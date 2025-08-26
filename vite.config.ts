@@ -15,6 +15,8 @@ export default defineConfig(() => ({
     },
   },
   optimizeDeps: {
-    include: ['@apollo/client'], // Thêm @apollo/client vào danh sách tối ưu hóa
+    // Thay vì 'include', chúng ta sẽ thử 'exclude' @apollo/client
+    // Điều này buộc Vite phải xử lý module này trực tiếp, có thể khắc phục lỗi exports.
+    exclude: ['@apollo/client'],
   },
 }));
