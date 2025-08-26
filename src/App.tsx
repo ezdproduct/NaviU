@@ -10,11 +10,8 @@ import Layout from "./components/Layout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CreateUser from "./pages/CreateUser";
-import UserProfileInfo from "./pages/UserProfileInfo"; // Import the new UserProfileInfo component
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { ApolloProvider } from "@apollo/client"; // Import ApolloProvider
-import { client } from "./lib/apolloClient"; // Import Apollo Client
 
 const queryClient = new QueryClient();
 
@@ -25,40 +22,29 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <ApolloProvider client={client}> {/* Wrap with ApolloProvider */}
-            <Routes>
-              {/* Route cho trang chủ với header riêng */}
-              <Route path="/" element={<Index />} />
+          <Routes>
+            {/* Route cho trang chủ với header riêng */}
+            <Route path="/" element={<Index />} />
 
-              {/* Các route sử dụng Layout chung với Header cố định */}
-              <Route element={<Layout />}>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/create-user" element={<CreateUser />} />
-              </Route>
-              
-              {/* Route /profile sẽ quản lý bố cục riêng của nó */}
-              <Route 
-                path="/profile" 
-                element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                } 
-              />
-              {/* New route for user profile information */}
-              <Route 
-                path="/profile/info" 
-                element={
-                  <ProtectedRoute>
-                    <UserProfileInfo />
-                  </ProtectedRoute>
-                } 
-              />
+            {/* Các route sử dụng Layout chung với Header cố định */}
+            <Route element={<Layout />}>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/create-user" element={<CreateUser />} />
+            </Route>
+            
+            {/* Route /profile sẽ quản lý bố cục riêng của nó */}
+            <Route 
+              path="/profile" 
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } 
+            />
 
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </ApolloProvider>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

@@ -16,8 +16,8 @@ const Header = () => {
         <nav className="flex items-center space-x-4">
           {isAuthenticated ? (
             <>
-              <Link to="/profile/info"> {/* Updated link to /profile/info */}
-                <Button variant="ghost" size="icon">
+              <Link to="/profile">
+                <Button variant="ghost" size="icon"> {/* Thay thế nút "Xem Hồ Sơ" bằng icon */}
                   <User className="h-5 w-5" />
                 </Button>
               </Link>

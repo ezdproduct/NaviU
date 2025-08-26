@@ -14,9 +14,4 @@ export default defineConfig(() => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  optimizeDeps: {
-    // Thay vì 'include', chúng ta sẽ thử 'exclude' @apollo/client
-    // Điều này buộc Vite phải xử lý module này trực tiếp, có thể khắc phục lỗi exports.
-    exclude: ['@apollo/client'],
-  },
 }));
