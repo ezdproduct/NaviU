@@ -1,0 +1,56 @@
+import React from 'react';
+import { careerData } from '@/data/careerData';
+import { Badge } from '@/components/ui/badge'; // Import Badge component
+import { cn } from '@/lib/utils'; // Import cn utility
+
+const CareerSection = () => (
+    <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+        {/* Đã loại bỏ dòng <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 border-b pb-4 mb-6">Chương 6: La bàn Sự nghiệp</h2> */}
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 border-b pb-4 mb-6">La bàn Sự nghiệp</h2>
+        <p className="text-lg text-gray-600 mb-6">Dựa trên phân tích đa chiều, đây là 5 ngành nghề phù hợp nhất với bạn.</p>
+        
+        {/* Mobile View - Cards */}
+        <div className="md:hidden space-y-4">
+            {careerData.map(job => (
+                <div key={job.rank} className={`rounded-lg border p-4 ${job.highlight ? 'bg-blue-50 border-blue-200' : 'bg-white'}`}>
+                    <div className="flex justify-between items-start">
+                        <h3 className="font-bold text-gray-800 pr-4">{job.rank}. {job.name}</h3>
+                        <span className={`font-bold text-lg ${job.highlight ? 'text-blue-600' : 'text-gray-700'}`}>{job.score}</span>
+                    </div>
+                    <div className="mt-2 text-sm text-gray-600">
+                        <span>Nhu cầu thị trường: </span>
+                        <Badge className={cn(job.demandColor, "text-white")}>{job.demand}</Badge> {/* Updated Badge styling */}
+                    </div>
+                </div>
+            ))}
+        </div>
+
+        {/* Desktop View - Table */}
+        <div className="hidden md:block overflow-x-auto rounded-lg border">
+            <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                    <tr>
+                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">#</th>
+                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Tên Ngành/Nghề</th>
+                        <th className="px-6 py-3 text-center text-xs font-bold text-gray-600 uppercase tracking-wider">Điểm Phù Hợp</th>
+                        <th className="px-6 py-3 text-center text-xs font-bold text-gray-600 uppercase tracking-wider">Nhu Cầu Thị Trường</th>
+                    </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                    {careerData.map(job => (
+                        <tr key={job.rank} className={job.highlight ? 'bg-blue-50' : ''}>
+                            <td className={`px-6 py-4 whitespace-nowrap ${job.highlight ? 'font-bold' : ''}`}>{job.rank}</td>
+                            <td className={`px-6 py-4 whitespace-nowrap ${job.highlight ? 'font-bold' : ''}`}>{job.name}</td>
+                            <td className={`px-6 py-4 whitespace-nowrap text-center ${job.highlight ? 'font-bold' : ''}`}>{job.score}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-center">
+                                <Badge className={cn(job.demandColor, "text-white")}>{job.demand}</Badge> {/* Updated Badge styling */}
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    </div>
+);
+
+export default CareerSection;
