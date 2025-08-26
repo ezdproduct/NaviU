@@ -17,13 +17,13 @@ import InterestsSection from './InterestsSection';
 import OutstandingCompetenciesCard from './OutstandingCompetenciesCard';
 import ActionCompassCard from './ActionCompassCard';
 import HoverViewMore from '@/components/HoverViewMore';
-import DashboardDetailModal from './DashboardDetailModal'; // Import the new modal
-import { personalityData } from '@/data/personalityData'; // Import data for modal content
+import DashboardDetailModal from './DashboardDetailModal';
+import { personalityData } from '@/data/personalityData';
 import { hollandCodeData } from '@/data/hollandCodeData';
 import { competencyData } from '@/data/competencyData';
 import { eqData } from '@/data/eqData';
 import { valuesData } from '@/data/valuesData';
-import CareerSection from './CareerSection'; // Import CareerSection
+import CareerSection from './CareerSection';
 
 interface DashboardViewProps {
   username: string;
@@ -44,6 +44,89 @@ const EqChart = () => {
     return <Radar data={data} options={options} />;
 };
 
+// Helper functions to generate modal content
+const getWelcomeModalDetails = (username: string) => ({
+  title: 'Hồ sơ Hướng nghiệp của bạn',
+  description: `Chào mừng trở lại, ${username}! Đây là phân tích tổng quan về tiềm năng của bạn.`,
+  content: (
+    <p className="text-sm text-gray-700">
+      Báo cáo này cung cấp cái nhìn sâu sắc về tính cách, sở thích, năng lực và giá trị nghề nghiệp của bạn, giúp bạn định hướng con đường sự nghiệp phù hợp nhất.
+    </p>
+  ),
+});
+
+const getPersonalityModalDetails = (personalityType: keyof typeof personalityData) => {
+  const pData = personalityData[personalityType];
+  return {
+    title: `Loại tính cách: ${pData.title} (${personalityType})`,
+    description: pData.description,
+    content: null,
+  };
+};
+
+const getHollandModalDetails = (hollandCodes: Array<keyof typeof hollandCodeData>) => {
+  const title = `Mã Holland: ${hollandCodes.map(code => hollandCodeData[code].name).join(' - ')}`;
+  const description = (
+    <div className="space-y-2">
+      {hollandCodes.map(code => {
+        const hData = hollandCodeData[code];
+        return (
+          <p key={code} className="text-sm text-gray-700">
+            <strong>{code} - {hData.name} ({hData.title}):</strong> {hData.description}
+          </p>
+        );
+      })}
+    </div>
+  );
+  return { title, description, content: null };
+};
+
+const getCompetenciesModalDetails = () => ({
+  title: 'Năng lực Nổi trội',
+  description: (
+    <div className="space-y-3">
+      <p className="text-sm text-gray-700">
+        <strong>Tư duy Ngôn ngữ:</strong> {competencyData.language.cao}
+      </p>
+      <p className="text-sm text-gray-700">
+        <strong>Tư duy Logic:</strong> {competencyData.logic.trung_binh}
+      </p>
+    </div>
+  ),
+  content: null,
+});
+
+const getActionCompassModalDetails = (mainValue: keyof typeof valuesData) => {
+  const vData = valuesData[mainValue];
+  return {
+    title: `Kim Chỉ Nam Hành Động: ${vData.name}`,
+    description: vData.description,
+    content: (
+      <div className="space-y-2 text-sm text-gray-700">
+        <p><strong>Vai trò trong việc ra quyết định:</strong> {vData.role}</p>
+        <p><strong>Câu hỏi Tự vấn:</strong></p>
+        <ul className="list-disc list-inside">
+          {vData.questions.map((q, i) => <li key={i}>{q}</li>)}
+        </ul>
+      </div>
+    ),
+  };
+};
+
+const getEqProfileModalDetails = () => ({
+  title: 'Hồ sơ Trí tuệ Cảm xúc',
+  description: 'Phân tích chi tiết về các khía cạnh của trí tuệ cảm xúc của bạn.',
+  content: (
+    <div className="space-y-3">
+      {(Object.keys(eqData) as Array<keyof typeof eqData>).map(key => (
+        <p key={key} className="text-sm text-gray-700">
+          <strong>{eqData[key].title}:</strong> {eqData[key].cao || eqData[key].trung_binh || eqData[key].thap}
+        </p>
+      ))}
+    </div>
+  ),
+});
+
 const DashboardView = ({ username }: DashboardViewProps) => {
   const [isWelcomeHovered, setIsWelcomeHovered] = useState(false);
   const [isPersonalityHovered, setIsPersonalityHovered] = useState(false);
@@ -54,89 +137,31 @@ const DashboardView = ({ username }: DashboardViewProps) => {
   const [modalContent, setModalContent] = useState<{ title: string; description: React.ReactNode; content?: React.ReactNode } | null>(null);
 
   const handleCardClick = (cardType: string) => {
-    let title = '';
-    let description: React.ReactNode = '';
-    let content: React.ReactNode = null;
-
+    let details;
     switch (cardType) {
       case 'welcome':
-        title = 'Hồ sơ Hướng nghiệp của bạn';
-        description = `Chào mừng trở lại, ${username}! Đây là phân tích tổng quan về tiềm năng của bạn.`;
-        content = (
-          <p className="text-sm text-gray-700">
-            Báo cáo này cung cấp cái nhìn sâu sắc về tính cách, sở thích, năng lực và giá trị nghề nghiệp của bạn, giúp bạn định hướng con đường sự nghiệp phù hợp nhất.
-          </p>
-        );
+        details = getWelcomeModalDetails(username);
         break;
       case 'personality':
-        const personalityType = 'INFP'; // Assuming INFP for now
-        const pData = personalityData[personalityType as keyof typeof personalityData];
-        title = `Loại tính cách: ${pData.title} (${personalityType})`;
-        description = pData.description;
+        details = getPersonalityModalDetails('INFP'); // Assuming INFP for now
         break;
       case 'holland':
-        const hollandCodes = ['A', 'I', 'S']; // Assuming AIS for now
-        title = 'Mã Holland: Nghệ thuật - Nghiên cứu - Xã hội';
-        description = (
-          <div className="space-y-2">
-            {hollandCodes.map(code => {
-              const hData = hollandCodeData[code as keyof typeof hollandCodeData];
-              return (
-                <p key={code} className="text-sm text-gray-700">
-                  <strong>{code} - {hData.name} ({hData.title}):</strong> {hData.description}
-                </p>
-              );
-            })}
-          </div>
-        );
+        details = getHollandModalDetails(['A', 'I', 'S']); // Assuming AIS for now
         break;
       case 'competencies':
-        title = 'Năng lực Nổi trội';
-        description = (
-          <div className="space-y-3">
-            <p className="text-sm text-gray-700">
-              <strong>Tư duy Ngôn ngữ:</strong> {competencyData.language.cao}
-            </p>
-            <p className="text-sm text-gray-700">
-              <strong>Tư duy Logic:</strong> {competencyData.logic.trung_binh}
-            </p>
-          </div>
-        );
+        details = getCompetenciesModalDetails();
         break;
       case 'action-compass':
-        const mainValue = 'can_bang'; // Assuming 'Cân bằng Công việc - Cuộc sống'
-        const vData = valuesData[mainValue as keyof typeof valuesData];
-        title = `Kim Chỉ Nam Hành Động: ${vData.name}`;
-        description = vData.description;
-        content = (
-          <div className="space-y-2 text-sm text-gray-700">
-            <p><strong>Vai trò trong việc ra quyết định:</strong> {vData.role}</p>
-            <p><strong>Câu hỏi Tự vấn:</strong></p>
-            <ul className="list-disc list-inside">
-              {vData.questions.map((q, i) => <li key={i}>{q}</li>)}
-            </ul>
-          </div>
-        );
+        details = getActionCompassModalDetails('can_bang'); // Assuming 'Cân bằng Công việc - Cuộc sống'
         break;
       case 'eq-profile':
-        title = 'Hồ sơ Trí tuệ Cảm xúc';
-        description = 'Phân tích chi tiết về các khía cạnh của trí tuệ cảm xúc của bạn.';
-        content = (
-          <div className="space-y-3">
-            {(Object.keys(eqData) as Array<keyof typeof eqData>).map(key => (
-              <p key={key} className="text-sm text-gray-700">
-                <strong>{eqData[key].title}:</strong> {eqData[key].cao || eqData[key].trung_binh || eqData[key].thap} {/* Simplified for example */}
-              </p>
-            ))}
-          </div>
-        );
+        details = getEqProfileModalDetails();
         break;
       default:
-        title = 'Thông tin chi tiết';
-        description = 'Không có thông tin chi tiết cho mục này.';
+        details = { title: 'Thông tin chi tiết', description: 'Không có thông tin chi tiết cho mục này.', content: null };
         break;
     }
-    setModalContent({ title, description, content });
+    setModalContent(details);
     setIsModalOpen(true);
   };
 
@@ -152,7 +177,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
           <h3 className="text-lg font-semibold opacity-80">Chào mừng trở lại, {username}!</h3>
           <p className="text-4xl font-bold mt-2">Hồ sơ Hướng nghiệp</p>
           <p className="opacity-80 mt-1">Đây là phân tích tổng quan về tiềm năng của bạn.</p>
-          <HoverViewMore isVisible={isWelcomeHovered} className="text-white" /> {/* Added text-white class */}
+          <HoverViewMore isVisible={isWelcomeHovered} className="text-white" />
         </div>
         <div
           className="group relative bg-white rounded-2xl shadow-sm p-6 cursor-pointer"
@@ -198,7 +223,6 @@ const DashboardView = ({ username }: DashboardViewProps) => {
       
       <InterestsSection onCardClick={handleCardClick} />
 
-      {/* New: La bàn Sự nghiệp section */}
       <CareerSection />
 
       {modalContent && (
