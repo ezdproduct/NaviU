@@ -8,7 +8,7 @@ const LandingPageHeader = () => {
   const { isAuthenticated, logout } = useAuth();
 
   return (
-    <header className="absolute top-0 left-0 right-0 z-50 px-4 sm:px-6 lg:px-8 py-2 bg-white/30 backdrop-blur-md"> {/* Added bg-white/30 and backdrop-blur-md */}
+    <header className="absolute top-0 left-0 right-0 z-50 px-4 sm:px-6 lg:px-8 py-3 bg-white/30 backdrop-blur-md"> {/* Changed py-2 to py-3 */}
       <div className="flex justify-between items-center max-w-7xl mx-auto">
         <Link to="/">
           <img src="/naviU.png" alt="NaviU Logo" className="h-8" />
@@ -21,7 +21,7 @@ const LandingPageHeader = () => {
                   <User className="h-5 w-5" />
                 </Button>
               </Link>
-              <Button onClick={logout} variant="secondary" className="bg-white text-blue-600 hover:bg-gray-100">Đăng xuất</Button>
+              <Button onClick={logout} variant="ghost" className="text-white hover:bg-white/20">Đăng xuất</Button> {/* Changed to variant="ghost" and text-white */}
             </>
           ) : (
             <>
