@@ -15,6 +15,8 @@ export default defineConfig(() => ({
     },
   },
   optimizeDeps: {
-    include: ['@apollo/client'], // Thêm @apollo/client vào đây
+    // Thử loại trừ @apollo/client khỏi quá trình pre-bundling của Vite
+    // để xem liệu điều này có giải quyết được lỗi export hay không.
+    exclude: ['@apollo/client'],
   },
 }));
