@@ -2,36 +2,12 @@ import React from 'react';
 import { competencyData } from '@/data/competencyData';
 import { eqData } from '@/data/eqData';
 
-// Định nghĩa kiểu cho userScores để dễ quản lý và mở rộng
-interface UserScores {
-    logic: 'cao' | 'trung_binh' | 'thap';
-    language: 'cao' | 'trung_binh' | 'thap';
-    spatial: 'cao' | 'trung_binh' | 'thap';
-    self_awareness: 'cao' | 'trung_binh' | 'thap';
-    self_regulation: 'cao' | 'trung_binh' | 'thap';
-    motivation: 'cao' | 'trung_binh' | 'thap';
-    empathy: 'cao' | 'trung_binh' | 'thap';
-    social_skills: 'cao' | 'trung_binh' | 'thap';
-}
+const CompetencySection = () => {
+    const userScores = {
+        logic: 'cao', language: 'cao', spatial: 'thap', self_awareness: 'cao',
+        self_regulation: 'trung_binh', motivation: 'thap', empathy: 'thap', social_skills: 'trung_binh'
+    } as const;
 
-// Giả định dữ liệu userScores sẽ được truyền vào qua props hoặc context
-// Tạm thời sử dụng dữ liệu mẫu để component không bị lỗi
-const defaultUserScores: UserScores = {
-    logic: 'cao',
-    language: 'cao',
-    spatial: 'thap',
-    self_awareness: 'cao',
-    self_regulation: 'trung_binh',
-    motivation: 'thap',
-    empathy: 'thap',
-    social_skills: 'trung_binh'
-};
-
-interface CompetencySectionProps {
-    userScores?: UserScores; // Cho phép truyền userScores qua props
-}
-
-const CompetencySection = ({ userScores = defaultUserScores }: CompetencySectionProps) => {
     return (
         <div>
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 border-b pb-4 mb-6">Chương 4: Năng lực & Trí tuệ Cảm xúc</h2>
