@@ -11,7 +11,6 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  // const [showWelcomeModal, setShowWelcomeModal] = useState(false); // Đã loại bỏ state này
   const { login } = useAuth();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -23,7 +22,6 @@ const Login = () => {
     setIsLoading(true);
     try {
       const loggedInUsername = await login(username, password); // Lấy tên người dùng từ hàm login
-      // setShowWelcomeModal(true); // Đã loại bỏ dòng này
       // Chuyển hướng đến trang profile và truyền state để mở tab 'do-test' và hiển thị modal
       navigate('/profile', { state: { initialView: 'do-test', showWelcome: true, username: loggedInUsername } });
     } catch (err) {
@@ -32,11 +30,6 @@ const Login = () => {
       setIsLoading(false);
     }
   };
-
-  // const handleWelcomeModalClose = () => { // Đã loại bỏ hàm này
-  //   setShowWelcomeModal(false);
-  //   navigate('/profile', { state: { initialView: 'do-test' } });
-  // };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -79,21 +72,14 @@ const Login = () => {
               {isLoading ? 'Đang xử lý...' : 'Đăng nhập'}
             </Button>
             <p className="text-sm text-center text-gray-600">
-              Chưa có tài khoản?{' '}
-              <Link to="/register" className="font-semibold text-blue-600 hover:underline">
-                Đăng ký
+              Đã có tài khoản?{' '}
+              <Link to="/login" className="font-semibold text-blue-600 hover:underline">
+                Đăng nhập
               </Link>
             </p>
           </CardFooter>
         </form>
       </Card>
-
-      {/* Welcome Modal không còn được render ở đây */}
-      {/* <WelcomeModal
-        isOpen={showWelcomeModal}
-        onClose={handleWelcomeModalClose}
-        username={username}
-      /> */}
     </div>
   );
 };

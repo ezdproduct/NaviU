@@ -1,11 +1,11 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getToken, saveToken, clearToken } from '@/lib/auth/storage';
+import { getToken, saveToken, clearToken, getUsername } from '@/lib/auth/storage'; // Import getUsername
 import { login as apiLogin } from '@/lib/auth/api';
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: { username: string } | null; // Thêm thông tin người dùng vào context
+  user: { username: string } | null;
   login: (username: string, password: string) => Promise<string>;
   logout: () => void;
 }
@@ -13,38 +13,34 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!getToken());
-  const [user, setUser] = useState<{ username: string } | null>(null); // State để lưu thông tin người dùng
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false); // Khởi tạo là false
+  const [user, setUser] = useState<{ username: string } | null>(null);
   const navigate = useNavigate();
 
   // Khi component khởi tạo, kiểm tra token và cố gắng lấy thông tin user nếu có
   React.useEffect(() => {
     const token = getToken();
-    if (token) {
-      // Trong một ứng dụng thực tế, bạn sẽ cần một API endpoint để xác thực token
-      // và lấy thông tin người dùng. Ở đây, chúng ta sẽ giả định có thể lấy username
-      // từ một nguồn nào đó hoặc lưu trữ nó cùng với token.
-      // Hiện tại, chúng ta sẽ không có username sau khi refresh nếu không có API.
-      // Để đơn giản, chúng ta sẽ chỉ set isAuthenticated.
-      // Nếu muốn username persistent, cần lưu nó vào localStorage hoặc gọi API.
+    const storedUsername = getUsername(); // Lấy tên người dùng từ storage
+    if (token && storedUsername) {
       setIsAuthenticated(true);
-      // Giả định username có thể được lấy từ token hoặc một nơi khác
-      // For now, we'll leave user as null or fetch it if an API exists.
-      // For this example, we'll rely on the login function to set it.
+      setUser({ username: storedUsername }); // Đặt user từ tên người dùng đã lưu
+    } else {
+      setIsAuthenticated(false);
+      setUser(null);
     }
-  }, []);
+  }, []); // Mảng dependency rỗng để chỉ chạy một lần khi mount
 
   const login = async (username: string, password: string): Promise<string> => {
     try {
       const data = await apiLogin(username, password);
-      saveToken(data.token);
+      saveToken(data.token, data.user_nicename); // Lưu tên người dùng cùng với token
       setIsAuthenticated(true);
-      setUser({ username: data.user_nicename }); // Lưu tên người dùng vào state
+      setUser({ username: data.user_nicename });
       return data.user_nicename;
     } catch (error) {
       console.error('Login failed:', error);
       setIsAuthenticated(false);
-      setUser(null); // Xóa thông tin người dùng nếu đăng nhập thất bại
+      setUser(null);
       throw error;
     }
   };
@@ -52,7 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     clearToken();
     setIsAuthenticated(false);
-    setUser(null); // Xóa thông tin người dùng khi đăng xuất
+    setUser(null);
     navigate('/login');
   };
 
