@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Link, useNavigate } from 'react-router-dom';
-import { useMutation } from '@apollo/client/react/hooks'; // Đã thay đổi đường dẫn import
+import { useMutation } from '@apollo/client'; // Đã thay đổi đường dẫn import trực tiếp từ '@apollo/client'
 import { REGISTER_USER_MUTATION } from '@/graphql/mutations/authMutations';
 import { showSuccess, showError } from '@/utils/toast'; // Import toast utilities
 
