@@ -10,6 +10,7 @@ import Layout from "./components/Layout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CreateUser from "./pages/CreateUser";
+import ProfileInfo from "./pages/ProfileInfo"; // Import ProfileInfo
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -39,6 +40,15 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Profile />
+                </ProtectedRoute>
+              } 
+            />
+            {/* Route cho trang Profile Info */}
+            <Route 
+              path="/profile-info" 
+              element={
+                <ProtectedRoute>
+                  <ProfileInfo />
                 </ProtectedRoute>
               } 
             />

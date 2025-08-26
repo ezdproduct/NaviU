@@ -16,7 +16,7 @@ const ProfileHeader = ({ onMenuClick }: ProfileHeaderProps) => {
         </Button>
         {/* Đã loại bỏ logo NaviU */}
       </div>
-      <Link to="/profile">
+      <Link to="/profile-info"> {/* Changed link to /profile-info */}
         <Button variant="ghost" size="icon">
           <User className="h-5 w-5" />
         </Button>
