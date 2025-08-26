@@ -136,6 +136,24 @@ const DashboardView = ({ username }: DashboardViewProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState<{ title: string; description: React.ReactNode; content?: React.ReactNode } | null>(null);
 
+  // Placeholder for user's actual report data
+  const userReportData = {
+    personalityType: 'INFP' as keyof typeof personalityData,
+    hollandCodes: ['A', 'I', 'S'] as Array<keyof typeof hollandCodeData>,
+    mainValue: 'can_bang' as keyof typeof valuesData,
+    competencies: {
+      language: 'cao' as 'cao' | 'trung_binh' | 'thap',
+      logic: 'trung_binh' as 'cao' | 'trung_binh' | 'thap',
+    },
+    eqScores: {
+      self_awareness: 'cao' as 'cao' | 'trung_binh' | 'thap',
+      self_regulation: 'trung_binh' as 'cao' | 'trung_binh' | 'thap',
+      motivation: 'thap' as 'cao' | 'trung_binh' | 'thap',
+      empathy: 'thap' as 'cao' | 'trung_binh' | 'thap',
+      social_skills: 'trung_binh' as 'cao' | 'trung_binh' | 'thap',
+    }
+  };
+
   const handleCardClick = (cardType: string) => {
     let details;
     switch (cardType) {
@@ -143,19 +161,19 @@ const DashboardView = ({ username }: DashboardViewProps) => {
         details = getWelcomeModalDetails(username);
         break;
       case 'personality':
-        details = getPersonalityModalDetails('INFP'); // Assuming INFP for now
+        details = getPersonalityModalDetails(userReportData.personalityType);
         break;
       case 'holland':
-        details = getHollandModalDetails(['A', 'I', 'S']); // Assuming AIS for now
+        details = getHollandModalDetails(userReportData.hollandCodes);
         break;
       case 'competencies':
-        details = getCompetenciesModalDetails();
+        details = getCompetenciesModalDetails(); // This still uses hardcoded values within the helper
         break;
       case 'action-compass':
-        details = getActionCompassModalDetails('can_bang'); // Assuming 'Cân bằng Công việc - Cuộc sống'
+        details = getActionCompassModalDetails(userReportData.mainValue);
         break;
       case 'eq-profile':
-        details = getEqProfileModalDetails();
+        details = getEqProfileModalDetails(); // This still uses hardcoded values within the helper
         break;
       default:
         details = { title: 'Thông tin chi tiết', description: 'Không có thông tin chi tiết cho mục này.', content: null };
@@ -186,8 +204,8 @@ const DashboardView = ({ username }: DashboardViewProps) => {
           onClick={() => handleCardClick('personality')}
         >
           <h3 className="text-gray-500">Loại tính cách</h3>
-          <p className="text-2xl font-bold text-gray-800 mt-2">INFP</p>
-          <p className="text-sm text-gray-500 mt-1">Người Lý Tưởng Hóa</p>
+          <p className="text-2xl font-bold text-gray-800 mt-2">{userReportData.personalityType}</p>
+          <p className="text-sm text-gray-500 mt-1">{personalityData[userReportData.personalityType].title}</p>
           <HoverViewMore isVisible={isPersonalityHovered} />
         </div>
         <div
@@ -197,8 +215,8 @@ const DashboardView = ({ username }: DashboardViewProps) => {
           onClick={() => handleCardClick('holland')}
         >
           <h3 className="text-gray-500">Mã Holland</h3>
-          <p className="text-2xl font-bold text-gray-800 mt-2">AIS</p>
-          <p className="text-sm text-gray-500 mt-1">Nghệ thuật - Nghiên cứu - Xã hội</p>
+          <p className="text-2xl font-bold text-gray-800 mt-2">{userReportData.hollandCodes.join('')}</p>
+          <p className="text-sm text-gray-500 mt-1">{userReportData.hollandCodes.map(code => hollandCodeData[code].name).join(' - ')}</p>
           <HoverViewMore isVisible={isHollandHovered} />
         </div>
       </div>
