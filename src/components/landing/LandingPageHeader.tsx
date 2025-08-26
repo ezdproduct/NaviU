@@ -8,7 +8,7 @@ const LandingPageHeader = () => {
   const { isAuthenticated, logout } = useAuth();
 
   return (
-    <header className="absolute top-0 left-0 right-0 z-50 px-4 sm:px-6 lg:px-8 py-2">
+    <header className="absolute top-0 left-0 right-0 z-50 px-4 sm:px-6 lg:px-8 py-2 bg-white/30 backdrop-blur-md"> {/* Added bg-white/30 and backdrop-blur-md */}
       <div className="flex justify-between items-center max-w-7xl mx-auto">
         <Link to="/">
           <img src="/naviU.png" alt="NaviU Logo" className="h-8" />
