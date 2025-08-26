@@ -4,31 +4,43 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Link, useNavigate } from 'react-router-dom';
-import { register } from '../lib/auth/api';
+import { useMutation } from '@apollo/client';
+import { REGISTER_USER_MUTATION } from '@/graphql/mutations/authMutations';
+import { showSuccess, showError } from '@/utils/toast'; // Import toast utilities
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const [registerUser, { loading, error }] = useMutation(REGISTER_USER_MUTATION, {
+    onCompleted: (data) => {
+      // console.log('Registration successful:', data);
+      setSuccessMessage('Đăng ký thành công! Vui lòng đăng nhập.');
+      showSuccess('Đăng ký thành công! Vui lòng đăng nhập.');
+      setUsername('');
+      setEmail('');
+      setPassword('');
+      // Optionally navigate to login after a short delay
+      setTimeout(() => {
+        navigate('/login?registered=true');
+      }, 2000);
+    },
+    onError: (err) => {
+      // console.error('Registration error:', err);
+      showError(err.message || 'Đăng ký không thành công. Vui lòng thử lại.');
+    },
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setIsLoading(true);
+    setSuccessMessage(null); // Clear previous success message
     try {
-      await register(username, email, password);
-      navigate('/login?registered=true');
+      await registerUser({ variables: { username, email, password } });
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('Đã xảy ra lỗi không xác định trong quá trình đăng ký.');
-      }
-    } finally {
-      setIsLoading(false);
+      // Error is handled by onError callback of useMutation
     }
   };
 
@@ -39,6 +51,11 @@ const Register = () => {
           <CardTitle className="text-2xl">Đăng ký</CardTitle>
           <CardDescription>Tạo tài khoản mới để bắt đầu.</CardDescription>
         </CardHeader>
+        {successMessage && (
+          <div className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg mx-6" role="alert">
+            {successMessage}
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           <CardContent className="grid gap-4">
             <div className="grid gap-2">
@@ -53,11 +70,11 @@ const Register = () => {
               <Label htmlFor="password">Mật khẩu</Label>
               <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             </div>
-            {error && <p className="text-sm text-red-500">{error}</p>}
+            {error && <p className="text-sm text-red-500">{error.message}</p>}
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
-            <Button className="w-full" type="submit" disabled={isLoading}>
-              {isLoading ? 'Đang xử lý...' : 'Đăng ký'}
+            <Button className="w-full" type="submit" disabled={loading}>
+              {loading ? 'Đang xử lý...' : 'Đăng ký'}
             </Button>
             <p className="text-sm text-center text-gray-600">
               Đã có tài khoản?{' '}
