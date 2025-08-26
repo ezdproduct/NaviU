@@ -23,8 +23,10 @@ const Register = () => {
       navigate('/login?registered=true');
     } catch (err) {
       if (err instanceof Error) {
+        console.error("Registration error:", err.message); // Log the error message
         setError(err.message);
       } else {
+        console.error("Unknown registration error:", err); // Log unknown errors
         setError('Đã xảy ra lỗi không xác định trong quá trình đăng ký.');
       }
     } finally {
