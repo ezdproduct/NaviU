@@ -95,7 +95,7 @@ const Profile = () => {
       {/* Mobile Sidebar (Sheet) */}
       {isMobile ? (
         <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
-          <SheetContent side="left" className="p-0 w-64 bg-gray-800 border-r-0">
+          <SheetContent side="left" className="p-0 w-64 bg-white border-r-0"> {/* Changed bg-gray-800 to bg-white */}
             <div className="flex flex-col h-full py-0">
               <SidebarContent 
                 isSidebarOpen={true}
