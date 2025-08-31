@@ -1,16 +1,16 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom'; // Giữ import ở đây
+// Removed useNavigate import
 import { getToken, saveToken, clearToken } from '@/lib/auth/storage';
 import { login as apiLogin, getCurrentUserInfo } from '@/lib/auth/api';
 
 interface User {
-  id: number; // Thêm trường id
+  id: number;
   username: string;
   email: string;
   first_name: string;
   last_name: string;
   description: string;
-  nickname: string; // Thêm trường nickname
+  nickname: string;
 }
 
 interface AuthContextType {
@@ -18,7 +18,7 @@ interface AuthContextType {
   user: User | null;
   login: (username: string, password: string) => Promise<string>;
   logout: () => void;
-  updateUserInfo: (newUser: User) => void; // Function to update user info in context
+  updateUserInfo: (newUser: User) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,7 +26,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
-  const navigate = useNavigate(); // useNaviage is now safely inside AuthProvider, which is a child of RouterProvider
+  // Removed const navigate = useNavigate();
 
   const fetchUser = useCallback(async () => {
     const token = getToken();
@@ -34,13 +34,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       try {
         const userInfo = await getCurrentUserInfo();
         setUser({ 
-          id: userInfo.id, // Lưu id người dùng
+          id: userInfo.id,
           username: userInfo.username, 
           email: userInfo.email,
           first_name: userInfo.first_name,
           last_name: userInfo.last_name,
           description: userInfo.description,
-          nickname: userInfo.nickname, // Lưu nickname
+          nickname: userInfo.nickname,
         });
         setIsAuthenticated(true);
       } catch (error) {
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const data = await apiLogin(username, password);
       saveToken(data.token, data.user_nicename);
-      await fetchUser(); // Fetch user info after successful login
+      await fetchUser();
       return data.user_nicename;
     } catch (error) {
       console.error('Login failed:', error);
@@ -78,12 +78,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     clearToken();
     setIsAuthenticated(false);
     setUser(null);
-    navigate('/login'); // Gọi navigate ở đây là an toàn vì nó nằm trong một hàm callback
+    // Navigation will now be handled by a component inside RouterProvider (e.g., App.tsx)
   };
 
   const updateUserInfo = (newUser: User) => {
     setUser(newUser);
-    // Also update the username in storage if it has changed
     const token = getToken();
     if (token && newUser.username) {
         saveToken(token, newUser.username);

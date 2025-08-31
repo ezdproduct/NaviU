@@ -3,14 +3,14 @@ import { createRoot } from "react-dom/client";
 import App, { routes } from "./App.tsx";
 import "./globals.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-// Removed AuthProvider import
+import { AuthProvider } from "./contexts/AuthContext"; // Import AuthProvider
 
 const router = createBrowserRouter(routes);
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router}>
-      <App /> {/* App sẽ chứa AuthProvider và các context khác */}
-    </RouterProvider>
+    <AuthProvider> {/* AuthProvider bao bọc toàn bộ ứng dụng */}
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );
