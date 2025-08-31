@@ -6,6 +6,9 @@ import { login as apiLogin, getCurrentUserInfo } from '@/lib/auth/api';
 interface User {
   username: string;
   email: string;
+  first_name: string;
+  last_name: string;
+  description: string;
 }
 
 interface AuthContextType {
@@ -28,7 +31,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (token) {
       try {
         const userInfo = await getCurrentUserInfo();
-        setUser({ username: userInfo.username, email: userInfo.email });
+        setUser({ 
+          username: userInfo.username, 
+          email: userInfo.email,
+          first_name: userInfo.first_name,
+          last_name: userInfo.last_name,
+          description: userInfo.description
+        });
         setIsAuthenticated(true);
       } catch (error) {
         console.error("Failed to fetch user on load, clearing token.", error);

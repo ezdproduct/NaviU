@@ -36,9 +36,12 @@ function naviu_get_current_user_data() {
     }
 
     $user_data = array(
-        'id'       => $user->ID,
-        'username' => $user->user_login,
-        'email'    => $user->user_email,
+        'id'          => $user->ID,
+        'username'    => $user->user_login,
+        'email'       => $user->user_email,
+        'first_name'  => $user->first_name,
+        'last_name'   => $user->last_name,
+        'description' => $user->description,
     );
 
     return new WP_REST_Response($user_data, 200);
@@ -54,10 +57,14 @@ function naviu_update_current_user_data(WP_REST_Request $request) {
     $user = wp_get_current_user();
     $params = $request->get_json_params();
 
+    // Sanitize all incoming fields
     $new_username = isset($params['username']) ? sanitize_text_field($params['username']) : '';
     $new_email = isset($params['email']) ? sanitize_email($params['email']) : '';
     $new_password = isset($params['new_password']) ? $params['new_password'] : '';
     $current_password = isset($params['current_password']) ? $params['current_password'] : '';
+    $first_name = isset($params['first_name']) ? sanitize_text_field($params['first_name']) : '';
+    $last_name = isset($params['last_name']) ? sanitize_text_field($params['last_name']) : '';
+    $description = isset($params['description']) ? sanitize_textarea_field($params['description']) : '';
 
     // --- Security Check: Verify current password if email or password is being changed ---
     $is_email_changed = strtolower($new_email) !== strtolower($user->user_email);
@@ -72,7 +79,7 @@ function naviu_update_current_user_data(WP_REST_Request $request) {
         }
     }
 
-    // --- Validation ---
+    // --- Prepare data for update ---
     $update_data = array('ID' => $user->ID);
 
     // Validate and prepare username
@@ -94,10 +101,11 @@ function naviu_update_current_user_data(WP_REST_Request $request) {
         $update_data['user_email'] = $new_email;
     }
 
-    // Prepare password
-    if ($is_password_changed) {
-        $update_data['user_pass'] = $new_password;
-    }
+    // Prepare other fields
+    if (isset($params['first_name'])) $update_data['first_name'] = $first_name;
+    if (isset($params['last_name'])) $update_data['last_name'] = $last_name;
+    if (isset($params['description'])) $update_data['description'] = $description;
+    if ($is_password_changed) $update_data['user_pass'] = $new_password;
 
     // --- Perform Update ---
     if (count($update_data) > 1) {
@@ -108,7 +116,21 @@ function naviu_update_current_user_data(WP_REST_Request $request) {
         }
     }
 
-    return new WP_REST_Response(array('message' => 'Cập nhật thông tin thành công!'), 200);
+    // Fetch the updated user data to return to the frontend
+    $updated_user = get_user_by('id', $user->ID);
+    $response_data = array(
+        'message'     => 'Cập nhật thông tin thành công!',
+        'user'        => array(
+            'id'          => $updated_user->ID,
+            'username'    => $updated_user->user_login,
+            'email'       => $updated_user->user_email,
+            'first_name'  => $updated_user->first_name,
+            'last_name'   => $updated_user->last_name,
+            'description' => $updated_user->description,
+        )
+    );
+
+    return new WP_REST_Response($response_data, 200);
 }
 
 ?>

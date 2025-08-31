@@ -53,26 +53,19 @@ export async function getCurrentUserInfo() {
  * Updates the current logged-in user's information.
  */
 export async function updateUser(
-  username: string,
-  email: string,
-  new_password?: string,
-  current_password?: string
+  userData: {
+    username: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+    description: string;
+    new_password?: string;
+    current_password?: string;
+  }
 ) {
   const token = getToken();
   if (!token) {
     throw new Error("No authentication token found.");
-  }
-
-  const body: { [key: string]: string } = {
-    username,
-    email,
-  };
-
-  if (new_password) {
-    body.new_password = new_password;
-  }
-  if (current_password) {
-    body.current_password = current_password;
   }
 
   const res = await fetch(`${WP_BASE_URL}/wp-json/custom/v1/user/me`, {
@@ -81,7 +74,7 @@ export async function updateUser(
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`,
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify(userData),
   });
 
   if (!res.ok) {
