@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import PasswordInput from '@/components/PasswordInput';
-import { LoginCredentials } from '@/types'; // Import LoginCredentials from shared types
+// Removed LoginCredentials import as it's not directly used here anymore
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -23,9 +23,14 @@ const Login = () => {
     setError(null);
     setIsLoading(true);
     try {
-      const credentials: LoginCredentials = { username, password }; // Use LoginCredentials type
-      const loggedInUsername = await login(credentials);
-      navigate('/profile', { state: { initialView: 'do-test', showWelcome: true, username: loggedInUsername } });
+      const success = await login(username, password); // Call login with username and password
+      if (success) {
+        // Assuming loginUser returns the user's nicename or similar for the welcome message
+        // For now, we'll use the username from state, or you can get it from the AuthContext user object after login
+        navigate('/profile', { state: { initialView: 'do-test', showWelcome: true, username: username } });
+      } else {
+        setError('Tên đăng nhập hoặc mật khẩu không đúng.');
+      }
     } catch (err: any) {
       setError(err.message || 'Tên đăng nhập hoặc mật khẩu không đúng.');
     } finally {

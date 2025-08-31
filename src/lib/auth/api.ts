@@ -1,5 +1,5 @@
-import { getToken, saveToken, clearToken, getUser } from "./storage";
-import { User, LoginCredentials, ApiResponse, UserProfileData, UpdateProfilePayload } from '@/types'; // Import from shared types
+import { getAuthToken, setAuthToken, storeUser, clearAuthData } from "./storage";
+import { User, LoginResponse, ProfileResponse, ApiResponse } from '@/types/auth'; // Import from shared types
 
 export const WP_BASE_URL = "https://naviu-backend.ezd.vn";
 
@@ -24,8 +24,9 @@ export async function safeJsonParse(response: Response): Promise<any> {
 }
 
 // Enhanced authenticatedFetch với debug
-export async function authenticatedFetch(url: string, options: RequestInit = {}): Promise<Response> {
-  const token = getToken();
+export async function authenticatedFetch(path: string, options: RequestInit = {}): Promise<Response> {
+  const token = getAuthToken();
+  const url = `${WP_BASE_URL}/wp-json${path}`; // Construct full URL
   
   console.log('🔍 API Request:', {
     url,
@@ -78,190 +79,123 @@ export async function authenticatedFetch(url: string, options: RequestInit = {})
   }
 }
 
-// --- Updated Login Function ---
-export async function login(credentials: LoginCredentials): Promise<ApiResponse<{user: User, token: string}>> {
+// --- Login Function ---
+export const loginUser = async (username: string, password: string): Promise<User | null> => {
   try {
-    const API_BASE_URL = WP_BASE_URL;
-    console.log('🔗 Login API URL:', `${API_BASE_URL}/wp-json/jwt-auth/v1/token`);
-    
-    const response = await fetch(`${API_BASE_URL}/wp-json/jwt-auth/v1/token`, {
+    const response = await fetch(`${WP_BASE_URL}/wp-json/jwt-auth/v1/token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        username: credentials.username,
-        password: credentials.password
-      })
+        username: username,
+        password: password,
+      }),
     });
-    
-    console.log('📥 Login response status:', response.status);
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('❌ Login error response:', errorText);
-      
-      let errorData;
-      try {
-        errorData = JSON.parse(errorText);
-      } catch {
-        errorData = { message: `HTTP ${response.status}: ${errorText}` };
-      }
-      
-      return {
-        success: false,
-        message: errorData.message || `Login failed with status ${response.status}`
-      };
-    }
-    
-    const data = await safeJsonParse(response);
-    console.log('📄 Login success data:', data);
-    // Add this after line 141 to see what data structure we get
-    console.log('JWT Token:', data.token);
-    console.log('User Email:', data.user_email);
-    console.log('User Nicename:', data.user_nicename);
-    console.log('User Display Name:', data.user_display_name);
-    console.log('User ID:', data.user_id);
-    
-    const { token, user_id, user_email, user_nicename, user_display_name } = data;
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No token received from server'
-      };
-    }
-    
-    const user: User = { // Changed to User
-      id: user_id || 0,
-      user_login: user_nicename,
-      user_email: user_email,
-      user_nicename: user_nicename,
-      user_display_name: user_display_name,
-      username: user_nicename, // Add username field
-      email: user_email, // Add email field
-    };
 
-    saveToken(token, user);
+    if (!response.ok) {
+      const errorData = await safeJsonParse(response);
+      throw new Error(errorData.message || 'Login failed');
+    }
+
+    const data: LoginResponse = await safeJsonParse(response);
     
-    return {
-      success: true,
-      data: {
-        token,
-        user
-      }
-    };
+    if (data.success && data.data) {
+      setAuthToken(data.data.token); // Store token
+      
+      // Transform WordPress user data to our User interface
+      const user: User = {
+        id: data.data.user.ID || data.data.user.id,
+        ID: data.data.user.ID || data.data.user.id,
+        username: data.data.user.username || data.data.user_nicename,
+        user_login: data.data.user.user_login || data.data.user_nicename,
+        email: data.data.user.email || data.data.user_email,
+        user_email: data.data.user.user_email || data.data.user.email,
+        display_name: data.data.user.display_name || data.data.user_display_name,
+        first_name: data.data.user.first_name || '',
+        last_name: data.data.user.last_name || '',
+        description: data.data.user.description,
+        roles: data.data.user.roles || [],
+        avatar: data.data.user.avatar,
+        meta: data.data.user.meta
+      };
+      
+      storeUser(user); // Store user data
+      return user;
+    }
     
+    return null;
   } catch (error) {
-    console.error('❌ Login error:', error);
-    return {
-      success: false,
-      message: error instanceof Error ? error.message : 'Login failed. Please try again.'
-    };
+    console.error('Login error:', error);
+    throw error;
   }
-}
+};
 
 export async function register(username: string, email: string, password: string) {
-  const res = await authenticatedFetch(`${WP_BASE_URL}/wp-json/custom/v1/register`, {
+  const res = await authenticatedFetch('/custom/v1/register', {
     method: "POST",
     body: JSON.stringify({ username, email, password }),
   });
   if (!res.ok) {
-    const errorData = await res.json();
+    const errorData = await safeJsonParse(res);
     throw new Error(errorData.message || "Đăng ký không thành công.");
   }
-  return res.json();
+  return safeJsonParse(res);
 }
 
-/**
- * Fetches the current logged-in user's information.
- */
-export async function getCurrentUserInfo(): Promise<User> { // Changed return type to User
-  const token = getToken();
-  const storedUser = getUser();
-  if (!token || !storedUser) {
-    throw new Error("No authentication token or user info found.");
-  }
-
-  const res = await authenticatedFetch(`${WP_BASE_URL}/wp-json/custom/v1/user/me`, {
-    method: "GET",
-  });
-
-  if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.message || "Failed to fetch user info.");
-  }
-  return res.json();
-}
-
-/**
- * Updates the current logged-in user's information using the standard WordPress REST API.
- * Does NOT handle password changes in this version.
- */
-export async function updateUser(
-  userId: number,
-  userData: {
-    username?: string;
-    email?: string;
-    first_name?: string;
-    last_name?: string;
-    description?: string;
-    nickname?: string;
-  }
-) {
-  const token = getToken();
-  if (!token) {
-    throw new Error("No authentication token found.");
-  }
-
-  const res = await authenticatedFetch(`${WP_BASE_URL}/wp-json/wp/v2/users/${userId}`, {
-    method: "PUT",
-    body: JSON.stringify(userData),
-  });
-
-  if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.message || "Failed to update user info.");
-  }
-  return res.json();
-}
-
-// --- New Profile API Functions ---
-export async function getUserProfile(): Promise<ApiResponse<UserProfileData>> {
+// --- Profile API Functions ---
+export const getUserProfile = async (): Promise<User | null> => {
   try {
-    const response = await authenticatedFetch(`${WP_BASE_URL}/wp-json/users/v1/profile`);
-    const data = await safeJsonParse(response);
+    const response = await authenticatedFetch('/users/v1/profile');
+    const data: ProfileResponse = await safeJsonParse(response);
     
-    if (!response.ok) {
-      return { success: false, message: data.message || 'Failed to fetch user profile.' };
+    if (data.success && data.data) {
+      // Ensure consistent field mapping
+      const user: User = {
+        ...data.data,
+        id: data.data.id || data.data.ID,
+        ID: data.data.ID || data.data.id,
+        email: data.data.email || data.data.user_email,
+        user_email: data.data.user_email || data.data.email,
+      };
+      
+      storeUser(user);
+      return user;
     }
-    
-    return { success: true, data: data.data };
+    return null;
   } catch (error) {
     console.error('Error fetching user profile:', error);
-    return { success: false, message: error instanceof Error ? error.message : 'An unknown error occurred.' };
+    return null;
   }
-}
+};
 
-export async function updateUserProfile(profileData: UpdateProfilePayload): Promise<ApiResponse<any>> {
+export const updateUserProfile = async (userData: Partial<User>): Promise<User | null> => {
   try {
-    const response = await authenticatedFetch(`${WP_BASE_URL}/wp-json/users/v1/profile`, {
-      method: 'POST', // Đã thay đổi từ 'PUT' thành 'POST'
-      body: JSON.stringify(profileData),
+    const response = await authenticatedFetch('/users/v1/profile', {
+      method: 'PUT', // Changed back to PUT as per user's request
+      body: JSON.stringify(userData),
     });
-    const data = await safeJsonParse(response);
+
+    const data: ProfileResponse = await safeJsonParse(response);
     
-    if (!response.ok) {
-      return { success: false, message: data.message || 'Failed to update user profile.' };
+    if (data.success && data.data) {
+      const user: User = {
+        ...data.data,
+        id: data.data.id || data.data.ID,
+        ID: data.data.ID || data.data.id,
+        email: data.data.email || data.data.user_email,
+        user_email: data.data.user_email || data.data.email,
+      };
+      
+      storeUser(user);
+      return user;
     }
-    
-    return { success: true, message: data.message || 'Profile updated successfully.' };
+    return null;
   } catch (error) {
     console.error('Error updating user profile:', error);
-    return { success: false, message: error instanceof Error ? error.message : 'An unknown error occurred.' };
+    throw error;
   }
-}
-
+};
 
 // Test function để debug
 export async function testConnection(): Promise<any> {
@@ -281,17 +215,17 @@ export async function testConnection(): Promise<any> {
     console.log('Basic API response:', basicResponse.status);
     
     // Test with authentication
-    const token = getToken();
+    const token = getAuthToken();
     if (token) {
-      const authResponse = await authenticatedFetch(`${API_BASE_URL}/wp/v2/users/me`);
+      const authResponse = await authenticatedFetch('/wp/v2/users/me');
       console.log('Auth API response:', authResponse.status);
       
-      const authData = await authResponse.json();
+      const authData = await safeJsonParse(authResponse);
       console.log('Auth API data:', authData);
     }
     
     // Test debug endpoint
-    const debugResponse = await authenticatedFetch(`${API_BASE_URL}/debug/v1/test-post`, {
+    const debugResponse = await authenticatedFetch('/debug/v1/test-post', {
       method: 'POST',
       body: JSON.stringify({
         test: 'data',
@@ -299,7 +233,7 @@ export async function testConnection(): Promise<any> {
       })
     });
     
-    const debugData = await debugResponse.json();
+    const debugData = await safeJsonParse(debugResponse);
     console.log('Debug endpoint response:', debugData);
     
     return { success: true };

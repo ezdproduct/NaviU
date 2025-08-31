@@ -10,9 +10,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { showSuccess, showError, showLoading, dismissToast } from '@/utils/toast';
+import { User } from '@/types/auth'; // Import User type
 
 const ProfileInfo: React.FC = () => {
-  const { user, logout, updateUserInfo } = useAuth(); // Keep updateUserInfo for context
+  const { user, logout, updateUser, refreshUser } = useAuth(); // Use updateUser from context
   const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -22,42 +23,45 @@ const ProfileInfo: React.FC = () => {
   const [success, setSuccess] = useState<string | null>(null);
   
   // Initialize with empty strings to avoid undefined → defined transition
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Partial<User>>({ // Use Partial<User>
     display_name: '',
     first_name: '',
     last_name: '',
     email: '',
-    phone: '',
-    birthday: '',
-    bio: ''
+    meta: {
+      phone: '',
+      birthday: '',
+    },
+    description: ''
   });
   
   useEffect(() => {
     loadProfile();
-  }, []);
+  }, [user?.id]); // Reload profile if user ID changes
   
   const loadProfile = async () => {
     setLoading(true);
     setError('');
     
     try {
-      const result = await getUserProfile();
+      const fetchedUser = await getUserProfile(); // Use new getUserProfile
       
-      if (result.success && result.data) {
-        // Ensure all fields have values (empty string if undefined)
+      if (fetchedUser) {
         setFormData({
-          display_name: result.data.display_name || '',
-          first_name: result.data.first_name || '',
-          last_name: result.data.last_name || '',
-          email: result.data.email || '',
-          phone: result.data.meta?.phone || '',
-          birthday: result.data.meta?.birthday || '',
-          bio: result.data.description || ''
+          display_name: fetchedUser.display_name || '',
+          first_name: fetchedUser.first_name || '',
+          last_name: fetchedUser.last_name || '',
+          email: fetchedUser.email || '',
+          meta: {
+            phone: fetchedUser.meta?.phone || '',
+            birthday: fetchedUser.meta?.birthday || '',
+          },
+          description: fetchedUser.description || ''
         });
         // Also update AuthContext user if needed, though this component primarily uses its own state
         // updateUserInfo({ ...user, ...result.data, nickname: result.data.display_name }); // Example if you want to sync
       } else {
-        setError(result.message || 'Failed to load profile');
+        setError('Failed to load profile');
       }
     } catch (error: any) {
       console.error('Profile load error:', error);
@@ -69,10 +73,20 @@ const ProfileInfo: React.FC = () => {
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value || '' // Ensure never undefined
-    }));
+    if (name === 'phone' || name === 'birthday') {
+      setFormData(prev => ({
+        ...prev,
+        meta: {
+          ...prev.meta,
+          [name]: value || ''
+        }
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value || '' // Ensure never undefined
+      }));
+    }
   };
   
   const handleBackToProfile = () => {
@@ -100,26 +114,28 @@ const ProfileInfo: React.FC = () => {
     const loadingToastId = showLoading('Đang cập nhật thông tin...');
     
     try {
-      const updatePayload = {
+      const updatePayload: Partial<User> = {
         display_name: formData.display_name,
         first_name: formData.first_name,
         last_name: formData.last_name,
         // email: formData.email, // Email might not be updatable via this custom endpoint
-        description: formData.bio,
-        phone: formData.phone,
-        birthday: formData.birthday,
+        description: formData.description,
+        meta: {
+          phone: formData.meta?.phone,
+          birthday: formData.meta?.birthday,
+        }
       };
 
-      const result = await updateUserProfile(updatePayload);
+      const success = await updateUser(updatePayload); // Use updateUser from context
       
-      if (result.success) {
+      if (success) {
         showSuccess('Thông tin đã được cập nhật thành công!');
         setSuccess('Profile updated successfully!');
         setIsEditing(false);
-        loadProfile(); // Reload to get latest data and sync with form
+        await refreshUser(); // Refresh user data in context after update
       } else {
-        showError(result.message || 'Đã xảy ra lỗi khi cập nhật thông tin.');
-        setError(result.message || 'Failed to update profile');
+        showError('Đã xảy ra lỗi khi cập nhật thông tin.');
+        setError('Failed to update profile');
       }
     } catch (error: any) {
       console.error('Profile update error:', error);
@@ -161,7 +177,7 @@ const ProfileInfo: React.FC = () => {
             <CardTitle className="text-3xl font-bold text-gray-800">
               {displayName}
             </CardTitle>
-            <p className="text-gray-600 mt-1">{formData.bio || 'Thông tin cá nhân của bạn'}</p>
+            <p className="text-gray-600 mt-1">{formData.description || 'Thông tin cá nhân của bạn'}</p>
           </CardHeader>
           <CardContent className="p-6 space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -194,11 +210,11 @@ const ProfileInfo: React.FC = () => {
               </div>
 
               <div>
-                <Label htmlFor="bio">Mô tả bản thân:</Label>
+                <Label htmlFor="description">Mô tả bản thân:</Label>
                 {isEditing ? (
-                  <Textarea id="bio" name="bio" value={formData.bio} onChange={handleChange} className="mt-1" disabled={saving} />
+                  <Textarea id="description" name="description" value={formData.description} onChange={handleChange} className="mt-1" disabled={saving} />
                 ) : (
-                  <p className="text-gray-800 text-lg whitespace-pre-wrap">{formData.bio || 'Chưa có'}</p>
+                  <p className="text-gray-800 text-lg whitespace-pre-wrap">{formData.description || 'Chưa có'}</p>
                 )}
               </div>
               <hr className="my-4" />
@@ -213,17 +229,17 @@ const ProfileInfo: React.FC = () => {
               <div>
                 <Label htmlFor="phone">Điện thoại:</Label>
                 {isEditing ? (
-                  <Input id="phone" name="phone" type="tel" value={formData.phone} onChange={handleChange} className="mt-1" disabled={saving} />
+                  <Input id="phone" name="phone" type="tel" value={formData.meta?.phone} onChange={handleChange} className="mt-1" disabled={saving} />
                 ) : (
-                  <p className="text-gray-800 text-lg">{formData.phone || 'Chưa có'}</p>
+                  <p className="text-gray-800 text-lg">{formData.meta?.phone || 'Chưa có'}</p>
                 )}
               </div>
               <div>
                 <Label htmlFor="birthday">Ngày sinh:</Label>
                 {isEditing ? (
-                  <Input id="birthday" name="birthday" type="date" value={formData.birthday} onChange={handleChange} className="mt-1" disabled={saving} />
+                  <Input id="birthday" name="birthday" type="date" value={formData.meta?.birthday} onChange={handleChange} className="mt-1" disabled={saving} />
                 ) : (
-                  <p className="text-gray-800 text-lg">{formData.birthday || 'Chưa có'}</p>
+                  <p className="text-gray-800 text-lg">{formData.meta?.birthday || 'Chưa có'}</p>
                 )}
               </div>
 

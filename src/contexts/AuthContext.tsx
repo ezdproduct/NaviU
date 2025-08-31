@@ -1,120 +1,110 @@
-import React, { createContext, useState, useContext, ReactNode, useEffect, useCallback } from 'react';
-import { getToken, saveToken, clearToken, getUser } from '@/lib/auth/storage';
-import { login as apiLogin, getCurrentUserInfo } from '@/lib/auth/api'; // Removed WordPressUser and LoginCredentials import
-import { User, LoginCredentials } from '@/types'; // Import User and LoginCredentials from shared types
+import React, { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
+import { User } from '@/types/auth'; // Import User type
+import { getStoredUser, clearAuthData, loginUser, getUserProfile, updateUserProfile } from '@/lib/auth/api'; // Import new API functions
 
 interface AuthContextType {
-  isAuthenticated: boolean;
   user: User | null;
-  login: (credentials: LoginCredentials) => Promise<string>;
+  loading: boolean;
+  isAuthenticated: boolean; // Add isAuthenticated
+  login: (username: string, password: string) => Promise<boolean>; // Update signature
   logout: () => void;
-  updateUserInfo: (newUser: User) => void;
+  updateUser: (userData: Partial<User>) => Promise<boolean>; // Update signature
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const isAuthenticated = user !== null; // Derive isAuthenticated from user state
 
-  const fetchUser = useCallback(async () => {
-    const token = getToken();
-    const storedUser = getUser();
-    if (token && storedUser) {
-      try {
-        const userInfo = await getCurrentUserInfo();
-        setUser({ 
-          id: userInfo.ID || storedUser.ID,
-          username: userInfo.user_login || storedUser.user_login, 
-          email: userInfo.user_email || storedUser.user_email,
-          first_name: userInfo.first_name,
-          last_name: userInfo.last_name,
-          description: userInfo.description,
-          nickname: userInfo.user_nicename || storedUser.user_nicename,
-          user_login: userInfo.user_login || storedUser.user_login,
-          user_nicename: userInfo.user_nicename || storedUser.user_nicename,
-          user_display_name: userInfo.user_display_name || storedUser.user_display_name,
-        });
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error("Failed to fetch user on load, clearing token.", error);
-        clearToken();
-        setIsAuthenticated(false);
+  const refreshUser = useCallback(async () => {
+    try {
+      const freshUser = await getUserProfile();
+      if (freshUser) {
+        setUser(freshUser);
+      } else {
+        // If profile cannot be fetched, clear auth data
+        clearAuthData();
         setUser(null);
       }
-    } else {
-      setIsAuthenticated(false);
+    } catch (error) {
+      console.error('Error refreshing user:', error);
+      clearAuthData();
       setUser(null);
     }
   }, []);
 
   useEffect(() => {
-    fetchUser();
-  }, [fetchUser]);
-
-  const login = async (credentials: LoginCredentials): Promise<string> => {
-    try {
-      const result = await apiLogin(credentials);
-      if (result.success && result.data) {
-        const { user: loggedInUser } = result.data;
-        setUser({
-          id: loggedInUser.ID,
-          username: loggedInUser.user_login,
-          email: loggedInUser.user_email,
-          first_name: loggedInUser.first_name,
-          last_name: loggedInUser.last_name,
-          description: loggedInUser.description,
-          nickname: loggedInUser.user_nicename,
-          user_login: loggedInUser.user_login,
-          user_nicename: loggedInUser.user_nicename,
-          user_display_name: loggedInUser.user_display_name,
-        });
-        setIsAuthenticated(true);
-        return loggedInUser.user_nicename;
-      } else {
-        throw new Error(result.message || 'Login failed.');
+    const initializeAuth = async () => {
+      const storedUser = getStoredUser();
+      if (storedUser) {
+        setUser(storedUser);
+        // Attempt to refresh user data from server for the latest info
+        await refreshUser();
       }
+      setLoading(false);
+    };
+
+    initializeAuth();
+  }, [refreshUser]);
+
+  const login = async (username: string, password: string): Promise<boolean> => {
+    try {
+      const loggedInUser = await loginUser(username, password);
+      if (loggedInUser) {
+        setUser(loggedInUser);
+        return true;
+      }
+      return false;
     } catch (error) {
       console.error('Login failed:', error);
-      clearToken();
-      setIsAuthenticated(false);
+      clearAuthData(); // Clear data on login failure
       setUser(null);
-      throw error;
+      return false;
     }
   };
 
   const logout = () => {
-    clearToken();
-    setIsAuthenticated(false);
+    clearAuthData();
     setUser(null);
   };
 
-  const updateUserInfo = (newUser: User) => {
-    setUser(newUser);
-    const token = getToken();
-    if (token && newUser) {
-        saveToken(token, {
-          ID: newUser.id,
-          user_login: newUser.username,
-          user_email: newUser.email,
-          user_nicename: newUser.nickname || newUser.username,
-          user_display_name: newUser.first_name && newUser.last_name ? `${newUser.first_name} ${newUser.last_name}` : newUser.username,
-          first_name: newUser.first_name,
-          last_name: newUser.last_name,
-          description: newUser.description,
-          nickname: newUser.nickname,
-        });
+  const updateUser = async (userData: Partial<User>): Promise<boolean> => {
+    try {
+      if (!user) {
+        console.error("Cannot update user: No user logged in.");
+        return false;
+      }
+      const updatedUser = await updateUserProfile(userData);
+      if (updatedUser) {
+        setUser(updatedUser);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Update user failed:', error);
+      return false;
     }
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, updateUserInfo }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      loading, 
+      isAuthenticated, // Provide isAuthenticated
+      login, 
+      logout, 
+      updateUser, 
+      refreshUser 
+    }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => {
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
