@@ -229,70 +229,24 @@ export async function updateUser(
 // --- New Profile API Functions ---
 export async function getUserProfile(): Promise<ApiResponse<UserProfileData>> {
   try {
-    const API_BASE_URL = WP_BASE_URL; // Use the already defined WP_BASE_URL
-
-    // Try custom endpoint first
-    let response = await authenticatedFetch(`${API_BASE_URL}/wp-json/users/v1/profile`);
-    
-    // If custom endpoint not found (or returns an error indicating it's not there), use WordPress built-in
-    if (!response.ok && response.status === 404) { // Check for 404 specifically
-      console.log('⚠️ Custom profile endpoint not found, using WordPress built-in /wp/v2/users/me');
-      response = await authenticatedFetch(`${API_BASE_URL}/wp-json/wp/v2/users/me`);
-      
-      if (!response.ok) {
-        const errorData = await safeJsonParse(response); // Try to parse error response
-        throw new Error(errorData.message || `HTTP ${response.status}: Failed to fetch user from built-in endpoint.`);
-      }
-      
-      const wpUser = await safeJsonParse(response); // Use safeJsonParse for consistency
-      
-      // Transform WordPress user format to our UserProfileData format
-      return {
-        success: true,
-        data: {
-          id: wpUser.id,
-          username: wpUser.slug || wpUser.username, // Use slug or username (user_login)
-          email: wpUser.email,
-          display_name: wpUser.name, // 'name' is display_name in WP REST API
-          first_name: wpUser.first_name || '',
-          last_name: wpUser.last_name || '',
-          description: wpUser.description || '',
-          avatar: wpUser.avatar_urls?.[96] || '', // Get 96x96 avatar URL
-          meta: {
-            phone: '', // Default empty, as standard WP /users/me doesn't provide this directly
-            birthday: '', // Default empty
-          }
-        }
-      };
-    } else if (!response.ok) {
-        // Handle other errors from the custom endpoint
-        const errorData = await safeJsonParse(response);
-        return { success: false, message: errorData.message || 'Failed to fetch user profile from custom endpoint.' };
-    }
-    
-    // If custom endpoint was successful
+    const response = await authenticatedFetch(`${WP_BASE_URL}/wp-json/users/v1/profile`);
     const data = await safeJsonParse(response);
     
-    // The custom endpoint is expected to return { success: true, data: UserProfileData }
-    // So we directly return data.data
-    return {
-      success: true,
-      data: data.data // Assuming data.data is already UserProfileData
-    };
+    if (!response.ok) {
+      return { success: false, message: data.message || 'Failed to fetch user profile.' };
+    }
     
+    return { success: true, data: data.data };
   } catch (error) {
     console.error('Error fetching user profile:', error);
-    return {
-      success: false,
-      message: error instanceof Error ? error.message : 'An unknown error occurred while fetching user profile.'
-    };
+    return { success: false, message: error instanceof Error ? error.message : 'An unknown error occurred.' };
   }
 }
 
 export async function updateUserProfile(profileData: UpdateProfilePayload): Promise<ApiResponse<any>> {
   try {
     const response = await authenticatedFetch(`${WP_BASE_URL}/wp-json/users/v1/profile`, {
-      method: 'PUT',
+      method: 'POST', // Đã thay đổi từ 'PUT' thành 'POST'
       body: JSON.stringify(profileData),
     });
     const data = await safeJsonParse(response);
