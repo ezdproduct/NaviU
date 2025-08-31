@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input'; // Vẫn giữ Input cho username
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import PasswordInput from '@/components/PasswordInput'; // Import PasswordInput mới
+import PasswordInput from '@/components/PasswordInput';
+import { LoginCredentials } from '@/types'; // Import LoginCredentials from shared types
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -22,10 +23,10 @@ const Login = () => {
     setError(null);
     setIsLoading(true);
     try {
-      const loggedInUsername = await login({ username, password }); // Truyền đối tượng credentials
-      // Chuyển hướng đến trang profile và truyền state để mở tab 'do-test' và hiển thị modal
+      const credentials: LoginCredentials = { username, password }; // Use LoginCredentials type
+      const loggedInUsername = await login(credentials);
       navigate('/profile', { state: { initialView: 'do-test', showWelcome: true, username: loggedInUsername } });
-    } catch (err: any) { // Thêm type any cho err
+    } catch (err: any) {
       setError(err.message || 'Tên đăng nhập hoặc mật khẩu không đúng.');
     } finally {
       setIsLoading(false);
@@ -58,7 +59,7 @@ const Login = () => {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Mật khẩu</Label>
-              <PasswordInput // Sử dụng PasswordInput mới
+              <PasswordInput
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

@@ -1,24 +1,12 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect, useCallback } from 'react';
-import { getToken, saveToken, clearToken, getUser } from '@/lib/auth/storage'; // Import thêm getUser
-import { login as apiLogin, getCurrentUserInfo, WordPressUser, LoginCredentials } from '@/lib/auth/api'; // Import WordPressUser và LoginCredentials
-
-interface User { // Cập nhật giao diện User để khớp với WordPressUser và các trường bổ sung
-  id: number;
-  username: string;
-  email: string;
-  first_name?: string; // Make optional
-  last_name?: string; // Make optional
-  description?: string; // Make optional
-  nickname?: string; // Make optional
-  user_login: string;
-  user_nicename: string;
-  user_display_name: string;
-}
+import { getToken, saveToken, clearToken, getUser } from '@/lib/auth/storage';
+import { login as apiLogin, getCurrentUserInfo } from '@/lib/auth/api'; // Removed WordPressUser and LoginCredentials import
+import { User, LoginCredentials } from '@/types'; // Import User and LoginCredentials from shared types
 
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  login: (credentials: LoginCredentials) => Promise<string>; // Cập nhật kiểu tham số
+  login: (credentials: LoginCredentials) => Promise<string>;
   logout: () => void;
   updateUserInfo: (newUser: User) => void;
 }
@@ -31,19 +19,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchUser = useCallback(async () => {
     const token = getToken();
-    const storedUser = getUser(); // Lấy user từ storage
+    const storedUser = getUser();
     if (token && storedUser) {
       try {
-        // Gọi API để lấy thông tin user mới nhất, hoặc sử dụng storedUser nếu không cần cập nhật ngay
-        const userInfo = await getCurrentUserInfo(); // Hàm này sẽ trả về thông tin user đầy đủ
+        const userInfo = await getCurrentUserInfo();
         setUser({ 
-          id: userInfo.id || storedUser.ID, // Ưu tiên ID từ API, fallback về storedUser
-          username: userInfo.username || storedUser.user_login, 
-          email: userInfo.email || storedUser.user_email,
+          id: userInfo.ID || storedUser.ID,
+          username: userInfo.user_login || storedUser.user_login, 
+          email: userInfo.user_email || storedUser.user_email,
           first_name: userInfo.first_name,
           last_name: userInfo.last_name,
           description: userInfo.description,
-          nickname: userInfo.nickname || storedUser.user_nicename, // Ưu tiên nickname từ API
+          nickname: userInfo.user_nicename || storedUser.user_nicename,
           user_login: userInfo.user_login || storedUser.user_login,
           user_nicename: userInfo.user_nicename || storedUser.user_nicename,
           user_display_name: userInfo.user_display_name || storedUser.user_display_name,
@@ -65,12 +52,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     fetchUser();
   }, [fetchUser]);
 
-  const login = async (credentials: LoginCredentials): Promise<string> => { // Cập nhật kiểu tham số
+  const login = async (credentials: LoginCredentials): Promise<string> => {
     try {
-      const result = await apiLogin(credentials); // Gọi hàm login mới
+      const result = await apiLogin(credentials);
       if (result.success && result.data) {
-        const { token, user: loggedInUser } = result.data;
-        // Cập nhật user trong context
+        const { user: loggedInUser } = result.data;
         setUser({
           id: loggedInUser.ID,
           username: loggedInUser.user_login,
@@ -84,7 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           user_display_name: loggedInUser.user_display_name,
         });
         setIsAuthenticated(true);
-        return loggedInUser.user_nicename; // Trả về user_nicename
+        return loggedInUser.user_nicename;
       } else {
         throw new Error(result.message || 'Login failed.');
       }
@@ -107,7 +93,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(newUser);
     const token = getToken();
     if (token && newUser) {
-        // Cập nhật thông tin user trong localStorage
         saveToken(token, {
           ID: newUser.id,
           user_login: newUser.username,

@@ -1,57 +1,7 @@
 import { getToken, saveToken, clearToken, getUser } from "./storage";
+import { User, LoginCredentials, ApiResponse, UserProfileData, UpdateProfilePayload } from '@/types'; // Import from shared types
 
 export const WP_BASE_URL = "https://naviu-backend.ezd.vn";
-
-// --- New Types ---
-interface LoginCredentials {
-  username: string;
-  password: string;
-}
-
-interface WordPressUser {
-  ID: number;
-  user_login: string;
-  user_email: string;
-  user_nicename: string;
-  user_display_name: string;
-  first_name?: string;
-  last_name?: string;
-  description?: string;
-  nickname?: string;
-}
-
-interface ApiResponse<T> {
-  success: boolean;
-  message?: string;
-  data?: T;
-}
-
-// Profile specific types
-interface UserProfileData {
-  id: number;
-  username: string;
-  email: string;
-  display_name: string;
-  first_name: string;
-  last_name: string;
-  description: string;
-  avatar: string;
-  meta: {
-    phone: string;
-    birthday: string;
-  };
-}
-
-interface UpdateProfilePayload {
-  display_name?: string;
-  first_name?: string;
-  last_name?: string;
-  email?: string;
-  description?: string;
-  phone?: string;
-  birthday?: string;
-}
-
 
 // Safe JSON parser
 export async function safeJsonParse(response: Response): Promise<any> {
@@ -129,7 +79,7 @@ export async function authenticatedFetch(url: string, options: RequestInit = {})
 }
 
 // --- Updated Login Function ---
-export async function login(credentials: LoginCredentials): Promise<ApiResponse<{user: WordPressUser, token: string}>> {
+export async function login(credentials: LoginCredentials): Promise<ApiResponse<{user: User, token: string}>> {
   try {
     const API_BASE_URL = WP_BASE_URL;
     console.log('🔗 Login API URL:', `${API_BASE_URL}/wp-json/jwt-auth/v1/token`);
@@ -182,12 +132,15 @@ export async function login(credentials: LoginCredentials): Promise<ApiResponse<
       };
     }
     
-    const user: WordPressUser = {
+    const user: User = { // Changed to User
       ID: user_id || 0,
       user_login: user_nicename,
       user_email: user_email,
       user_nicename: user_nicename,
-      user_display_name: user_display_name
+      user_display_name: user_display_name,
+      id: user_id || 0, // Add id field
+      username: user_nicename, // Add username field
+      email: user_email, // Add email field
     };
 
     saveToken(token, user);
@@ -224,7 +177,7 @@ export async function register(username: string, email: string, password: string
 /**
  * Fetches the current logged-in user's information.
  */
-export async function getCurrentUserInfo(): Promise<WordPressUser> { // Changed return type
+export async function getCurrentUserInfo(): Promise<User> { // Changed return type to User
   const token = getToken();
   const storedUser = getUser();
   if (!token || !storedUser) {
@@ -284,7 +237,7 @@ export async function getUserProfile(): Promise<ApiResponse<UserProfileData>> {
       return { success: false, message: data.message || 'Failed to fetch user profile.' };
     }
     
-    return { success: true, data: data.data }; // Assuming the PHP returns { success: true, data: { ... } }
+    return { success: true, data: data.data };
   } catch (error) {
     console.error('Error fetching user profile:', error);
     return { success: false, message: error instanceof Error ? error.message : 'An unknown error occurred.' };
