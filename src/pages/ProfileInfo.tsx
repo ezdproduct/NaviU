@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { showSuccess, showError, showLoading, dismissToast } from '@/utils/toast';
-import { updateUser } from '@/lib/auth/api';
+import UsersAPI from '@/api/users'; // Import mới
 
 const ProfileInfo = () => {
   const { user, logout, updateUserInfo } = useAuth();
@@ -22,21 +22,20 @@ const ProfileInfo = () => {
     first_name: '',
     last_name: '',
     description: '',
-    nickname: '', // Thêm nickname vào state
+    nickname: '',
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Effect to populate form data when user object is available or changes
   useEffect(() => {
     if (user) {
       setFormData({
         username: user.username,
         email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        description: user.description,
-        nickname: user.nickname, // Lấy nickname từ user
+        first_name: user.first_name || '',
+        last_name: user.last_name || '',
+        description: user.description || '',
+        nickname: user.nickname || '',
       });
     }
   }, [user]);
@@ -58,15 +57,14 @@ const ProfileInfo = () => {
   const handleCancelClick = () => {
     setIsEditing(false);
     setError(null);
-    // Reset form data from the original user state
     if (user) {
       setFormData({
         username: user.username,
         email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        description: user.description,
-        nickname: user.nickname,
+        first_name: user.first_name || '',
+        last_name: user.last_name || '',
+        description: user.description || '',
+        nickname: user.nickname || '',
       });
     }
   };
@@ -91,16 +89,19 @@ const ProfileInfo = () => {
         first_name: formData.first_name,
         last_name: formData.last_name,
         description: formData.description,
-        nickname: formData.nickname, // Thêm nickname vào payload
+        nickname: formData.nickname,
       };
 
-      const response = await updateUser(user.id, updatePayload);
+      const result = await UsersAPI.updateProfile(user.id, updatePayload);
 
-      updateUserInfo(response); // Cập nhật thông tin người dùng trong AuthContext
-
-      showSuccess('Thông tin đã được cập nhật thành công!');
-      setIsEditing(false);
-    } catch (err) {
+      if (result.success) {
+        updateUserInfo(result.data); // Cập nhật thông tin người dùng trong AuthContext
+        showSuccess('Thông tin đã được cập nhật thành công!');
+        setIsEditing(false);
+      } else {
+        throw new Error(result.message || 'Cập nhật thông tin thất bại.');
+      }
+    } catch (err: any) {
       const errorMessage = err instanceof Error ? err.message : 'Đã xảy ra lỗi khi cập nhật thông tin.';
       showError(errorMessage);
       setError(errorMessage);
@@ -145,7 +146,7 @@ const ProfileInfo = () => {
                 <div>
                   <Label htmlFor="last_name">Tên:</Label>
                   {isEditing ? (
-                    <Input id="last_name" type="text" value={formData.last_name} onChange={handleInputChange} className="mt-1" disabled={isLoading} />
+                        <Input id="last_name" type="text" value={formData.last_name} onChange={handleInputChange} className="mt-1" disabled={isLoading} />
                   ) : (
                     <p className="text-gray-800 text-lg">{user?.last_name || 'Chưa có'}</p>
                   )}

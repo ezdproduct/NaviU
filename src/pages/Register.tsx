@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input'; // Vẫn giữ Input cho username và email
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Link, useNavigate } from 'react-router-dom';
-import { register } from '../lib/auth/api';
-import PasswordInput from '@/components/PasswordInput'; // Import PasswordInput mới
+import { useAuth } from '../contexts/AuthContext'; // Sử dụng register từ AuthContext
+import PasswordInput from '@/components/PasswordInput';
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -14,22 +14,22 @@ const Register = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { register } = useAuth(); // Lấy register từ useAuth
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
     try {
-      await register(username, email, password);
-      navigate('/login?registered=true');
-    } catch (err) {
-      if (err instanceof Error) {
-        console.error("Registration error:", err.message); // Log the error message
-        setError(err.message);
+      const result = await register(username, email, password);
+      if (result.success) {
+        navigate('/login?registered=true');
       } else {
-        console.error("Unknown registration error:", err); // Log unknown errors
-        setError('Đã xảy ra lỗi không xác định trong quá trình đăng ký.');
+        setError(result.message || 'Đã xảy ra lỗi trong quá trình đăng ký.');
       }
+    } catch (err: any) {
+      console.error("Registration error:", err.message);
+      setError(err.message || 'Đã xảy ra lỗi không xác định trong quá trình đăng ký.');
     } finally {
       setIsLoading(false);
     }
@@ -54,7 +54,7 @@ const Register = () => {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Mật khẩu</Label>
-              <PasswordInput // Sử dụng PasswordInput mới
+              <PasswordInput
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
