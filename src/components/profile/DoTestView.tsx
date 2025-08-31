@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useBlocker } from 'react-router-dom'; // Import useBlocker
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import ConfirmNavigationModal from '@/components/ConfirmNavigationModal';
@@ -131,6 +131,37 @@ const DoTestView = () => {
   const currentOptions = questionsData[currentQuestionIndex]?.options || []; // Sử dụng questionsData
   const isTestFinished = currentQuestionIndex >= questionsData.length; // Sử dụng questionsData
 
+  // Xác định khi nào bài test đang diễn ra
+  const isTestInProgress = (testMode === 'ai' && currentQuestionIndex > 0 && !isTestFinished) ||
+                           (testMode === 'basic' && Object.keys(messages).length > 0 && !isTestFinished); // Giả định BasicTestView cũng có cách để biết nó đang có câu trả lời
+
+  // Sử dụng useBlocker để chặn điều hướng
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      isTestInProgress &&
+      currentLocation.pathname !== nextLocation.pathname
+  );
+
+  useEffect(() => {
+    if (blocker.state === 'blocked') {
+      setShowConfirmModal(true);
+    }
+  }, [blocker.state]);
+
+  const handleConfirmNavigation = () => {
+    setShowConfirmModal(false);
+    if (blocker.state === 'blocked') {
+      blocker.proceed(); // Cho phép điều hướng
+    }
+  };
+
+  const handleCancelNavigation = () => {
+    setShowConfirmModal(false);
+    if (blocker.state === 'blocked') {
+      blocker.reset(); // Hủy điều hướng
+    }
+  };
+
   return (
     <div className="flex flex-col bg-white rounded-2xl shadow-sm min-h-[calc(100vh-6rem)]">
       {/* Header cho các nút chuyển đổi chế độ test */}
@@ -222,8 +253,8 @@ const DoTestView = () => {
 
       <ConfirmNavigationModal
         isOpen={showConfirmModal}
-        onClose={() => setShowConfirmModal(false)}
-        onConfirm={handleConfirmFinishTest}
+        onClose={handleCancelNavigation} // Sử dụng handleCancelNavigation cho onClose
+        onConfirm={handleConfirmNavigation} // Sử dụng handleConfirmNavigation cho onConfirm
       />
     </div>
   );
