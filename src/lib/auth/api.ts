@@ -50,17 +50,17 @@ export async function getCurrentUserInfo() {
 }
 
 /**
- * Updates the current logged-in user's information.
+ * Updates the current logged-in user's information using the standard WordPress REST API.
+ * Does NOT handle password changes in this version.
  */
 export async function updateUser(
+  userId: number, // Thêm userId làm đối số
   userData: {
-    username: string;
-    email: string;
-    first_name: string;
-    last_name: string;
-    description: string;
-    new_password?: string;
-    current_password?: string;
+    username?: string;
+    email?: string;
+    first_name?: string;
+    last_name?: string;
+    description?: string;
   }
 ) {
   const token = getToken();
@@ -68,8 +68,8 @@ export async function updateUser(
     throw new Error("No authentication token found.");
   }
 
-  const res = await fetch(`${WP_BASE_URL}/wp-json/custom/v1/user/me`, {
-    method: "POST",
+  const res = await fetch(`${WP_BASE_URL}/wp-json/wp/v2/users/${userId}`, {
+    method: "PUT", // Thay đổi phương thức thành PUT
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`,

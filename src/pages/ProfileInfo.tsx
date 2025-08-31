@@ -23,8 +23,7 @@ const ProfileInfo = () => {
     last_name: '',
     description: '',
   });
-  const [newPassword, setNewPassword] = useState('');
-  const [currentPassword, setCurrentPassword] = useState('');
+  // Đã loại bỏ newPassword và currentPassword
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -53,8 +52,7 @@ const ProfileInfo = () => {
   const handleEditClick = () => {
     setIsEditing(true);
     setError(null);
-    setNewPassword('');
-    setCurrentPassword('');
+    // Đã loại bỏ reset newPassword và currentPassword
   };
 
   const handleCancelClick = () => {
@@ -70,8 +68,7 @@ const ProfileInfo = () => {
         description: user.description,
       });
     }
-    setNewPassword('');
-    setCurrentPassword('');
+    // Đã loại bỏ reset newPassword và currentPassword
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -81,29 +78,28 @@ const ProfileInfo = () => {
     const loadingToastId = showLoading('Đang cập nhật thông tin...');
 
     try {
+      if (!user?.id) {
+        throw new Error('Không tìm thấy ID người dùng để cập nhật.');
+      }
       if (!formData.username || !formData.email) {
         throw new Error('Tên đăng nhập và Email không được để trống.');
       }
 
-      const isEmailChanged = formData.email.toLowerCase() !== user?.email.toLowerCase();
-      const isPasswordChanged = newPassword !== '';
+      // Chỉ gửi các trường được hỗ trợ bởi endpoint tiêu chuẩn
+      const updatePayload = {
+        username: formData.username,
+        email: formData.email,
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        description: formData.description,
+      };
 
-      if ((isEmailChanged || isPasswordChanged) && !currentPassword) {
-        throw new Error('Vui lòng nhập mật khẩu hiện tại để xác nhận thay đổi.');
-      }
+      const response = await updateUser(user.id, updatePayload);
 
-      const response = await updateUser({
-        ...formData,
-        new_password: newPassword || undefined,
-        current_password: currentPassword || undefined,
-      });
-
-      updateUserInfo(response.user);
+      updateUserInfo(response); // Cập nhật thông tin người dùng trong AuthContext
 
       showSuccess('Thông tin đã được cập nhật thành công!');
       setIsEditing(false);
-      setNewPassword('');
-      setCurrentPassword('');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Đã xảy ra lỗi khi cập nhật thông tin.';
       showError(errorMessage);
@@ -182,18 +178,7 @@ const ProfileInfo = () => {
                 )}
               </div>
 
-              {isEditing && (
-                <>
-                  <div>
-                    <Label htmlFor="new-password">Mật khẩu mới (để trống nếu không đổi):</Label>
-                    <Input id="new-password" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className="mt-1" placeholder="Để trống nếu không đổi mật khẩu" disabled={isLoading} />
-                  </div>
-                  <div>
-                    <Label htmlFor="current-password">Mật khẩu hiện tại (bắt buộc khi đổi email/mật khẩu):</Label>
-                    <Input id="current-password" type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} className="mt-1" placeholder="Nhập mật khẩu hiện tại của bạn" disabled={isLoading} />
-                  </div>
-                </>
-              )}
+              {/* Đã loại bỏ các trường mật khẩu mới và mật khẩu hiện tại */}
 
               {error && <p className="text-sm text-red-500">{error}</p>}
 

@@ -4,6 +4,7 @@ import { getToken, saveToken, clearToken } from '@/lib/auth/storage';
 import { login as apiLogin, getCurrentUserInfo } from '@/lib/auth/api';
 
 interface User {
+  id: number; // Thêm trường id
   username: string;
   email: string;
   first_name: string;
@@ -32,6 +33,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       try {
         const userInfo = await getCurrentUserInfo();
         setUser({ 
+          id: userInfo.id, // Lưu id người dùng
           username: userInfo.username, 
           email: userInfo.email,
           first_name: userInfo.first_name,
