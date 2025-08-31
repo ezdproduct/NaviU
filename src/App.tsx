@@ -10,9 +10,10 @@ import Layout from "./components/Layout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CreateUser from "./pages/CreateUser";
-import ProfileInfo from "./pages/ProfileInfo"; // Import ProfileInfo
+import ProfileInfo from "./pages/ProfileInfo";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ProfileLayout from "./components/profile/ProfileLayout"; // Import ProfileLayout
 
 const queryClient = new QueryClient();
 
@@ -24,26 +25,23 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            {/* Route cho trang chủ với header riêng */}
             <Route path="/" element={<Index />} />
 
-            {/* Các route sử dụng Layout chung với Header cố định */}
             <Route element={<Layout />}>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/create-user" element={<CreateUser />} />
             </Route>
             
-            {/* Route /profile sẽ quản lý bố cục riêng của nó */}
+            {/* Route /profile sẽ sử dụng ProfileLayout và hiển thị các chế độ xem con */}
             <Route 
-              path="/profile" 
+              path="/profile/*" // Sử dụng wildcard để ProfileLayout có thể quản lý các route con
               element={
                 <ProtectedRoute>
                   <Profile />
                 </ProtectedRoute>
               } 
             />
-            {/* Route cho trang Profile Info */}
             <Route 
               path="/profile-info" 
               element={
