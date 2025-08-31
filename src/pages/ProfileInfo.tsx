@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -8,21 +8,26 @@ import { ArrowLeft, Edit, Save, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { showSuccess, showError, showLoading, dismissToast } from '@/utils/toast';
-import { updateUser } from '@/lib/auth/api'; // Import the placeholder API function
-import { saveToken } from '@/lib/auth/storage'; // Import saveToken to update username in local storage
+import { updateUser } from '@/lib/auth/api';
 
 const ProfileInfo = () => {
-  const { user, logout, login } = useAuth(); // Also get login to re-authenticate if username changes
+  const { user, logout, updateUserInfo } = useAuth();
   const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editableUsername, setEditableUsername] = useState(user?.username || '');
-  // For email, we'll use a placeholder or derive from username if not available in context
-  const [editableEmail, setEditableEmail] = useState(user?.username ? `${user.username.toLowerCase()}@example.com` : '');
+  const [editableUsername, setEditableUsername] = useState('');
+  const [editableEmail, setEditableEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user) {
+      setEditableUsername(user.username);
+      setEditableEmail(user.email);
+    }
+  }, [user]);
 
   const handleBackToProfile = () => {
     navigate('/profile');
@@ -31,7 +36,6 @@ const ProfileInfo = () => {
   const handleEditClick = () => {
     setIsEditing(true);
     setError(null);
-    // Reset password fields when entering edit mode
     setNewPassword('');
     setCurrentPassword('');
   };
@@ -39,9 +43,10 @@ const ProfileInfo = () => {
   const handleCancelClick = () => {
     setIsEditing(false);
     setError(null);
-    // Revert changes
-    setEditableUsername(user?.username || '');
-    setEditableEmail(user?.username ? `${user.username.toLowerCase()}@example.com` : '');
+    if (user) {
+      setEditableUsername(user.username);
+      setEditableEmail(user.email);
+    }
     setNewPassword('');
     setCurrentPassword('');
   };
@@ -57,43 +62,27 @@ const ProfileInfo = () => {
         throw new Error('Tên đăng nhập và Email không được để trống.');
       }
 
-      // Check if current password is required for email/password change
-      const isEmailChanged = editableEmail !== (user?.username ? `${user.username.toLowerCase()}@example.com` : '');
+      const isEmailChanged = editableEmail.toLowerCase() !== user?.email.toLowerCase();
       const isPasswordChanged = newPassword !== '';
 
       if ((isEmailChanged || isPasswordChanged) && !currentPassword) {
-        throw new Error('Vui lòng nhập mật khẩu hiện tại để xác nhận thay đổi email hoặc mật khẩu.');
+        throw new Error('Vui lòng nhập mật khẩu hiện tại để xác nhận thay đổi.');
       }
 
-      // Call the placeholder updateUser API
       await updateUser(
-        user?.username || '', // current username
         editableUsername,
         editableEmail,
-        newPassword,
-        currentPassword,
-        // In a real app, you'd pass the actual JWT token here: getToken()
+        newPassword || undefined,
+        currentPassword || undefined
       );
 
-      // If username changed, we need to re-save the token with the new username
-      // This is a simplification; a real backend would return a new token or confirm the change.
-      if (user?.username !== editableUsername) {
-        // This is a tricky part: if username changes, the old token might become invalid
-        // or the user context needs to be fully refreshed.
-        // For this example, we'll simulate updating the stored username.
-        // In a real app, you might need to re-login or get a new token.
-        const currentToken = localStorage.getItem('wp_jwt'); // Get existing token
-        if (currentToken) {
-          saveToken(currentToken, editableUsername); // Update username in local storage
-          // Force a re-render of AuthContext to pick up new username
-          // This is a workaround; ideally, AuthContext would have an `updateUser` method
-          // that also updates its internal state.
-          window.location.reload(); // Simplest way to refresh AuthContext for now
-        }
-      }
+      // Update user info in the context
+      updateUserInfo({ username: editableUsername, email: editableEmail });
 
       showSuccess('Thông tin đã được cập nhật thành công!');
       setIsEditing(false);
+      setNewPassword('');
+      setCurrentPassword('');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Đã xảy ra lỗi khi cập nhật thông tin.';
       showError(errorMessage);
@@ -154,9 +143,7 @@ const ProfileInfo = () => {
                     disabled={isLoading}
                   />
                 ) : (
-                  <p className="text-gray-800 text-lg">
-                    {user?.username ? `${user.username.toLowerCase()}@example.com` : 'Không có'}
-                  </p>
+                  <p className="text-gray-800 text-lg">{user?.email || 'Không có'}</p>
                 )}
               </div>
 
@@ -182,7 +169,7 @@ const ProfileInfo = () => {
                       value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)}
                       className="mt-1"
-                      required={isEmailChanged || isPasswordChanged} // Dynamically require current password
+                      placeholder="Nhập mật khẩu hiện tại của bạn"
                       disabled={isLoading}
                     />
                   </div>
