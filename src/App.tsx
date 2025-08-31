@@ -3,7 +3,6 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
-  // Removed BrowserRouter, Routes
   RouteObject, // Import RouteObject type
 } from "react-router-dom";
 import NotFound from "./pages/NotFound";
@@ -13,7 +12,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CreateUser from "./pages/CreateUser";
 import ProfileInfo from "./pages/ProfileInfo";
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { useAuth } from "./contexts/AuthContext"; // Keep useAuth for DashboardViewWrapper
 import ProtectedRoute from "./components/ProtectedRoute";
 import ProfileLayout from "./components/profile/ProfileLayout";
 
@@ -76,17 +75,15 @@ export const routes: RouteObject[] = [
   },
 ];
 
-// App component now provides contexts
+// App component now provides other contexts
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <AuthProvider>
-        {/* The RouterProvider will render the actual routes in main.tsx */}
-        {/* This component now just provides the contexts */}
-        {/* The Outlet will be rendered by the RouterProvider */}
-      </AuthProvider>
+      {/* AuthProvider is now in main.tsx */}
+      {/* The RouterProvider will render the actual routes in main.tsx */}
+      {/* This component now just provides the contexts */}
     </TooltipProvider>
   </QueryClientProvider>
 );
