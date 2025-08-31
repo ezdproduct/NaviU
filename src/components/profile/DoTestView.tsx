@@ -8,46 +8,12 @@ import ConfirmNavigationModal from '@/components/ConfirmNavigationModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { showSuccess, showError, showLoading, dismissToast } from '@/utils/toast';
 import BasicTestView from './BasicTestView'; // Import BasicTestView
+import { questionsData, Question } from '@/data/questionsData'; // Import questionsData và Question type
 
 type Message = {
   sender: 'ai' | 'user';
   text: string;
 };
-
-type Question = {
-  text: string;
-  options: string[];
-};
-
-const questions: Question[] = [
-  {
-    text: 'Chào bạn, chúng ta hãy bắt đầu nhé! Khi đối mặt với một vấn đề phức tạp, bạn thường làm gì đầu tiên?',
-    options: [
-      'Phân tích vấn đề một cách logic.',
-      'Tìm kiếm cảm hứng từ những ý tưởng mới.',
-      'Xem xét vấn đề ảnh hưởng đến mọi người.',
-      'Bắt tay vào hành động ngay lập tức.',
-    ],
-  },
-  {
-    text: 'Thật thú vị! Khi làm việc nhóm, bạn thích vai trò nào hơn?',
-    options: [
-      'Người lên kế hoạch và tổ chức.',
-      'Người đưa ra ý tưởng sáng tạo.',
-      'Người kết nối và tạo sự hòa hợp.',
-      'Người thực thi và giải quyết vấn đề.',
-    ],
-  },
-  {
-    text: 'Cảm ơn bạn. Cuối cùng, điều gì mang lại cho bạn nhiều năng lượng nhất?',
-    options: [
-      'Hoàn thành một công việc một cách hoàn hảo.',
-      'Khám phá một khả năng mới.',
-      'Giúp đỡ hoặc truyền cảm hứng cho người khác.',
-      'Trải nghiệm một điều gì đó mới mẻ.',
-    ],
-  },
-];
 
 const DoTestView = () => {
   const navigate = useNavigate();
@@ -72,7 +38,7 @@ const DoTestView = () => {
     if (testMode === 'ai' && messages.length === 0) {
       setIsAiTyping(true);
       setTimeout(() => {
-        setMessages([{ sender: 'ai', text: questions[0].text }]);
+        setMessages([{ sender: 'ai', text: questionsData[0].text }]); // Sử dụng questionsData
         setIsAiTyping(false);
       }, 1000);
     } else if (testMode === 'basic') {
@@ -87,11 +53,11 @@ const DoTestView = () => {
     setMessages((prev) => [...prev, { sender: 'user', text: answer }]);
     const nextQuestionIndex = currentQuestionIndex + 1;
 
-    if (nextQuestionIndex < questions.length) {
+    if (nextQuestionIndex < questionsData.length) { // Sử dụng questionsData
       setCurrentQuestionIndex(nextQuestionIndex);
       setIsAiTyping(true);
       setTimeout(() => {
-        setMessages((prev) => [...prev, { sender: 'ai', text: questions[nextQuestionIndex].text }]);
+        setMessages((prev) => [...prev, { sender: 'ai', text: questionsData[nextQuestionIndex].text }]); // Sử dụng questionsData
         setIsAiTyping(false);
       }, 1500);
     } else {
@@ -103,8 +69,13 @@ const DoTestView = () => {
     }
   };
 
-  const handleFinishTest = () => {
+  const handleFinishTest = async (answers?: { [key: string]: string }) => {
     setShowConfirmModal(true);
+    // Lưu trữ câu trả lời tạm thời nếu có để gửi sau khi xác nhận
+    if (answers) {
+      // Logic để xử lý answers từ BasicTestView nếu cần
+      // Hiện tại, chúng ta sẽ gửi dữ liệu từ AI chat hoặc một payload đơn giản
+    }
   };
 
   const handleConfirmFinishTest = async () => {
@@ -113,18 +84,25 @@ const DoTestView = () => {
     const loadingToastId = showLoading('Đang gửi kết quả bài test...');
 
     try {
-      const userAnswers = messages
-        .filter(msg => msg.sender === 'user')
-        .map(msg => msg.text);
-
-      const submissionData: { [key: string]: string } = {
+      let submissionData: { [key: string]: string } = {
         username: user?.username || 'Guest',
         timestamp: new Date().toISOString(),
       };
 
-      questions.forEach((q, index) => {
-          submissionData[`Question ${index + 1}`] = userAnswers[index] || '';
-      });
+      if (testMode === 'ai') {
+        const userAnswers = messages
+          .filter(msg => msg.sender === 'user')
+          .map(msg => msg.text);
+
+        questionsData.forEach((q, index) => { // Sử dụng questionsData
+            submissionData[`Question ${index + 1}`] = userAnswers[index] || '';
+        });
+      } else {
+        // Logic để lấy câu trả lời từ BasicTestView nếu cần
+        // Hiện tại, chỉ gửi một thông báo đơn giản cho BasicTestView
+        submissionData['Test Type'] = 'Basic Test';
+        submissionData['Status'] = 'Completed';
+      }
 
       const response = await fetch('https://script.google.com/macros/s/AKfycbzDnYuQtbgUeqqz_XfAQ2MhEP7xi3-W1eHAMcRgDqPbD18YATPnTLVJQ4tBx4mOhW3Y/exec', {
         method: 'POST',
@@ -150,8 +128,8 @@ const DoTestView = () => {
     }
   };
 
-  const currentOptions = questions[currentQuestionIndex]?.options || [];
-  const isTestFinished = currentQuestionIndex >= questions.length;
+  const currentOptions = questionsData[currentQuestionIndex]?.options || []; // Sử dụng questionsData
+  const isTestFinished = currentQuestionIndex >= questionsData.length; // Sử dụng questionsData
 
   return (
     <div className="flex flex-col bg-white rounded-2xl shadow-sm min-h-[calc(100vh-6rem)]">
