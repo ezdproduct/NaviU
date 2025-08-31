@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
 import { User } from '@/types/auth'; // Import User type
-import { getStoredUser, clearAuthData, loginUser, getUserProfile, updateUserProfile } from '@/lib/auth/api'; // Import new API functions
+import { getStoredUser, storeUser, getAuthToken, setAuthToken, clearAuthData } from '@/lib/auth/storage'; // Import clearAuthData từ storage
+import { loginUser, getUserProfile, updateUserProfile } from '@/lib/auth/api'; // Chỉ import các hàm API từ api.ts
 
 interface AuthContextType {
   user: User | null;
