@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Giữ import ở đây
 import { getToken, saveToken, clearToken } from '@/lib/auth/storage';
 import { login as apiLogin, getCurrentUserInfo } from '@/lib/auth/api';
 
@@ -26,7 +26,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Di chuyển useNaviage vào bên trong component AuthProvider
 
   const fetchUser = useCallback(async () => {
     const token = getToken();
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     clearToken();
     setIsAuthenticated(false);
     setUser(null);
-    navigate('/login');
+    navigate('/login'); // Gọi navigate ở đây là an toàn vì nó nằm trong một hàm callback
   };
 
   const updateUserInfo = (newUser: User) => {
