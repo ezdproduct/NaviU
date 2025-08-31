@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   RouteObject,
+  Outlet // Import Outlet để App có thể render các route con
 } from "react-router-dom";
 import NotFound from "./pages/NotFound";
 import Index from "./pages/Index";
@@ -12,7 +13,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CreateUser from "./pages/CreateUser";
 import ProfileInfo from "./pages/ProfileInfo";
-import { useAuth } from "./contexts/AuthContext";
+import { AuthProvider, useAuth } from "./contexts/AuthContext"; // Import AuthProvider
 import ProtectedRoute from "./components/ProtectedRoute";
 import ProfileLayout from "./components/profile/ProfileLayout";
 
@@ -36,7 +37,7 @@ export const routes: RouteObject[] = [
     element: <Index />,
   },
   {
-    element: <Layout />,
+    element: <Layout />, // Layout chung cho các trang không phải profile
     children: [
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
@@ -47,7 +48,7 @@ export const routes: RouteObject[] = [
     path: "/profile",
     element: (
       <ProtectedRoute>
-        <ProfileLayout />
+        <ProfileLayout /> {/* ProfileLayout là layout cho các trang profile */}
       </ProtectedRoute>
     ),
     children: [
@@ -73,14 +74,16 @@ export const routes: RouteObject[] = [
   },
 ];
 
+// App component bao bọc các context và render Outlet
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      {/* AuthProvider is now in main.tsx, wrapping App */}
-      {/* App's children will be rendered by the RouterProvider */}
-      {/* This component now just provides the contexts */}
+      <AuthProvider> {/* AuthProvider được đặt ở đây, bên trong RouterProvider */}
+        {/* Outlet sẽ render các route được định nghĩa trong RouterProvider */}
+        <Outlet /> 
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
