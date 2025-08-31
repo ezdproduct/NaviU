@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Edit, Save, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea'; // Import Textarea
+import { Textarea } from '@/components/ui/textarea';
 import { showSuccess, showError, showLoading, dismissToast } from '@/utils/toast';
 import { updateUser } from '@/lib/auth/api';
 
@@ -16,25 +16,35 @@ const ProfileInfo = () => {
   const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editableUsername, setEditableUsername] = useState('');
-  const [editableEmail, setEditableEmail] = useState('');
-  const [editableFirstName, setEditableFirstName] = useState('');
-  const [editableLastName, setEditableLastName] = useState('');
-  const [editableDescription, setEditableDescription] = useState('');
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    first_name: '',
+    last_name: '',
+    description: '',
+  });
   const [newPassword, setNewPassword] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Effect to populate form data when user object is available or changes
   useEffect(() => {
     if (user) {
-      setEditableUsername(user.username);
-      setEditableEmail(user.email);
-      setEditableFirstName(user.first_name);
-      setEditableLastName(user.last_name);
-      setEditableDescription(user.description);
+      setFormData({
+        username: user.username,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        description: user.description,
+      });
     }
   }, [user]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({ ...prev, [id]: value }));
+  };
 
   const handleBackToProfile = () => {
     navigate('/profile');
@@ -50,12 +60,15 @@ const ProfileInfo = () => {
   const handleCancelClick = () => {
     setIsEditing(false);
     setError(null);
+    // Reset form data from the original user state
     if (user) {
-      setEditableUsername(user.username);
-      setEditableEmail(user.email);
-      setEditableFirstName(user.first_name);
-      setEditableLastName(user.last_name);
-      setEditableDescription(user.description);
+      setFormData({
+        username: user.username,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        description: user.description,
+      });
     }
     setNewPassword('');
     setCurrentPassword('');
@@ -68,11 +81,11 @@ const ProfileInfo = () => {
     const loadingToastId = showLoading('Đang cập nhật thông tin...');
 
     try {
-      if (!editableUsername || !editableEmail) {
+      if (!formData.username || !formData.email) {
         throw new Error('Tên đăng nhập và Email không được để trống.');
       }
 
-      const isEmailChanged = editableEmail.toLowerCase() !== user?.email.toLowerCase();
+      const isEmailChanged = formData.email.toLowerCase() !== user?.email.toLowerCase();
       const isPasswordChanged = newPassword !== '';
 
       if ((isEmailChanged || isPasswordChanged) && !currentPassword) {
@@ -80,16 +93,11 @@ const ProfileInfo = () => {
       }
 
       const response = await updateUser({
-        username: editableUsername,
-        email: editableEmail,
-        first_name: editableFirstName,
-        last_name: editableLastName,
-        description: editableDescription,
+        ...formData,
         new_password: newPassword || undefined,
-        current_password: current_password || undefined,
+        current_password: currentPassword || undefined,
       });
 
-      // Update user info in the context with the data returned from the API
       updateUserInfo(response.user);
 
       showSuccess('Thông tin đã được cập nhật thành công!');
@@ -133,7 +141,7 @@ const ProfileInfo = () => {
                 <div>
                   <Label htmlFor="first_name">Họ:</Label>
                   {isEditing ? (
-                    <Input id="first_name" type="text" value={editableFirstName} onChange={(e) => setEditableFirstName(e.target.value)} className="mt-1" disabled={isLoading} />
+                    <Input id="first_name" type="text" value={formData.first_name} onChange={handleInputChange} className="mt-1" disabled={isLoading} />
                   ) : (
                     <p className="text-gray-800 text-lg">{user?.first_name || 'Chưa có'}</p>
                   )}
@@ -141,7 +149,7 @@ const ProfileInfo = () => {
                 <div>
                   <Label htmlFor="last_name">Tên:</Label>
                   {isEditing ? (
-                    <Input id="last_name" type="text" value={editableLastName} onChange={(e) => setEditableLastName(e.target.value)} className="mt-1" disabled={isLoading} />
+                    <Input id="last_name" type="text" value={formData.last_name} onChange={handleInputChange} className="mt-1" disabled={isLoading} />
                   ) : (
                     <p className="text-gray-800 text-lg">{user?.last_name || 'Chưa có'}</p>
                   )}
@@ -151,7 +159,7 @@ const ProfileInfo = () => {
               <div>
                 <Label htmlFor="description">Mô tả bản thân:</Label>
                 {isEditing ? (
-                  <Textarea id="description" value={editableDescription} onChange={(e) => setEditableDescription(e.target.value)} className="mt-1" disabled={isLoading} />
+                  <Textarea id="description" value={formData.description} onChange={handleInputChange} className="mt-1" disabled={isLoading} />
                 ) : (
                   <p className="text-gray-800 text-lg whitespace-pre-wrap">{user?.description || 'Chưa có'}</p>
                 )}
@@ -160,7 +168,7 @@ const ProfileInfo = () => {
               <div>
                 <Label htmlFor="username">Tên đăng nhập:</Label>
                 {isEditing ? (
-                  <Input id="username" type="text" value={editableUsername} onChange={(e) => setEditableUsername(e.target.value)} className="mt-1" required disabled={isLoading} />
+                  <Input id="username" type="text" value={formData.username} onChange={handleInputChange} className="mt-1" required disabled={isLoading} />
                 ) : (
                   <p className="text-gray-800 text-lg">{user?.username || 'Không có'}</p>
                 )}
@@ -168,7 +176,7 @@ const ProfileInfo = () => {
               <div>
                 <Label htmlFor="email">Email:</Label>
                 {isEditing ? (
-                  <Input id="email" type="email" value={editableEmail} onChange={(e) => setEditableEmail(e.target.value)} className="mt-1" required disabled={isLoading} />
+                  <Input id="email" type="email" value={formData.email} onChange={handleInputChange} className="mt-1" required disabled={isLoading} />
                 ) : (
                   <p className="text-gray-800 text-lg">{user?.email || 'Không có'}</p>
                 )}
