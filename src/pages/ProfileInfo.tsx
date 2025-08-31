@@ -22,8 +22,8 @@ const ProfileInfo = () => {
     first_name: '',
     last_name: '',
     description: '',
+    nickname: '', // Thêm nickname vào state
   });
-  // Đã loại bỏ newPassword và currentPassword
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,6 +36,7 @@ const ProfileInfo = () => {
         first_name: user.first_name,
         last_name: user.last_name,
         description: user.description,
+        nickname: user.nickname, // Lấy nickname từ user
       });
     }
   }, [user]);
@@ -52,7 +53,6 @@ const ProfileInfo = () => {
   const handleEditClick = () => {
     setIsEditing(true);
     setError(null);
-    // Đã loại bỏ reset newPassword và currentPassword
   };
 
   const handleCancelClick = () => {
@@ -66,9 +66,9 @@ const ProfileInfo = () => {
         first_name: user.first_name,
         last_name: user.last_name,
         description: user.description,
+        nickname: user.nickname,
       });
     }
-    // Đã loại bỏ reset newPassword và currentPassword
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -85,13 +85,13 @@ const ProfileInfo = () => {
         throw new Error('Tên đăng nhập và Email không được để trống.');
       }
 
-      // Chỉ gửi các trường được hỗ trợ bởi endpoint tiêu chuẩn
       const updatePayload = {
         username: formData.username,
         email: formData.email,
         first_name: formData.first_name,
         last_name: formData.last_name,
         description: formData.description,
+        nickname: formData.nickname, // Thêm nickname vào payload
       };
 
       const response = await updateUser(user.id, updatePayload);
@@ -153,6 +153,15 @@ const ProfileInfo = () => {
               </div>
 
               <div>
+                <Label htmlFor="nickname">Biệt danh:</Label>
+                {isEditing ? (
+                  <Input id="nickname" type="text" value={formData.nickname} onChange={handleInputChange} className="mt-1" disabled={isLoading} />
+                ) : (
+                  <p className="text-gray-800 text-lg">{user?.nickname || 'Chưa có'}</p>
+                )}
+              </div>
+
+              <div>
                 <Label htmlFor="description">Mô tả bản thân:</Label>
                 {isEditing ? (
                   <Textarea id="description" value={formData.description} onChange={handleInputChange} className="mt-1" disabled={isLoading} />
@@ -177,8 +186,6 @@ const ProfileInfo = () => {
                   <p className="text-gray-800 text-lg">{user?.email || 'Không có'}</p>
                 )}
               </div>
-
-              {/* Đã loại bỏ các trường mật khẩu mới và mật khẩu hiện tại */}
 
               {error && <p className="text-sm text-red-500">{error}</p>}
 

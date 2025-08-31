@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } => 'react-router-dom';
 import { getToken, saveToken, clearToken } from '@/lib/auth/storage';
 import { login as apiLogin, getCurrentUserInfo } from '@/lib/auth/api';
 
@@ -10,6 +10,7 @@ interface User {
   first_name: string;
   last_name: string;
   description: string;
+  nickname: string; // Thêm trường nickname
 }
 
 interface AuthContextType {
@@ -22,7 +23,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider = ({ children }: { ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
@@ -38,7 +39,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           email: userInfo.email,
           first_name: userInfo.first_name,
           last_name: userInfo.last_name,
-          description: userInfo.description
+          description: userInfo.description,
+          nickname: userInfo.nickname, // Lưu nickname
         });
         setIsAuthenticated(true);
       } catch (error) {

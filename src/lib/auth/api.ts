@@ -61,6 +61,7 @@ export async function updateUser(
     first_name?: string;
     last_name?: string;
     description?: string;
+    nickname?: string; // Thêm nickname
   }
 ) {
   const token = getToken();
