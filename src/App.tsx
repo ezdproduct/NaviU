@@ -60,8 +60,8 @@ export const routes: RouteObject[] = [
   {
     path: "/profile",
     element: (
+      // ProfileLayout là layout cho các trang profile
       <ProtectedRoute>
-        {/* ProfileLayout là layout cho các trang profile */}
         <ProfileLayout /> 
       </ProtectedRoute>
     ),
