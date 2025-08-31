@@ -24,6 +24,7 @@ const DoTestView = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [testMode, setTestMode] = useState<'ai' | 'basic'>('ai'); // State mới để quản lý chế độ test
+  const [basicTestAnswers, setBasicTestAnswers] = useState<{ [key: string]: string } | null>(null); // State để lưu câu trả lời từ BasicTestView
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -70,12 +71,10 @@ const DoTestView = () => {
   };
 
   const handleFinishTest = async (answers?: { [key: string]: string }) => {
-    setShowConfirmModal(true);
-    // Lưu trữ câu trả lời tạm thời nếu có để gửi sau khi xác nhận
-    if (answers) {
-      // Logic để xử lý answers từ BasicTestView nếu cần
-      // Hiện tại, chúng ta sẽ gửi dữ liệu từ AI chat hoặc một payload đơn giản
+    if (testMode === 'basic' && answers) {
+      setBasicTestAnswers(answers); // Lưu trữ câu trả lời từ BasicTestView
     }
+    setShowConfirmModal(true);
   };
 
   const handleConfirmFinishTest = async () => {
@@ -97,11 +96,16 @@ const DoTestView = () => {
         questionsData.forEach((q, index) => { // Sử dụng questionsData
             submissionData[`Question ${index + 1}`] = userAnswers[index] || '';
         });
-      } else {
-        // Logic để lấy câu trả lời từ BasicTestView nếu cần
-        // Hiện tại, chỉ gửi một thông báo đơn giản cho BasicTestView
+      } else if (testMode === 'basic' && basicTestAnswers) {
+        // Sử dụng câu trả lời từ BasicTestView
+        Object.keys(basicTestAnswers).forEach(questionId => {
+          submissionData[questionId] = basicTestAnswers[questionId];
+        });
         submissionData['Test Type'] = 'Basic Test';
-        submissionData['Status'] = 'Completed';
+      } else {
+        // Fallback nếu không có câu trả lời nào được thu thập
+        submissionData['Test Type'] = 'Unknown';
+        submissionData['Status'] = 'Completed (No answers collected)';
       }
 
       const response = await fetch('https://script.google.com/macros/s/AKfycbzDnYuQtbgUeqqz_XfAQ2MhEP7xi3-W1eHAMcRgDqPbD18YATPnTLVJQ4tBx4mOhW3Y/exec', {
@@ -124,6 +128,7 @@ const DoTestView = () => {
     } finally {
       dismissToast(loadingToastId);
       setIsSubmitting(false);
+      setBasicTestAnswers(null); // Xóa câu trả lời tạm thời
       navigate('/profile/dashboard'); // Chuyển hướng đến tab dashboard
     }
   };
@@ -133,7 +138,7 @@ const DoTestView = () => {
 
   // Xác định khi nào bài test đang diễn ra
   const isTestInProgress = (testMode === 'ai' && currentQuestionIndex > 0 && !isTestFinished) ||
-                           (testMode === 'basic' && Object.keys(messages).length > 0 && !isTestFinished); // Giả định BasicTestView cũng có cách để biết nó đang có câu trả lời
+                           (testMode === 'basic' && Object.keys(basicTestAnswers || {}).length > 0 && !isTestFinished); // Kiểm tra basicTestAnswers
 
   // Sử dụng useBlocker để chặn điều hướng
   const blocker = useBlocker(
