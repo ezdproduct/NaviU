@@ -246,7 +246,7 @@ const DoTestView = () => {
                 className="flex-grow"
                 disabled
               />
-              <Button onClick={handleFinishTest} disabled={isSubmitting || !isTestFinished}>
+              <Button onClick={() => handleFinishTest()} disabled={isSubmitting || !isTestFinished}>
                 {isSubmitting ? 'Đang gửi...' : 'Kết thúc'}
               </Button>
             </div>
