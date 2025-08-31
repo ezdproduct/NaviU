@@ -3,7 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
-  RouteObject, // Import RouteObject type
+  RouteObject,
 } from "react-router-dom";
 import NotFound from "./pages/NotFound";
 import Index from "./pages/Index";
@@ -12,7 +12,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CreateUser from "./pages/CreateUser";
 import ProfileInfo from "./pages/ProfileInfo";
-import { useAuth } from "./contexts/AuthContext"; // Keep useAuth for DashboardViewWrapper
+import { useAuth } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ProfileLayout from "./components/profile/ProfileLayout";
 
@@ -25,13 +25,11 @@ import DoTestView from '@/components/profile/DoTestView';
 
 const queryClient = new QueryClient();
 
-// Wrapper component to access AuthContext for DashboardView
 const DashboardViewWrapper = () => {
   const { user } = useAuth();
   return <DashboardView username={user?.username || 'Bạn'} />;
 };
 
-// Define routes as an array of RouteObject
 export const routes: RouteObject[] = [
   {
     path: "/",
@@ -75,14 +73,13 @@ export const routes: RouteObject[] = [
   },
 ];
 
-// App component now provides other contexts
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      {/* AuthProvider is now in main.tsx */}
-      {/* The RouterProvider will render the actual routes in main.tsx */}
+      {/* AuthProvider is now in main.tsx, wrapping App */}
+      {/* App's children will be rendered by the RouterProvider */}
       {/* This component now just provides the contexts */}
     </TooltipProvider>
   </QueryClientProvider>

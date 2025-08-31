@@ -26,7 +26,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
-  const navigate = useNavigate(); // Di chuyển useNaviage vào bên trong component AuthProvider
+  const navigate = useNavigate(); // useNaviage is now safely inside AuthProvider, which is a child of RouterProvider
 
   const fetchUser = useCallback(async () => {
     const token = getToken();
