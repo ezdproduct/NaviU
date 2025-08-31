@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button';
 import HeroSection from '@/components/landing/HeroSection';
 import FeatureSection from '@/components/landing/FeatureSection';
 import TestimonialSection from '@/components/landing/TestimonialSection'; // Import the new TestimonialSection
-import Footer from '@/components/Footer'; // Import the updated Footer
-import LandingPageHeader from '@/components/landing/LandingPageHeader'; // Import the new LandingPageHeader
+// Removed Footer import
+// Removed LandingPageHeader import
 import CareerPreviewSection from '@/components/landing/CareerPreviewSection'; // Import the new CareerPreviewSection
 import {
   Brain,
@@ -25,8 +25,8 @@ import {
 
 const Index = () => {
   return (
-    <div className="flex flex-col min-h-screen">
-      <LandingPageHeader /> {/* Render the new landing page header */}
+    <> {/* Removed the div wrapper as LandingLayout provides it */}
+      {/* Removed LandingPageHeader */}
       <HeroSection />
 
       <main className="flex-1">
@@ -108,8 +108,8 @@ const Index = () => {
       </main>
 
       <TestimonialSection /> {/* Render the new TestimonialSection here */}
-      <Footer />
-    </div>
+      {/* Removed Footer */}
+    </>
   );
 };
 

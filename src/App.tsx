@@ -16,6 +16,7 @@ import ProfileInfo from "./pages/ProfileInfo";
 import { AuthProvider, useAuth } from "./contexts/AuthContext"; // Import AuthProvider
 import ProtectedRoute from "./components/ProtectedRoute";
 import ProfileLayout from "./components/profile/ProfileLayout";
+import LandingLayout from "./components/landing/LandingLayout"; // Import LandingLayout
 
 // Import individual profile views
 import DashboardView from '@/components/profile/DashboardView';
@@ -33,8 +34,10 @@ const DashboardViewWrapper = () => {
 
 export const routes: RouteObject[] = [
   {
-    path: "/",
-    element: <Index />,
+    element: <LandingLayout />, // Sử dụng LandingLayout làm layout cha cho trang landing
+    children: [
+      { path: "/", element: <Index /> },
+    ],
   },
   {
     element: <Layout />, // Layout chung cho các trang không phải profile
