@@ -29,6 +29,7 @@ import { useEffect } from "react"; // Import useEffect
 
 // Import APITest component
 import APITest from "./components/debug/APITest";
+import SimpleAPITest from "./components/debug/SimpleAPITest"; // Import SimpleAPITest
 
 const queryClient = new QueryClient();
 
@@ -51,13 +52,15 @@ export const routes: RouteObject[] = [
       { path: "/register", element: <Register /> },
       { path: "/create-user", element: <CreateUser /> },
       { path: "/api-test", element: <APITest /> }, // Thêm route cho APITest
+      { path: "/simple-api-test", element: <SimpleAPITest /> }, // Thêm route cho SimpleAPITest
     ],
   },
   {
     path: "/profile",
     element: (
       <ProtectedRoute>
-        <ProfileLayout /> {/* ProfileLayout là layout cho các trang profile */}
+        {/* ProfileLayout là layout cho các trang profile */}
+        <ProfileLayout /> 
       </ProtectedRoute>
     ),
     children: [
