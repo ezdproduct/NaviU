@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/ui/input'; // Vẫn giữ Input cho username
 import { Label } from '@/components/ui/label';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import PasswordInput from '@/components/PasswordInput'; // Import PasswordInput mới
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -57,9 +58,8 @@ const Login = () => {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Mật khẩu</Label>
-              <Input
+              <PasswordInput // Sử dụng PasswordInput mới
                 id="password"
-                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -72,9 +72,9 @@ const Login = () => {
               {isLoading ? 'Đang xử lý...' : 'Đăng nhập'}
             </Button>
             <p className="text-sm text-center text-gray-600">
-              Đã có tài khoản?{' '}
-              <Link to="/login" className="font-semibold text-blue-600 hover:underline">
-                Đăng nhập
+              Chưa có tài khoản?{' '}
+              <Link to="/register" className="font-semibold text-blue-600 hover:underline">
+                Đăng ký
               </Link>
             </p>
           </CardFooter>

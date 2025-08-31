@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/ui/input'; // Vẫn giữ Input cho username và email
 import { Label } from '@/components/ui/label';
 import { Link, useNavigate } from 'react-router-dom';
 import { register } from '../lib/auth/api';
+import PasswordInput from '@/components/PasswordInput'; // Import PasswordInput mới
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -53,7 +54,12 @@ const Register = () => {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Mật khẩu</Label>
-              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+              <PasswordInput // Sử dụng PasswordInput mới
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
             </div>
             {error && <p className="text-sm text-red-500">{error}</p>}
           </CardContent>
