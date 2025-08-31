@@ -61,7 +61,8 @@ export const routes: RouteObject[] = [
     path: "/profile",
     element: (
       <ProtectedRoute>
-        <ProfileLayout />
+        {/* ProfileLayout là layout cho các trang profile */}
+        <ProfileLayout /> 
       </ProtectedRoute>
     ),
     children: [
