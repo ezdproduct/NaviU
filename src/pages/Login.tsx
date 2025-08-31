@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/ui/input'; // Vẫn giữ Input cho username
 import { Label } from '@/components/ui/label';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import PasswordInput from '@/components/PasswordInput';
+import PasswordInput from '@/components/PasswordInput'; // Import PasswordInput mới
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -22,16 +22,11 @@ const Login = () => {
     setError(null);
     setIsLoading(true);
     try {
-      const result = await login(username, password);
-      if (result.success) {
-        // Sau khi đăng nhập thành công, useAuth context sẽ cập nhật và kích hoạt điều hướng trong App.tsx
-        // Hoặc, nếu muốn điều hướng ngay lập tức ở đây:
-        navigate('/profile', { state: { initialView: 'do-test', showWelcome: true, username: username } });
-      } else {
-        setError(result.message || 'Tên đăng nhập hoặc mật khẩu không đúng.');
-      }
-    } catch (err: any) {
-      setError(err.message || 'Đã xảy ra lỗi khi đăng nhập.');
+      const loggedInUsername = await login(username, password); // Lấy tên người dùng từ hàm login
+      // Chuyển hướng đến trang profile và truyền state để mở tab 'do-test' và hiển thị modal
+      navigate('/profile', { state: { initialView: 'do-test', showWelcome: true, username: loggedInUsername } });
+    } catch (err) {
+      setError('Tên đăng nhập hoặc mật khẩu không đúng.');
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +58,7 @@ const Login = () => {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Mật khẩu</Label>
-              <PasswordInput
+              <PasswordInput // Sử dụng PasswordInput mới
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

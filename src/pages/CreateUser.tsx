@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { API_BASE_URL } from '@/utils/constants'; // Import mới
 
-const WP_BASE = API_BASE_URL; // Sử dụng API_BASE_URL từ constants
+const WP_BASE = "https://naviu-backend.ezd.vn"; // đổi theo site của bạn
 
 export default function CreateUserWithJWT() {
   const [adminUser, setAdminUser] = useState("");
