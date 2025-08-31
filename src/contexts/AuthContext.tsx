@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect, useCallback } from 'react';
-import { useNavigate } => 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Đã sửa lỗi cú pháp ở đây
 import { getToken, saveToken, clearToken } from '@/lib/auth/storage';
 import { login as apiLogin, getCurrentUserInfo } from '@/lib/auth/api';
 
@@ -23,7 +23,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { ReactNode }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
