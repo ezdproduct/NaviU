@@ -1,6 +1,6 @@
-import { getToken, saveToken, clearToken, getUser } from "./storage"; // Import thêm clearToken và getUser
+import { getToken, saveToken, clearToken, getUser } from "./storage";
 
-export const WP_BASE_URL = "https://naviu-backend.ezd.vn"; // Đã thêm 'export'
+export const WP_BASE_URL = "https://naviu-backend.ezd.vn";
 
 // --- New Types ---
 interface LoginCredentials {
@@ -14,7 +14,7 @@ interface WordPressUser {
   user_email: string;
   user_nicename: string;
   user_display_name: string;
-  first_name?: string; // Thêm các trường này để khớp với AuthContext User
+  first_name?: string;
   last_name?: string;
   description?: string;
   nickname?: string;
@@ -25,6 +25,33 @@ interface ApiResponse<T> {
   message?: string;
   data?: T;
 }
+
+// Profile specific types
+interface UserProfileData {
+  id: number;
+  username: string;
+  email: string;
+  display_name: string;
+  first_name: string;
+  last_name: string;
+  description: string;
+  avatar: string;
+  meta: {
+    phone: string;
+    birthday: string;
+  };
+}
+
+interface UpdateProfilePayload {
+  display_name?: string;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  description?: string;
+  phone?: string;
+  birthday?: string;
+}
+
 
 // Safe JSON parser
 export async function safeJsonParse(response: Response): Promise<any> {
@@ -104,7 +131,7 @@ export async function authenticatedFetch(url: string, options: RequestInit = {})
 // --- Updated Login Function ---
 export async function login(credentials: LoginCredentials): Promise<ApiResponse<{user: WordPressUser, token: string}>> {
   try {
-    const API_BASE_URL = WP_BASE_URL; // Sử dụng WP_BASE_URL đã định nghĩa
+    const API_BASE_URL = WP_BASE_URL;
     console.log('🔗 Login API URL:', `${API_BASE_URL}/wp-json/jwt-auth/v1/token`);
     
     const response = await fetch(`${API_BASE_URL}/wp-json/jwt-auth/v1/token`, {
@@ -139,6 +166,12 @@ export async function login(credentials: LoginCredentials): Promise<ApiResponse<
     
     const data = await safeJsonParse(response);
     console.log('📄 Login success data:', data);
+    // Add this after line 141 to see what data structure we get
+    console.log('JWT Token:', data.token);
+    console.log('User Email:', data.user_email);
+    console.log('User Nicename:', data.user_nicename);
+    console.log('User Display Name:', data.user_display_name);
+    console.log('User ID:', data.user_id);
     
     const { token, user_id, user_email, user_nicename, user_display_name } = data;
     
@@ -157,7 +190,7 @@ export async function login(credentials: LoginCredentials): Promise<ApiResponse<
       user_display_name: user_display_name
     };
 
-    saveToken(token, user); // Lưu token và user object
+    saveToken(token, user);
     
     return {
       success: true,
@@ -191,16 +224,13 @@ export async function register(username: string, email: string, password: string
 /**
  * Fetches the current logged-in user's information.
  */
-export async function getCurrentUserInfo() {
+export async function getCurrentUserInfo(): Promise<WordPressUser> { // Changed return type
   const token = getToken();
-  const storedUser = getUser(); // Lấy thông tin user từ storage
+  const storedUser = getUser();
   if (!token || !storedUser) {
     throw new Error("No authentication token or user info found.");
   }
 
-  // Nếu có thông tin user trong localStorage, trả về ngay để tránh gọi API không cần thiết
-  // Hoặc bạn có thể gọi API để lấy thông tin mới nhất
-  // Hiện tại, tôi sẽ gọi API để đảm bảo thông tin luôn được cập nhật
   const res = await authenticatedFetch(`${WP_BASE_URL}/wp-json/custom/v1/user/me`, {
     method: "GET",
   });
@@ -217,14 +247,14 @@ export async function getCurrentUserInfo() {
  * Does NOT handle password changes in this version.
  */
 export async function updateUser(
-  userId: number, // Thêm userId làm đối số
+  userId: number,
   userData: {
     username?: string;
     email?: string;
     first_name?: string;
     last_name?: string;
     description?: string;
-    nickname?: string; // Thêm nickname
+    nickname?: string;
   }
 ) {
   const token = getToken();
@@ -233,7 +263,7 @@ export async function updateUser(
   }
 
   const res = await authenticatedFetch(`${WP_BASE_URL}/wp-json/wp/v2/users/${userId}`, {
-    method: "PUT", // Thay đổi phương thức thành PUT
+    method: "PUT",
     body: JSON.stringify(userData),
   });
 
@@ -244,9 +274,46 @@ export async function updateUser(
   return res.json();
 }
 
+// --- New Profile API Functions ---
+export async function getUserProfile(): Promise<ApiResponse<UserProfileData>> {
+  try {
+    const response = await authenticatedFetch(`${WP_BASE_URL}/wp-json/users/v1/profile`);
+    const data = await safeJsonParse(response);
+    
+    if (!response.ok) {
+      return { success: false, message: data.message || 'Failed to fetch user profile.' };
+    }
+    
+    return { success: true, data: data.data }; // Assuming the PHP returns { success: true, data: { ... } }
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    return { success: false, message: error instanceof Error ? error.message : 'An unknown error occurred.' };
+  }
+}
+
+export async function updateUserProfile(profileData: UpdateProfilePayload): Promise<ApiResponse<any>> {
+  try {
+    const response = await authenticatedFetch(`${WP_BASE_URL}/wp-json/users/v1/profile`, {
+      method: 'PUT',
+      body: JSON.stringify(profileData),
+    });
+    const data = await safeJsonParse(response);
+    
+    if (!response.ok) {
+      return { success: false, message: data.message || 'Failed to update user profile.' };
+    }
+    
+    return { success: true, message: data.message || 'Profile updated successfully.' };
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+    return { success: false, message: error instanceof Error ? error.message : 'An unknown error occurred.' };
+  }
+}
+
+
 // Test function để debug
 export async function testConnection(): Promise<any> {
-  const API_BASE_URL = WP_BASE_URL; // Sử dụng WP_BASE_URL đã định nghĩa
+  const API_BASE_URL = WP_BASE_URL;
   
   console.log('🔗 Testing connection to:', API_BASE_URL);
   

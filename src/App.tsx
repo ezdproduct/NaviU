@@ -4,8 +4,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   RouteObject,
-  Outlet, // Import Outlet để App có thể render các route con
-  useNavigate // Import useNavigate ở đây
+  Outlet,
+  useNavigate
 } from "react-router-dom";
 import NotFound from "./pages/NotFound";
 import Index from "./pages/Index";
@@ -14,7 +14,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CreateUser from "./pages/CreateUser";
 import ProfileInfo from "./pages/ProfileInfo";
-import { useAuth } from "./contexts/AuthContext"; // Chỉ import useAuth
+import { useAuth } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ProfileLayout from "./components/profile/ProfileLayout";
 import LandingLayout from "./components/landing/LandingLayout";
@@ -25,11 +25,12 @@ import ReportView from '@/components/profile/ReportView';
 import TestHubView from '@/components/profile/TestHubView';
 import ConnectView from '@/components/profile/ConnectView';
 import DoTestView from '@/components/profile/DoTestView';
-import { useEffect } from "react"; // Import useEffect
+import { useEffect } from "react";
 
-// Import APITest component
+// Import debug components
 import APITest from "./components/debug/APITest";
-import SimpleAPITest from "./components/debug/SimpleAPITest"; // Import SimpleAPITest
+import SimpleAPITest from "./components/debug/SimpleAPITest";
+import QuickTest from "./components/debug/QuickTest"; // Import QuickTest
 
 const queryClient = new QueryClient();
 
@@ -40,27 +41,27 @@ const DashboardViewWrapper = () => {
 
 export const routes: RouteObject[] = [
   {
-    element: <LandingLayout />, // Sử dụng LandingLayout làm layout cha cho trang landing
+    element: <LandingLayout />,
     children: [
       { path: "/", element: <Index /> },
     ],
   },
   {
-    element: <Layout />, // Layout chung cho các trang không phải profile
+    element: <Layout />,
     children: [
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
       { path: "/create-user", element: <CreateUser /> },
-      { path: "/api-test", element: <APITest /> }, // Thêm route cho APITest
-      { path: "/simple-api-test", element: <SimpleAPITest /> }, // Thêm route cho SimpleAPITest
+      { path: "/api-test", element: <APITest /> },
+      { path: "/simple-api-test", element: <SimpleAPITest /> },
+      { path: "/quick-test", element: <QuickTest /> }, // Add route for QuickTest
     ],
   },
   {
     path: "/profile",
     element: (
       <ProtectedRoute>
-        {/* ProfileLayout là layout cho các trang profile */}
-        <ProfileLayout /> 
+        <ProfileLayout />
       </ProtectedRoute>
     ),
     children: [
@@ -86,15 +87,12 @@ export const routes: RouteObject[] = [
   },
 ];
 
-// App component bao bọc các context và render Outlet
 const App = () => {
-  const { isAuthenticated } = useAuth(); // useAuth an toàn vì AuthProvider ở main.tsx
-  const navigate = useNavigate(); // useNavigate an toàn vì App ở trong RouterProvider
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Điều hướng đến trang đăng nhập khi người dùng không còn xác thực
     if (!isAuthenticated) {
-      // Tránh điều hướng lặp lại nếu đã ở trang đăng nhập/đăng ký
       if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
         navigate('/login');
       }
@@ -106,8 +104,7 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        {/* AuthProvider đã được chuyển ra main.tsx */}
-        <Outlet /> {/* Outlet sẽ render các route được định nghĩa trong RouterProvider */}
+        <Outlet />
       </TooltipProvider>
     </QueryClientProvider>
   );

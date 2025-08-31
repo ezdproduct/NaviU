@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { getUserProfile, updateUserProfile } from '@/lib/auth/api'; // Corrected import path
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -9,43 +10,71 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { showSuccess, showError, showLoading, dismissToast } from '@/utils/toast';
-import { updateUser } from '@/lib/auth/api';
 
-const ProfileInfo = () => {
-  const { user, logout, updateUserInfo } = useAuth();
+const ProfileInfo: React.FC = () => {
+  const { user, logout, updateUserInfo } = useAuth(); // Keep updateUserInfo for context
   const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(true); // Start loading
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  
+  // Initialize with empty strings to avoid undefined → defined transition
   const [formData, setFormData] = useState({
-    username: '',
-    email: '',
+    display_name: '',
     first_name: '',
     last_name: '',
-    description: '',
-    nickname: '', // Thêm nickname vào state
+    email: '',
+    phone: '',
+    birthday: '',
+    bio: ''
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  // Effect to populate form data when user object is available or changes
+  
   useEffect(() => {
-    if (user) {
-      setFormData({
-        username: user.username,
-        email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        description: user.description,
-        nickname: user.nickname, // Lấy nickname từ user
-      });
+    loadProfile();
+  }, []);
+  
+  const loadProfile = async () => {
+    setLoading(true);
+    setError('');
+    
+    try {
+      const result = await getUserProfile();
+      
+      if (result.success && result.data) {
+        // Ensure all fields have values (empty string if undefined)
+        setFormData({
+          display_name: result.data.display_name || '',
+          first_name: result.data.first_name || '',
+          last_name: result.data.last_name || '',
+          email: result.data.email || '',
+          phone: result.data.meta?.phone || '',
+          birthday: result.data.meta?.birthday || '',
+          bio: result.data.description || ''
+        });
+        // Also update AuthContext user if needed, though this component primarily uses its own state
+        // updateUserInfo({ ...user, ...result.data, nickname: result.data.display_name }); // Example if you want to sync
+      } else {
+        setError(result.message || 'Failed to load profile');
+      }
+    } catch (error: any) {
+      console.error('Profile load error:', error);
+      setError(error.message || 'Failed to load profile');
+    } finally {
+      setLoading(false);
     }
-  }, [user]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { id, value } = e.target;
-    setFormData(prev => ({ ...prev, [id]: value }));
   };
-
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value || '' // Ensure never undefined
+    }));
+  };
+  
   const handleBackToProfile = () => {
     navigate('/profile');
   };
@@ -53,64 +82,67 @@ const ProfileInfo = () => {
   const handleEditClick = () => {
     setIsEditing(true);
     setError(null);
+    setSuccess(null);
   };
 
   const handleCancelClick = () => {
     setIsEditing(false);
     setError(null);
-    // Reset form data from the original user state
-    if (user) {
-      setFormData({
-        username: user.username,
-        email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        description: user.description,
-        nickname: user.nickname,
-      });
-    }
+    setSuccess(null);
+    loadProfile(); // Reload original data
   };
-
-  const handleSave = async (e: React.FormEvent) => {
+  
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setIsLoading(true);
+    setSaving(true);
+    setError('');
+    setSuccess('');
     const loadingToastId = showLoading('Đang cập nhật thông tin...');
-
+    
     try {
-      if (!user?.id) {
-        throw new Error('Không tìm thấy ID người dùng để cập nhật.');
-      }
-      if (!formData.username || !formData.email) {
-        throw new Error('Tên đăng nhập và Email không được để trống.');
-      }
-
       const updatePayload = {
-        username: formData.username,
-        email: formData.email,
+        display_name: formData.display_name,
         first_name: formData.first_name,
         last_name: formData.last_name,
-        description: formData.description,
-        nickname: formData.nickname, // Thêm nickname vào payload
+        // email: formData.email, // Email might not be updatable via this custom endpoint
+        description: formData.bio,
+        phone: formData.phone,
+        birthday: formData.birthday,
       };
 
-      const response = await updateUser(user.id, updatePayload);
-
-      updateUserInfo(response); // Cập nhật thông tin người dùng trong AuthContext
-
-      showSuccess('Thông tin đã được cập nhật thành công!');
-      setIsEditing(false);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Đã xảy ra lỗi khi cập nhật thông tin.';
-      showError(errorMessage);
-      setError(errorMessage);
+      const result = await updateUserProfile(updatePayload);
+      
+      if (result.success) {
+        showSuccess('Thông tin đã được cập nhật thành công!');
+        setSuccess('Profile updated successfully!');
+        setIsEditing(false);
+        loadProfile(); // Reload to get latest data and sync with form
+      } else {
+        showError(result.message || 'Đã xảy ra lỗi khi cập nhật thông tin.');
+        setError(result.message || 'Failed to update profile');
+      }
+    } catch (error: any) {
+      console.error('Profile update error:', error);
+      showError(error.message || 'Đã xảy ra lỗi khi cập nhật thông tin.');
+      setError(error.message || 'Failed to update profile');
     } finally {
       dismissToast(loadingToastId);
-      setIsLoading(false);
+      setSaving(false);
     }
   };
-
-  const displayName = user?.first_name || user?.last_name ? `${user.first_name} ${user.last_name}`.trim() : user?.username;
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="flex items-center justify-center p-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <span className="ml-2 text-gray-700">Đang tải hồ sơ...</span>
+        </div>
+      </div>
+    );
+  }
+  
+  const displayName = formData.display_name || user?.username || 'Người dùng';
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 sm:p-6 lg:p-8">
@@ -123,79 +155,88 @@ const ProfileInfo = () => {
           <CardHeader className="flex flex-col items-center text-center p-6 border-b">
             <Avatar className="w-24 h-24 mb-4">
               <AvatarFallback className="text-4xl font-bold bg-blue-600 text-white">
-                {displayName ? displayName.charAt(0).toUpperCase() : 'U'}
+                {displayName.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <CardTitle className="text-3xl font-bold text-gray-800">
-              {displayName || 'Người dùng'}
+              {displayName}
             </CardTitle>
-            <p className="text-gray-600 mt-1">{user?.description || 'Thông tin cá nhân của bạn'}</p>
+            <p className="text-gray-600 mt-1">{formData.bio || 'Thông tin cá nhân của bạn'}</p>
           </CardHeader>
           <CardContent className="p-6 space-y-4">
-            <form onSubmit={handleSave} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="first_name">Họ:</Label>
                   {isEditing ? (
-                    <Input id="first_name" type="text" value={formData.first_name} onChange={handleInputChange} className="mt-1" disabled={isLoading} />
+                    <Input id="first_name" name="first_name" type="text" value={formData.first_name} onChange={handleChange} className="mt-1" disabled={saving} />
                   ) : (
-                    <p className="text-gray-800 text-lg">{user?.first_name || 'Chưa có'}</p>
+                    <p className="text-gray-800 text-lg">{formData.first_name || 'Chưa có'}</p>
                   )}
                 </div>
                 <div>
                   <Label htmlFor="last_name">Tên:</Label>
                   {isEditing ? (
-                    <Input id="last_name" type="text" value={formData.last_name} onChange={handleInputChange} className="mt-1" disabled={isLoading} />
+                    <Input id="last_name" name="last_name" type="text" value={formData.last_name} onChange={handleChange} className="mt-1" disabled={saving} />
                   ) : (
-                    <p className="text-gray-800 text-lg">{user?.last_name || 'Chưa có'}</p>
+                    <p className="text-gray-800 text-lg">{formData.last_name || 'Chưa có'}</p>
                   )}
                 </div>
               </div>
 
               <div>
-                <Label htmlFor="nickname">Biệt danh:</Label>
+                <Label htmlFor="display_name">Tên hiển thị:</Label>
                 {isEditing ? (
-                  <Input id="nickname" type="text" value={formData.nickname} onChange={handleInputChange} className="mt-1" disabled={isLoading} />
+                  <Input id="display_name" name="display_name" type="text" value={formData.display_name} onChange={handleChange} className="mt-1" disabled={saving} />
                 ) : (
-                  <p className="text-gray-800 text-lg">{user?.nickname || 'Chưa có'}</p>
+                  <p className="text-gray-800 text-lg">{formData.display_name || 'Chưa có'}</p>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="description">Mô tả bản thân:</Label>
+                <Label htmlFor="bio">Mô tả bản thân:</Label>
                 {isEditing ? (
-                  <Textarea id="description" value={formData.description} onChange={handleInputChange} className="mt-1" disabled={isLoading} />
+                  <Textarea id="bio" name="bio" value={formData.bio} onChange={handleChange} className="mt-1" disabled={saving} />
                 ) : (
-                  <p className="text-gray-800 text-lg whitespace-pre-wrap">{user?.description || 'Chưa có'}</p>
+                  <p className="text-gray-800 text-lg whitespace-pre-wrap">{formData.bio || 'Chưa có'}</p>
                 )}
               </div>
               <hr className="my-4" />
               <div>
-                <Label htmlFor="username">Tên đăng nhập:</Label>
+                <Label htmlFor="email">Email:</Label>
                 {isEditing ? (
-                  <Input id="username" type="text" value={formData.username} onChange={handleInputChange} className="mt-1" required disabled={isLoading} />
+                  <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} className="mt-1" required disabled={saving} />
                 ) : (
-                  <p className="text-gray-800 text-lg">{user?.username || 'Không có'}</p>
+                  <p className="text-gray-800 text-lg">{formData.email || 'Không có'}</p>
                 )}
               </div>
               <div>
-                <Label htmlFor="email">Email:</Label>
+                <Label htmlFor="phone">Điện thoại:</Label>
                 {isEditing ? (
-                  <Input id="email" type="email" value={formData.email} onChange={handleInputChange} className="mt-1" required disabled={isLoading} />
+                  <Input id="phone" name="phone" type="tel" value={formData.phone} onChange={handleChange} className="mt-1" disabled={saving} />
                 ) : (
-                  <p className="text-gray-800 text-lg">{user?.email || 'Không có'}</p>
+                  <p className="text-gray-800 text-lg">{formData.phone || 'Chưa có'}</p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="birthday">Ngày sinh:</Label>
+                {isEditing ? (
+                  <Input id="birthday" name="birthday" type="date" value={formData.birthday} onChange={handleChange} className="mt-1" disabled={saving} />
+                ) : (
+                  <p className="text-gray-800 text-lg">{formData.birthday || 'Chưa có'}</p>
                 )}
               </div>
 
               {error && <p className="text-sm text-red-500">{error}</p>}
+              {success && <p className="text-sm text-green-500">{success}</p>}
 
               <div className="pt-4 flex gap-2">
                 {isEditing ? (
                   <>
-                    <Button type="submit" className="flex-1" disabled={isLoading}>
-                      {isLoading ? 'Đang lưu...' : <><Save className="h-4 w-4 mr-2" /> Lưu thay đổi</>}
+                    <Button type="submit" className="flex-1" disabled={saving}>
+                      {saving ? 'Đang lưu...' : <><Save className="h-4 w-4 mr-2" /> Lưu thay đổi</>}
                     </Button>
-                    <Button type="button" variant="outline" onClick={handleCancelClick} disabled={isLoading}>
+                    <Button type="button" variant="outline" onClick={handleCancelClick} disabled={saving}>
                       <X className="h-4 w-4 mr-2" /> Hủy
                     </Button>
                   </>
