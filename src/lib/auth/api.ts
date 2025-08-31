@@ -26,15 +26,23 @@ interface ApiResponse<T> {
   data?: T;
 }
 
-// --- Utility Function ---
-async function safeJsonParse(response: Response): Promise<any> {
+// Safe JSON parser
+export async function safeJsonParse(response: Response): Promise<any> {
   try {
-    const text = await response.text();
-    if (!text) return {}; // Return empty object if response is empty
-    return JSON.parse(text);
+    const contentType = response.headers.get('content-type');
+    
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.error('Expected JSON but got:', contentType);
+      console.error('Response body:', text);
+      
+      throw new Error(`Expected JSON response but got ${contentType}. Check console for full response.`);
+    }
+    
+    return await response.json();
   } catch (error) {
-    console.error("Failed to parse JSON response:", error);
-    return {}; // Return empty object on parse error
+    console.error('JSON Parse Error:', error);
+    throw new Error('Failed to parse JSON response');
   }
 }
 
@@ -42,11 +50,10 @@ async function safeJsonParse(response: Response): Promise<any> {
 export async function authenticatedFetch(url: string, options: RequestInit = {}): Promise<Response> {
   const token = getToken();
   
-  console.log('🔍 API Request Debug:', {
+  console.log('🔍 API Request:', {
     url,
     method: options.method || 'GET',
-    hasToken: !!token,
-    token: token ? `${token.substring(0, 20)}...` : 'No token'
+    hasToken: !!token
   });
   
   const defaultHeaders: Record<string, string> = {
@@ -65,21 +72,31 @@ export async function authenticatedFetch(url: string, options: RequestInit = {})
     },
   };
   
-  console.log('📤 Final request options:', finalOptions);
-  
   try {
     const response = await fetch(url, finalOptions);
     
     console.log('📥 Response status:', response.status);
+    console.log('📥 Response headers:', Object.fromEntries(response.headers.entries()));
     
-    // Clone response để đọc body mà không consume
+    // Check content type
+    const contentType = response.headers.get('content-type');
+    console.log('📄 Content-Type:', contentType);
+    
+    // Read response as text first to debug
     const responseClone = response.clone();
     const responseText = await responseClone.text();
-    console.log('📄 Response body:', responseText);
+    
+    console.log('📄 Raw response:', responseText.substring(0, 500)); // First 500 chars
+    
+    // Check if it's actually JSON
+    if (!contentType || !contentType.includes('application/json')) {
+      console.error('❌ Expected JSON but got:', contentType);
+      console.error('❌ Response body:', responseText);
+    }
     
     return response;
   } catch (error) {
-    console.error('❌ Fetch error:', error);
+    console.error('❌ Network error:', error);
     throw error;
   }
 }
