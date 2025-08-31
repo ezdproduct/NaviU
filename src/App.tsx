@@ -27,6 +27,9 @@ import ConnectView from '@/components/profile/ConnectView';
 import DoTestView from '@/components/profile/DoTestView';
 import { useEffect } from "react"; // Import useEffect
 
+// Import APITest component
+import APITest from "./components/debug/APITest";
+
 const queryClient = new QueryClient();
 
 const DashboardViewWrapper = () => {
@@ -47,14 +50,14 @@ export const routes: RouteObject[] = [
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
       { path: "/create-user", element: <CreateUser /> },
+      { path: "/api-test", element: <APITest /> }, // Thêm route cho APITest
     ],
   },
   {
     path: "/profile",
     element: (
       <ProtectedRoute>
-        {/* ProfileLayout là layout cho các trang profile */}
-        <ProfileLayout /> 
+        <ProfileLayout /> {/* ProfileLayout là layout cho các trang profile */}
       </ProtectedRoute>
     ),
     children: [
