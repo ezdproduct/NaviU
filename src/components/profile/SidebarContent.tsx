@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import ConfirmNavigationModal from '@/components/ConfirmNavigationModal';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -17,8 +17,8 @@ import {
 } from '@heroicons/react/24/outline'; // Sử dụng outline icons cho vẻ ngoài nhẹ nhàng
 
 interface SidebarContentProps {
-  activeView: string;
-  setActiveView: (view: string) => void;
+  activeView: string; // This will now be the path segment (e.g., 'dashboard', 'report')
+  setActiveView: (view: string) => void; // This will now trigger navigation
   onToggle: () => void;
   isSidebarOpen: boolean;
 }
@@ -41,7 +41,7 @@ const SidebarContent = ({ activeView, setActiveView, onToggle, isSidebarOpen }: 
     if (!isSidebarOpen) {
       onToggle(); // Chỉ mở sidebar, không chuyển tab
     } else {
-      setActiveView(viewId); // Nếu sidebar đã mở, thì chuyển tab
+      setActiveView(viewId); // Gọi setActiveView để điều hướng
     }
   };
 
@@ -59,19 +59,19 @@ const SidebarContent = ({ activeView, setActiveView, onToggle, isSidebarOpen }: 
     setShowConfirmModal(false);
     navigate('/');
   };
-  
+
   return (
     <>
       <div className={cn("flex items-center justify-center py-4", !isSidebarOpen && "py-2")}>
-        <Link 
-          to="/" 
+        <Link
+          to="/"
           className={cn("flex items-center", !isSidebarOpen && "justify-center")}
           onClick={handleLogoClick}
         >
-          <img 
+          <img
             src={isSidebarOpen ? "/naviU.png" : "/logo.png"}
-            alt="NaviU Logo" 
-            className="h-8" 
+            alt="NaviU Logo"
+            className="h-8"
           />
         </Link>
       </div>
@@ -83,9 +83,9 @@ const SidebarContent = ({ activeView, setActiveView, onToggle, isSidebarOpen }: 
             onClick={(e) => handleNavClick(e, item.id)}
             className={cn(
               'flex items-center space-x-3 px-4 py-3 my-1 rounded-lg transition-colors duration-200',
-              activeView !== item.id && 'text-gray-700 hover:bg-gray-100', // Changed hover:bg-white/20 to hover:bg-gray-100
+              activeView !== item.id && 'text-gray-700 hover:bg-gray-100',
               activeView === item.id && isSidebarOpen && 'bg-blue-600 text-white hover:bg-blue-700',
-              activeView === item.id && !isSidebarOpen && 'text-blue-600 hover:bg-gray-100', // Changed hover:bg-white/20 to hover:bg-gray-100
+              activeView === item.id && !isSidebarOpen && 'text-blue-600 hover:bg-gray-100',
               !isSidebarOpen && "justify-center"
             )}
             title={isSidebarOpen ? '' : item.name}
@@ -96,7 +96,7 @@ const SidebarContent = ({ activeView, setActiveView, onToggle, isSidebarOpen }: 
         ))}
       </nav>
       <div className="px-2 flex-shrink-0">
-        <div className={cn("bg-blue-50 rounded-lg p-6 text-center mx-2", !isSidebarOpen && "hidden")}> {/* Changed bg-blue-50/50 to bg-blue-50 */}
+        <div className={cn("bg-blue-50 rounded-lg p-6 text-center mx-2", !isSidebarOpen && "hidden")}>
           <h4 className="font-semibold text-blue-800">Tư vấn 1-1</h4>
           <p className="text-sm mt-2 text-blue-700">Nâng cấp để nhận tư vấn chuyên sâu từ chuyên gia.</p>
           <button className="mt-4 bg-blue-600 text-white font-semibold w-full py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">

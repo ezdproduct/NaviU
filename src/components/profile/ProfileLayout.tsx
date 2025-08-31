@@ -9,18 +9,15 @@ import SidebarContent from '@/components/profile/SidebarContent';
 import WelcomeModal from '@/components/WelcomeModal';
 import { useAuth } from '@/contexts/AuthContext';
 
-interface ProfileLayoutProps {
-  children: React.ReactNode;
-}
-
-const ProfileLayout = ({ children }: ProfileLayoutProps) => {
+const ProfileLayout = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const initialActiveView = (location.state as { initialView?: string })?.initialView || 'dashboard';
-  const [activeView, setActiveView] = useState(initialActiveView);
+  // Lấy phân đoạn đường dẫn hiện tại để xác định activeView cho sidebar
+  const currentPathSegment = location.pathname.split('/')[2] || 'dashboard'; 
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const mainContentRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLElement>(null);
@@ -37,9 +34,10 @@ const ProfileLayout = ({ children }: ProfileLayoutProps) => {
     if (state?.showWelcome) {
       setShowWelcomeModal(true);
       setUsernameForModal(state.username || user?.username || '');
+      // Xóa trạng thái sau khi hiển thị modal để tránh nó xuất hiện lại khi refresh
       navigate(location.pathname, { replace: true, state: { initialView: state.initialView } });
     }
-  }, [activeView, location.state, location.pathname, navigate, user?.username]);
+  }, [location.state, location.pathname, navigate, user?.username]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -52,22 +50,19 @@ const ProfileLayout = ({ children }: ProfileLayoutProps) => {
       document.addEventListener('mousedown', handleClickOutside);
     } else {
       document.removeEventListener('mousedown', handleClickOutside);
-    }
+    };
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isSidebarOpen, isMobile]);
 
-  const handleViewChange = (view: string) => {
-    setActiveView(view);
-    if (isMobile) {
-      setIsSidebarOpen(false);
-    }
-  };
-
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleViewChange = (view: string) => {
+    navigate(`/profile/${view}`); // Điều hướng trực tiếp bằng React Router
   };
 
   const handleWelcomeModalClose = () => {
@@ -82,7 +77,7 @@ const ProfileLayout = ({ children }: ProfileLayoutProps) => {
             <div className="flex flex-col h-full py-0">
               <SidebarContent 
                 isSidebarOpen={true}
-                activeView={activeView} 
+                activeView={currentPathSegment} 
                 setActiveView={handleViewChange} 
                 onToggle={() => setIsSidebarOpen(false)} 
               />
@@ -93,7 +88,7 @@ const ProfileLayout = ({ children }: ProfileLayoutProps) => {
         <Sidebar 
           ref={sidebarRef}
           isSidebarOpen={isSidebarOpen}
-          activeView={activeView} 
+          activeView={currentPathSegment} 
           setActiveView={handleViewChange} 
           onToggle={toggleSidebar} 
         />
@@ -104,7 +99,7 @@ const ProfileLayout = ({ children }: ProfileLayoutProps) => {
         {!isMobile && <ProfilePageHeader />}
 
         <div ref={mainContentRef} className="flex-1 min-h-0 overflow-y-auto no-scrollbar flex flex-col px-4">
-          {children} {/* Render children here */}
+          <Outlet /> {/* Render the nested route component here */}
         </div>
       </div>
 
