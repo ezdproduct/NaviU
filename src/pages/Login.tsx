@@ -22,11 +22,11 @@ const Login = () => {
     setError(null);
     setIsLoading(true);
     try {
-      const loggedInUsername = await login(username, password); // Lấy tên người dùng từ hàm login
+      const loggedInUsername = await login({ username, password }); // Truyền đối tượng credentials
       // Chuyển hướng đến trang profile và truyền state để mở tab 'do-test' và hiển thị modal
       navigate('/profile', { state: { initialView: 'do-test', showWelcome: true, username: loggedInUsername } });
-    } catch (err) {
-      setError('Tên đăng nhập hoặc mật khẩu không đúng.');
+    } catch (err: any) { // Thêm type any cho err
+      setError(err.message || 'Tên đăng nhập hoặc mật khẩu không đúng.');
     } finally {
       setIsLoading(false);
     }
