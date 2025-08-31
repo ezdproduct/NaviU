@@ -1,6 +1,6 @@
 import { getToken, saveToken, clearToken, getUser } from "./storage"; // Import thêm clearToken và getUser
 
-const WP_BASE_URL = "https://naviu-backend.ezd.vn";
+export const WP_BASE_URL = "https://naviu-backend.ezd.vn"; // Đã thêm 'export'
 
 // --- New Types ---
 interface LoginCredentials {
