@@ -230,8 +230,8 @@ export async function getUserProfile(): Promise<ApiResponse<UserProfileData>> {
 
 export async function updateUserProfile(profileData: UpdateProfilePayload): Promise<ApiResponse<any>> {
   try {
-    const response = await authenticatedFetch(`${WP_BASE_URL}/wp-json/users/v1/profile`, {
-      method: 'PUT',
+    const response = await authenticatedFetch(`${WP_BASE_URL}/wp-json/naviu/v1/update-profile`, {
+      method: 'POST',
       body: JSON.stringify(profileData),
     });
     const data = await safeJsonParse(response);
