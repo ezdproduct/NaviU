@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '@/components/profile/Sidebar';
 import ProfileHeader from '@/components/profile/ProfileHeader';
-import ProfilePageHeader from '@/components/profile/ProfilePageHeader';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent } from '@/components/CustomSheet';
 import SidebarContent from '@/components/profile/SidebarContent';
@@ -98,13 +97,12 @@ const ProfileLayout = () => {
       
       <div className="flex flex-col flex-1 overflow-hidden">
         {isMobile && <ProfileHeader onMenuClick={toggleSidebar} />}
-        {!isMobile && <ProfilePageHeader />}
 
         <div 
           ref={mainContentRef} 
           className={cn(
             "flex-1 min-h-0 overflow-y-auto no-scrollbar flex flex-col",
-            !isDoTestView && "px-4" // Chỉ áp dụng padding nếu không phải trang do-test
+            !isDoTestView && "px-4 pt-6" // Chỉ áp dụng padding nếu không phải trang do-test
           )}
         >
           <Outlet /> {/* Render the nested route component here */}
@@ -118,6 +116,3 @@ const ProfileLayout = () => {
       />
     </div>
   );
-};
-
-export default ProfileLayout;

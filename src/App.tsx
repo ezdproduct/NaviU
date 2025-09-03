@@ -12,7 +12,6 @@ import Index from "./pages/Index";
 import Layout from "./components/Layout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import ProfileInfo from "./pages/ProfileInfo";
 import { useAuth } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ProfileLayout from "./components/profile/ProfileLayout";
@@ -62,14 +61,6 @@ export const routes: RouteObject[] = [
       { path: "connect", element: <ConnectView /> },
       { path: "do-test", element: <DoTestView /> },
     ],
-  },
-  {
-    path: "/profile-info",
-    element: (
-      <ProtectedRoute>
-        <ProfileInfo />
-      </ProtectedRoute>
-    ),
   },
   {
     path: "*",

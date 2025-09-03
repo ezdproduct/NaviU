@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
-import { User } from 'lucide-react'; // Import icon User
 
 const Header = () => {
   const { isAuthenticated, logout } = useAuth();
@@ -16,11 +15,6 @@ const Header = () => {
         <nav className="flex items-center space-x-4">
           {isAuthenticated ? (
             <>
-              <Link to="/profile-info"> {/* Changed link to /profile-info */}
-                <Button variant="ghost" size="icon">
-                  <User className="h-5 w-5" />
-                </Button>
-              </Link>
               <Button onClick={logout}>Đăng xuất</Button>
             </>
           ) : (
