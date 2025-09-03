@@ -1,6 +1,6 @@
 import { User } from '@/types'; // Import User interface từ file kiểu dữ liệu chung
 
-const AUTH_TOKEN_KEY = "auth_token";
+const AUTH_TOKEN_KEY = "jwt_token"; // Changed from "auth_token"
 const USER_KEY = "user";
 
 export function saveToken(token: string, user: User) {

@@ -162,62 +162,18 @@ export async function getCurrentUserInfo(): Promise<User> {
   return user;
 }
 
-export async function updateUser(
-  userId: number,
-  userData: {
-    username?: string;
-    email?: string;
-    first_name?: string;
-    last_name?: string;
-    description?: string;
-    nickname?: string;
-  }
-) {
-  const token = getToken();
-  if (!token) {
-    throw new Error("No authentication token found.");
-  }
-
-  const res = await authenticatedFetch(`${WP_BASE_URL}/wp-json/wp/v2/users/${userId}`, {
-    method: "PUT",
-    body: JSON.stringify(userData),
-  });
-
-  if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.message || "Failed to update user info.");
-  }
-  return res.json();
-}
-
 export async function getUserProfile(): Promise<ApiResponse<UserProfileData>> {
   try {
-    const response = await authenticatedFetch(`${WP_BASE_URL}/wp-json/wp/v2/users/me?context=edit`);
-
+    const response = await authenticatedFetch(`${WP_BASE_URL}/wp-json/users/v1/profile`);
+    
     if (!response.ok) {
       const errorData = await safeJsonParse(response);
       return { success: false, message: errorData.message || 'Failed to fetch user profile.' };
     }
-
-    const wpUser = await safeJsonParse(response);
-
-    return {
-      success: true,
-      data: {
-        id: wpUser.id,
-        username: wpUser.slug,
-        email: wpUser.email,
-        display_name: wpUser.name,
-        first_name: wpUser.first_name || '',
-        last_name: wpUser.last_name || '',
-        description: wpUser.description || '',
-        avatar: wpUser.avatar_urls?.[96] || '',
-        meta: {
-          phone: '', // This data is not available in the standard endpoint
-          birthday: '', // This data is not available in the standard endpoint
-        },
-      },
-    };
+    
+    const data = await safeJsonParse(response);
+    return { success: true, data: data.data };
+    
   } catch (error) {
     console.error('Error fetching user profile:', error);
     return {
@@ -232,8 +188,8 @@ export async function getUserProfile(): Promise<ApiResponse<UserProfileData>> {
 
 export async function updateUserProfile(profileData: UpdateProfilePayload): Promise<ApiResponse<any>> {
   try {
-    const response = await authenticatedFetch(`${WP_BASE_URL}/wp-json/naviu/v1/update-profile`, {
-      method: 'POST',
+    const response = await authenticatedFetch(`${WP_BASE_URL}/wp-json/users/v1/profile`, {
+      method: 'PUT',
       body: JSON.stringify(profileData),
     });
     const data = await safeJsonParse(response);
@@ -242,7 +198,7 @@ export async function updateUserProfile(profileData: UpdateProfilePayload): Prom
       return { success: false, message: data.message || 'Failed to update user profile.' };
     }
     
-    return { success: true, message: data.message || 'Profile updated successfully.' };
+    return { success: true, data, message: 'Cập nhật thành công!' };
   } catch (error) {
     console.error('Error updating user profile:', error);
     return { success: false, message: error instanceof Error ? error.message : 'An unknown error occurred.' };

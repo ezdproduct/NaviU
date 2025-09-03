@@ -14,6 +14,7 @@ import {
   ChevronDoubleLeftIcon, // For Collapse
   ChevronDoubleRightIcon, // For Expand
   ArrowRightOnRectangleIcon, // For Logout
+  Cog6ToothIcon, // For Settings
 } from '@heroicons/react/24/outline'; // Sử dụng outline icons cho vẻ ngoài nhẹ nhàng
 
 interface SidebarContentProps {
@@ -29,6 +30,7 @@ const navItems = [
   { id: 'testhub', name: 'TEST HUB', icon: ClipboardDocumentListIcon },
   { id: 'connect', name: 'Kết nối chuyên gia', icon: UsersIcon },
   { id: 'do-test', name: 'Làm Bài Test', icon: PencilSquareIcon },
+  { id: 'settings', name: 'Cài đặt Tài khoản', icon: Cog6ToothIcon }, // Add settings item
 ];
 
 const SidebarContent = ({ activeView, setActiveView, onToggle, isSidebarOpen }: SidebarContentProps) => {
