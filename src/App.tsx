@@ -12,7 +12,6 @@ import Index from "./pages/Index";
 import Layout from "./components/Layout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import CreateUser from "./pages/CreateUser";
 import ProfileInfo from "./pages/ProfileInfo";
 import { useAuth } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -26,11 +25,6 @@ import TestHubView from '@/components/profile/TestHubView';
 import ConnectView from '@/components/profile/ConnectView';
 import DoTestView from '@/components/profile/DoTestView';
 import { useEffect } from "react";
-
-// Import debug components
-import APITest from "./components/debug/APITest";
-import SimpleAPITest from "./components/debug/SimpleAPITest";
-import QuickTest from "./components/debug/QuickTest"; // Import QuickTest
 
 const queryClient = new QueryClient();
 
@@ -51,18 +45,13 @@ export const routes: RouteObject[] = [
     children: [
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
-      { path: "/create-user", element: <CreateUser /> },
-      { path: "/api-test", element: <APITest /> },
-      { path: "/simple-api-test", element: <SimpleAPITest /> },
-      { path: "/quick-test", element: <QuickTest /> }, // Add route for QuickTest
     ],
   },
   {
     path: "/profile",
     element: (
       <ProtectedRoute>
-        {/* ProfileLayout là layout cho các trang profile */}
-        <ProfileLayout /> 
+        <ProfileLayout />
       </ProtectedRoute>
     ),
     children: [
