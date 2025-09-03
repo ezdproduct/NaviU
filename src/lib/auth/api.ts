@@ -133,12 +133,11 @@ export async function register(username: string, email: string, password: string
 
 export async function getCurrentUserInfo(): Promise<User> {
   const token = getToken();
-  const storedUser = getUser();
-  if (!token || !storedUser) {
-    throw new Error("No authentication token or user info found.");
+  if (!token) {
+    throw new Error("No authentication token found.");
   }
 
-  const res = await authenticatedFetch(`${WP_BASE_URL}/wp-json/custom/v1/user/me`, {
+  const res = await authenticatedFetch(`${WP_BASE_URL}/wp-json/wp/v2/users/me?context=edit`, {
     method: "GET",
   });
 
@@ -146,7 +145,21 @@ export async function getCurrentUserInfo(): Promise<User> {
     const errorData = await res.json();
     throw new Error(errorData.message || "Failed to fetch user info.");
   }
-  return res.json();
+  const wpUser = await res.json();
+
+  const user: User = {
+    id: wpUser.id,
+    username: wpUser.slug,
+    email: wpUser.email,
+    first_name: wpUser.first_name,
+    last_name: wpUser.last_name,
+    description: wpUser.description,
+    nickname: wpUser.nickname || wpUser.slug,
+    user_login: wpUser.slug,
+    user_nicename: wpUser.slug,
+    user_display_name: wpUser.name,
+  };
+  return user;
 }
 
 export async function updateUser(
@@ -179,51 +192,40 @@ export async function updateUser(
 
 export async function getUserProfile(): Promise<ApiResponse<UserProfileData>> {
   try {
-    let response = await authenticatedFetch(`${WP_BASE_URL}/wp-json/users/v1/profile`);
-    
-    if (!response.ok && response.status === 404) {
-      response = await authenticatedFetch(`${WP_BASE_URL}/wp-json/wp/v2/users/me`);
-      
-      if (!response.ok) {
-        const errorData = await safeJsonParse(response);
-        throw new Error(errorData.message || `HTTP ${response.status}: Failed to fetch user from built-in endpoint.`);
-      }
-      
-      const wpUser = await safeJsonParse(response);
-      
-      return {
-        success: true,
-        data: {
-          id: wpUser.id,
-          username: wpUser.slug || wpUser.username,
-          email: wpUser.email,
-          display_name: wpUser.name,
-          first_name: wpUser.first_name || '',
-          last_name: wpUser.last_name || '',
-          description: wpUser.description || '',
-          avatar: wpUser.avatar_urls?.[96] || '',
-          meta: {
-            phone: '',
-            birthday: '',
-          }
-        }
-      };
-    } else if (!response.ok) {
-        const errorData = await safeJsonParse(response);
-        return { success: false, message: errorData.message || 'Failed to fetch user profile from custom endpoint.' };
+    const response = await authenticatedFetch(`${WP_BASE_URL}/wp-json/wp/v2/users/me?context=edit`);
+
+    if (!response.ok) {
+      const errorData = await safeJsonParse(response);
+      return { success: false, message: errorData.message || 'Failed to fetch user profile.' };
     }
-    
-    const data = await safeJsonParse(response);
+
+    const wpUser = await safeJsonParse(response);
+
     return {
       success: true,
-      data: data.data
+      data: {
+        id: wpUser.id,
+        username: wpUser.slug,
+        email: wpUser.email,
+        display_name: wpUser.name,
+        first_name: wpUser.first_name || '',
+        last_name: wpUser.last_name || '',
+        description: wpUser.description || '',
+        avatar: wpUser.avatar_urls?.[96] || '',
+        meta: {
+          phone: '', // This data is not available in the standard endpoint
+          birthday: '', // This data is not available in the standard endpoint
+        },
+      },
     };
-    
   } catch (error) {
     console.error('Error fetching user profile:', error);
     return {
       success: false,
-      message: error instanceof Error ? error.message : 'An unknown error occurred while fetching user profile.'
+      message:
+        error instanceof Error
+          ? error.message
+          : 'An unknown error occurred while fetching user profile.',
     };
   }
 }
