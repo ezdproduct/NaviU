@@ -8,6 +8,7 @@ import { Sheet, SheetContent } from '@/components/CustomSheet';
 import SidebarContent from '@/components/profile/SidebarContent';
 import WelcomeModal from '@/components/WelcomeModal';
 import { useAuth } from '@/contexts/AuthContext';
+import { cn } from '@/lib/utils'; // Import cn utility
 
 const ProfileLayout = () => {
   const isMobile = useIsMobile();
@@ -17,6 +18,7 @@ const ProfileLayout = () => {
 
   // Lấy phân đoạn đường dẫn hiện tại để xác định activeView cho sidebar
   const currentPathSegment = location.pathname.split('/')[2] || 'dashboard'; 
+  const isDoTestView = location.pathname.endsWith('/do-test'); // Kiểm tra xem có phải trang do-test không
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const mainContentRef = useRef<HTMLDivElement>(null);
@@ -98,7 +100,13 @@ const ProfileLayout = () => {
         {isMobile && <ProfileHeader onMenuClick={toggleSidebar} />}
         {!isMobile && <ProfilePageHeader />}
 
-        <div ref={mainContentRef} className="flex-1 min-h-0 overflow-y-auto no-scrollbar flex flex-col px-4">
+        <div 
+          ref={mainContentRef} 
+          className={cn(
+            "flex-1 min-h-0 overflow-y-auto no-scrollbar flex flex-col",
+            !isDoTestView && "px-4" // Chỉ áp dụng padding nếu không phải trang do-test
+          )}
+        >
           <Outlet /> {/* Render the nested route component here */}
         </div>
       </div>

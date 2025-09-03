@@ -168,9 +168,9 @@ const DoTestView = () => {
   };
 
   return (
-    <div className="flex flex-col bg-white rounded-2xl shadow-sm min-h-[calc(100vh-6rem)]">
+    <div className="flex flex-col bg-white flex-1">
       {/* Header cho các nút chuyển đổi chế độ test */}
-      <div className="p-4 border-b flex justify-center gap-4 bg-gray-50 rounded-t-2xl">
+      <div className="p-4 border-b flex justify-center gap-4 bg-gray-50">
         <Button
           variant={testMode === 'ai' ? 'default' : 'outline'}
           onClick={() => setTestMode('ai')}
@@ -225,7 +225,7 @@ const DoTestView = () => {
             )}
             <div ref={messagesEndRef} />
           </div>
-          <div className="bg-gray-50 border-t p-4 rounded-b-2xl">
+          <div className="bg-gray-50 border-t p-4">
             <div className="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-2">
               {!isAiTyping && !isTestFinished && currentOptions.map((option, index) => (
                 <Button
