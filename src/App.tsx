@@ -7,27 +7,24 @@ import {
   Outlet,
   useNavigate
 } from "react-router-dom";
+import NotFound from "./pages/NotFound";
+import Index from "./pages/Index";
+import Layout from "./components/Layout";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ProfileInfo from "./pages/ProfileInfo";
 import { useAuth } from "./contexts/AuthContext";
-import { useEffect, lazy, Suspense } from "react"; // Import lazy and Suspense
-import LoadingSpinner from "./components/LoadingSpinner"; // Import the new spinner
+import ProtectedRoute from "./components/ProtectedRoute";
+import ProfileLayout from "./components/profile/ProfileLayout";
+import LandingLayout from "./components/landing/LandingLayout";
 
-// Lazy load pages
-const NotFound = lazy(() => import("./pages/NotFound"));
-const Index = lazy(() => import("./pages/Index"));
-const Layout = lazy(() => import("./components/Layout"));
-const Login = lazy(() => import("./pages/Login"));
-const Register = lazy(() => import("./pages/Register"));
-const ProfileInfo = lazy(() => import("./pages/ProfileInfo"));
-const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
-const ProfileLayout = lazy(() => import("./components/profile/ProfileLayout"));
-const LandingLayout = lazy(() => import("./components/landing/LandingLayout"));
-
-// Lazy load profile views
-const DashboardView = lazy(() => import('@/components/profile/DashboardView'));
-const ReportView = lazy(() => import('@/components/profile/ReportView'));
-const TestHubView = lazy(() => import('@/components/profile/TestHubView'));
-const ConnectView = lazy(() => import('@/components/profile/ConnectView'));
-const DoTestView = lazy(() => import('@/components/profile/DoTestView'));
+// Import individual profile views
+import DashboardView from '@/components/profile/DashboardView';
+import ReportView from '@/components/profile/ReportView';
+import TestHubView from '@/components/profile/TestHubView';
+import ConnectView from '@/components/profile/ConnectView';
+import DoTestView from '@/components/profile/DoTestView';
+import { useEffect } from "react";
 
 const queryClient = new QueryClient();
 
@@ -97,9 +94,7 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <Suspense fallback={<LoadingSpinner />}>
-          <Outlet />
-        </Suspense>
+        <Outlet />
       </TooltipProvider>
     </QueryClientProvider>
   );
