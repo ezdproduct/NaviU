@@ -21,9 +21,7 @@ export const AuthProvider = ({ children }: { ReactNode }) => {
 
   const fetchUser = useCallback(async () => {
     setIsLoadingAuth(true);
-    // TẠM THỜI: Thêm độ trễ nhân tạo để dễ dàng quan sát lớp phủ loading
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Độ trễ 1 giây
-
+    // Đã loại bỏ độ trễ nhân tạo
     const token = getToken();
     if (token) {
       try {
