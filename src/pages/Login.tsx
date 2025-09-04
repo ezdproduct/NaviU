@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,10 +13,17 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth(); // Lấy isAuthenticated từ AuthContext
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const registrationSuccess = searchParams.get('registered') === 'true';
+
+  // Thêm useEffect để kiểm tra trạng thái đăng nhập
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/profile', { replace: true }); // Điều hướng đến trang profile nếu đã đăng nhập
+    }
+  }, [isAuthenticated, navigate]); // Chạy khi isAuthenticated hoặc navigate thay đổi
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
