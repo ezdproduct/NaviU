@@ -3,10 +3,11 @@ import { TestInfo } from '@/data/testHubData';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight } from 'lucide-react'; // Import ArrowRight icon
+import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom'; // Import Link
 
 interface TestCardProps {
-  test: TestInfo;
+  test: TestInfo & { link?: string }; // Thêm link vào interface
 }
 
 const TestCard = ({ test }: TestCardProps) => {
@@ -28,8 +29,10 @@ const TestCard = ({ test }: TestCardProps) => {
             </Badge>
           ))}
         </div>
-        <Button className="mt-2 bg-blue-600 text-white hover:bg-blue-700"> {/* Explicitly set blue background and white text */}
-          Khám phá <ArrowRight className="ml-1 h-4 w-4" />
+        <Button asChild className="mt-2 bg-blue-600 text-white hover:bg-blue-700">
+          <Link to={test.link || '#'}>
+            Khám phá <ArrowRight className="ml-1 h-4 w-4" />
+          </Link>
         </Button>
       </CardFooter>
     </Card>

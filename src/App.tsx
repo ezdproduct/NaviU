@@ -23,7 +23,8 @@ import ReportView from '@/components/profile/ReportView';
 import TestHubView from '@/components/profile/TestHubView';
 import ConnectView from '@/components/profile/ConnectView';
 import DoTestView from '@/components/profile/DoTestView';
-import UserProfile from '@/pages/UserProfile'; // Import the new UserProfile page
+import UserProfile from '@/pages/UserProfile';
+import TestRunnerPage from "@/components/profile/TestRunnerPage"; // Import trang làm test mới
 import { useEffect } from "react";
 
 const queryClient = new QueryClient();
@@ -60,8 +61,9 @@ export const routes: RouteObject[] = [
       { path: "report", element: <ReportView /> },
       { path: "testhub", element: <TestHubView /> },
       { path: "connect", element: <ConnectView /> },
-      { path: "do-test", element: <DoTestView /> },
-      { path: "settings", element: <UserProfile /> }, // Add the new route
+      { path: "do-test", element: <DoTestView /> }, // Trang cổng thông tin
+      { path: "do-test/:testId", element: <TestRunnerPage /> }, // Trang làm test động
+      { path: "settings", element: <UserProfile /> },
     ],
   },
   {

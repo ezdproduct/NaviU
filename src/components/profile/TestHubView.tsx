@@ -3,15 +3,23 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { testHubData } from '@/data/testHubData';
 import TestCard from './TestCard';
 
+const getTestLink = (testTitle: string): string => {
+  if (testTitle.toLowerCase().includes('mbti')) {
+    return '/profile/do-test/mbti';
+  }
+  // Thêm các bài test khác ở đây
+  return '#'; // Đường dẫn mặc định
+};
+
 const TestSection = ({ title, tests }: { title: string; tests: any[] }) => (
   <section>
     <h2 className="text-2xl font-bold text-gray-800 mb-4">{title}</h2>
     <Carousel opts={{ align: "start" }} className="w-full">
       <CarouselContent className="-ml-4">
         {tests.map((test, index) => (
-          <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3"> {/* Adjusted basis for wider cards */}
+          <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
             <div className="p-1 h-full">
-              <TestCard test={test} />
+              <TestCard test={{ ...test, link: getTestLink(test.title) }} />
             </div>
           </CarouselItem>
         ))}
