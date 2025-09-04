@@ -7,7 +7,15 @@ import GenericTestRunner from "./GenericTestRunner";
 import { useNavigate } from 'react-router-dom';
 import { showSuccess } from '@/utils/toast';
 
-interface Question {
+// Định nghĩa interface cho cấu trúc câu hỏi từ API
+interface ApiQuestion {
+  id: string;
+  text: string;
+  choices: { [key: string]: { label: string } };
+}
+
+// Định nghĩa interface cho cấu trúc câu hỏi mà GenericTestRunner mong đợi
+interface TransformedQuestion {
   id: string;
   text: string;
   options: { key: string; text: string }[];
@@ -20,7 +28,7 @@ interface DGTCQuizProps {
 const API_URL = `${WP_BASE_URL}/wp-json/mbti/v1`;
 
 export default function DGTCQuiz({ token }: DGTCQuizProps) {
-  const [questions, setQuestions] = useState<Question[]>([]);
+  const [questions, setQuestions] = useState<TransformedQuestion[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -35,10 +43,19 @@ export default function DGTCQuiz({ token }: DGTCQuizProps) {
         if (!res.ok) {
           throw new Error(`Lỗi HTTP! Trạng thái: ${res.status}`);
         }
-        const data = await res.json();
+        const data: ApiQuestion[] = await res.json();
         
-        // Sử dụng trực tiếp dữ liệu câu hỏi từ API, giả định API đã cung cấp đầy đủ options
-        setQuestions(data);
+        // Chuyển đổi dữ liệu từ API sang định dạng mong muốn
+        const transformedQuestions: TransformedQuestion[] = data.map(q => ({
+          id: q.id,
+          text: q.text,
+          options: Object.entries(q.choices).map(([key, choice]) => ({
+            key: key,
+            text: choice.label,
+          })),
+        }));
+
+        setQuestions(transformedQuestions);
 
       } catch (err: any) {
         console.error("Error fetching ĐGTC questions:", err);
