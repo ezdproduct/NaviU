@@ -6,21 +6,20 @@ import { useAuth } from '@/contexts/AuthContext';
 
 // Import Heroicons
 import {
-  Squares2X2Icon,
-  DocumentTextIcon,
-  ClipboardDocumentListIcon,
-  UsersIcon,
-  PencilSquareIcon,
-  ChevronDoubleLeftIcon,
-  ChevronDoubleRightIcon,
-  ArrowRightOnRectangleIcon,
-  Cog6ToothIcon,
-  ClockIcon, // Import icon mới
-} from '@heroicons/react/24/outline';
+  Squares2X2Icon, // For Dashboard
+  DocumentTextIcon, // For Report
+  ClipboardDocumentListIcon, // For Test Hub
+  UsersIcon, // For Connect
+  PencilSquareIcon, // For Do Test
+  ChevronDoubleLeftIcon, // For Collapse
+  ChevronDoubleRightIcon, // For Expand
+  ArrowRightOnRectangleIcon, // For Logout
+  Cog6ToothIcon, // For Settings
+} from '@heroicons/react/24/outline'; // Sử dụng outline icons cho vẻ ngoài nhẹ nhàng
 
 interface SidebarContentProps {
-  activeView: string;
-  setActiveView: (view: string) => void;
+  activeView: string; // This will now be the path segment (e.g., 'dashboard', 'report')
+  setActiveView: (view: string) => void; // This will now trigger navigation
   onToggle: () => void;
   isSidebarOpen: boolean;
 }
@@ -31,8 +30,7 @@ const navItems = [
   { id: 'testhub', name: 'TEST HUB', icon: ClipboardDocumentListIcon },
   { id: 'connect', name: 'Kết nối chuyên gia', icon: UsersIcon },
   { id: 'do-test', name: 'Làm Bài Test', icon: PencilSquareIcon },
-  { id: 'history', name: 'Lịch sử làm test', icon: ClockIcon }, // Thêm mục mới
-  { id: 'settings', name: 'Cài đặt Tài khoản', icon: Cog6ToothIcon },
+  { id: 'settings', name: 'Cài đặt Tài khoản', icon: Cog6ToothIcon }, // Add settings item
 ];
 
 const SidebarContent = ({ activeView, setActiveView, onToggle, isSidebarOpen }: SidebarContentProps) => {
@@ -43,19 +41,19 @@ const SidebarContent = ({ activeView, setActiveView, onToggle, isSidebarOpen }: 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, viewId: string) => {
     e.preventDefault();
     if (!isSidebarOpen) {
-      onToggle();
+      onToggle(); // Chỉ mở sidebar, không chuyển tab
     } else {
-      setActiveView(viewId);
+      setActiveView(viewId); // Gọi setActiveView để điều hướng
     }
   };
 
   const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (!isSidebarOpen) {
-      e.preventDefault();
-      onToggle();
+      e.preventDefault(); // Ngăn chặn chuyển hướng
+      onToggle(); // Chỉ mở sidebar
     } else {
-      e.preventDefault();
-      setShowConfirmModal(true);
+      e.preventDefault(); // Ngăn chặn chuyển hướng mặc định của Link
+      setShowConfirmModal(true); // Hiển thị modal xác nhận
     }
   };
 
