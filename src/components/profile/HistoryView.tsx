@@ -24,8 +24,14 @@ interface TestHistoryItem {
   submitted_at: string;
 }
 
-// Giả định một API endpoint chung cho lịch sử tất cả các bài test
-const API_ALL_TESTS_HISTORY_URL = `${WP_BASE_URL}/wp-json/tests/v1/history`; // URL giả định
+// Định nghĩa các API endpoint cho từng loại bài test
+const API_ENDPOINTS = {
+  MBTI: `${WP_BASE_URL}/wp-json/mbti/v1/history`,
+  // Thêm các API endpoint cho các bài test khác tại đây
+  // HOLLAND: `${WP_BASE_URL}/wp-json/holland/v1/history`,
+  // EQ: `${WP_BASE_URL}/wp-json/eq/v1/history`,
+  // VALUES: `${WP_BASE_URL}/wp-json/values/v1/history`,
+};
 
 const HistoryView = () => {
   const { user } = useAuth();
@@ -45,24 +51,62 @@ const HistoryView = () => {
 
     setLoading(true);
     setError(null);
+    
+    const headers = {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    };
+
+    const fetchPromises = Object.entries(API_ENDPOINTS).map(([type, url]) =>
+      fetch(url, { headers })
+        .then(async res => {
+          const data = await res.json();
+          if (!res.ok) {
+            throw new Error(data.message || `Lỗi khi tải lịch sử ${type}: ${res.status}`);
+          }
+          return { type, data };
+        })
+        .catch(err => {
+          console.error(`Error fetching ${type} history:`, err);
+          return { type, error: err.message };
+        })
+    );
+
     try {
-      const response = await fetch(API_ALL_TESTS_HISTORY_URL, { // Sử dụng URL chung
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
+      const results = await Promise.allSettled(fetchPromises);
+      let combinedHistory: TestHistoryItem[] = [];
+      let hasFetchError = false;
+
+      results.forEach(result => {
+        if (result.status === 'fulfilled' && !result.value.error) {
+          const { type, data } = result.value;
+          // Giả định mỗi API trả về một mảng các item lịch sử
+          const typedHistory = data.map((item: any) => ({
+            ...item,
+            type: type,
+            title: item.title || `${type} Test`, // Gán tiêu đề mặc định nếu không có
+          }));
+          combinedHistory = combinedHistory.concat(typedHistory);
+        } else {
+          hasFetchError = true;
+          // Có thể lưu trữ lỗi cụ thể cho từng API nếu muốn hiển thị chi tiết hơn
+        }
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || `Lỗi khi tải lịch sử: ${response.status}`);
+      // Sắp xếp lịch sử theo thời gian nộp bài giảm dần (mới nhất trước)
+      combinedHistory.sort((a, b) => new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime());
+
+      setHistory(combinedHistory);
+      if (hasFetchError && combinedHistory.length === 0) {
+        setError('Không thể tải một số hoặc tất cả lịch sử bài test. Vui lòng kiểm tra cấu hình API.');
+      } else if (hasFetchError) {
+        // Nếu có lỗi nhưng vẫn có dữ liệu, có thể hiển thị cảnh báo thay vì lỗi toàn màn hình
+        // setError('Có lỗi xảy ra khi tải một số lịch sử bài test.');
       }
 
-      const data: TestHistoryItem[] = await response.json();
-      setHistory(data);
     } catch (err: any) {
-      console.error("Error fetching all tests history:", err);
-      setError(err.message || 'Không thể tải lịch sử bài test. Vui lòng kiểm tra cấu hình API.');
+      console.error("Error processing history fetches:", err);
+      setError(err.message || 'Có lỗi xảy ra khi tải lịch sử bài test.');
     } finally {
       setLoading(false);
     }
