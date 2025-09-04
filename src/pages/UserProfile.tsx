@@ -4,13 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { getUserProfile, updateUserProfile } from "@/lib/auth/api";
+import { getToken } from "@/lib/auth/storage";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import MbtiProfile from "@/components/profile/MbtiProfile"; // Import component mới
 
-const PersonalInfo = () => {
+const UserProfile = () => {
   const [formData, setFormData] = useState({
     display_name: "",
     first_name: "",
@@ -21,6 +20,8 @@ const PersonalInfo = () => {
   const [loading, setLoading] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const token = getToken();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -40,8 +41,11 @@ const PersonalInfo = () => {
       }
       setPageLoading(false);
     };
-    fetchProfile();
-  }, []);
+
+    if (token) {
+      fetchProfile();
+    }
+  }, [token]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -64,88 +68,81 @@ const PersonalInfo = () => {
     setLoading(false);
   };
 
+  if (!token) {
+    return <p className="text-center text-red-500">Bạn chưa đăng nhập.</p>;
+  }
+
   if (pageLoading) {
     return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <Card>
+        <CardHeader>
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-4 w-64 mt-2" />
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2"><Skeleton className="h-4 w-24" /><Skeleton className="h-10 w-full" /></div>
+            <div className="space-y-2"><Skeleton className="h-4 w-24" /><Skeleton className="h-10 w-full" /></div>
+          </div>
           <div className="space-y-2"><Skeleton className="h-4 w-24" /><Skeleton className="h-10 w-full" /></div>
-          <div className="space-y-2"><Skeleton className="h-4 w-24" /><Skeleton className="h-10 w-full" /></div>
-        </div>
-        <div className="space-y-2"><Skeleton className="h-4 w-24" /><Skeleton className="h-10 w-full" /></div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-2"><Skeleton className="h-4 w-24" /><Skeleton className="h-10 w-full" /></div>
-          <div className="space-y-2"><Skeleton className="h-4 w-24" /><Skeleton className="h-10 w-full" /></div>
-        </div>
-        <Skeleton className="h-10 w-32" />
-      </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2"><Skeleton className="h-4 w-24" /><Skeleton className="h-10 w-full" /></div>
+            <div className="space-y-2"><Skeleton className="h-4 w-24" /><Skeleton className="h-10 w-full" /></div>
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Skeleton className="h-10 w-32" />
+        </CardFooter>
+      </Card>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <CardContent className="space-y-6">
-        {message && (
-          <Alert variant={message.type === 'error' ? 'destructive' : 'default'}>
-            <Terminal className="h-4 w-4" />
-            <AlertTitle>{message.type === 'success' ? 'Thành công' : 'Lỗi'}</AlertTitle>
-            <AlertDescription>{message.text}</AlertDescription>
-          </Alert>
-        )}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="last_name">Họ</Label>
-            <Input id="last_name" name="last_name" value={formData.last_name} onChange={handleChange} />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="first_name">Tên</Label>
-            <Input id="first_name" name="first_name" value={formData.first_name} onChange={handleChange} />
-          </div>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="display_name">Tên hiển thị</Label>
-          <Input id="display_name" name="display_name" value={formData.display_name} onChange={handleChange} />
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="phone">Số điện thoại</Label>
-            <Input id="phone" name="phone" type="tel" value={formData.phone} onChange={handleChange} />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="birthday">Ngày sinh</Label>
-            <Input id="birthday" name="birthday" type="date" value={formData.birthday} onChange={handleChange} />
-          </div>
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Button type="submit" disabled={loading}>
-          {loading ? "Đang lưu..." : "Lưu thay đổi"}
-        </Button>
-      </CardFooter>
-    </form>
-  );
-};
-
-const UserProfile = () => {
-  return (
     <Card>
       <CardHeader>
-        <CardTitle>Cài đặt Tài khoản</CardTitle>
-        <CardDescription>Quản lý thông tin cá nhân và các cài đặt khác của bạn.</CardDescription>
+        <CardTitle>Thông tin cá nhân</CardTitle>
+        <CardDescription>Cập nhật thông tin cá nhân của bạn tại đây.</CardDescription>
       </CardHeader>
-      <Tabs defaultValue="personal" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="personal">Thông tin cá nhân</TabsTrigger>
-          <TabsTrigger value="mbti">Hồ sơ MBTI</TabsTrigger>
-        </TabsList>
-        <TabsContent value="personal">
-          <PersonalInfo />
-        </TabsContent>
-        <TabsContent value="mbti">
-          <CardContent>
-            <MbtiProfile />
-          </CardContent>
-        </TabsContent>
-      </Tabs>
+      <form onSubmit={handleSubmit}>
+        <CardContent className="space-y-6">
+          {message && (
+            <Alert variant={message.type === 'error' ? 'destructive' : 'default'}>
+              <Terminal className="h-4 w-4" />
+              <AlertTitle>{message.type === 'success' ? 'Thành công' : 'Lỗi'}</AlertTitle>
+              <AlertDescription>{message.text}</AlertDescription>
+            </Alert>
+          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="last_name">Họ</Label>
+              <Input id="last_name" name="last_name" value={formData.last_name} onChange={handleChange} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="first_name">Tên</Label>
+              <Input id="first_name" name="first_name" value={formData.first_name} onChange={handleChange} />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="display_name">Tên hiển thị</Label>
+            <Input id="display_name" name="display_name" value={formData.display_name} onChange={handleChange} />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="phone">Số điện thoại</Label>
+              <Input id="phone" name="phone" type="tel" value={formData.phone} onChange={handleChange} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="birthday">Ngày sinh</Label>
+              <Input id="birthday" name="birthday" type="date" value={formData.birthday} onChange={handleChange} />
+            </div>
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button type="submit" disabled={loading}>
+            {loading ? "Đang lưu..." : "Lưu thay đổi"}
+          </Button>
+        </CardFooter>
+      </form>
     </Card>
   );
 };
