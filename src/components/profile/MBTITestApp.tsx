@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, User, CheckCircle, ArrowRight, ArrowLeft, BarChart3, Zap } from 'lucide-react';
-import { Button } from '@/components/ui/button'; // Import Button from shadcn/ui
-import { Progress } from '@/components/ui/progress'; // Import Progress from shadcn/ui
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'; // Import Card components
+import { Clock, User, CheckCircle, ArrowRight, ArrowLeft, BarChart3, Zap, Settings } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const MBTITestApp = () => {
-  const [currentView, setCurrentView] = useState('list'); // 'list', 'test', 'result'
+  const [currentView, setCurrentView] = useState('list'); // 'list', 'test', 'result', 'config'
   const [tests, setTests] = useState([]);
   const [currentTest, setCurrentTest] = useState<any>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -14,40 +16,42 @@ const MBTITestApp = () => {
   const [startTime, setStartTime] = useState<number | null>(null);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState('');
+  const [apiStatus, setApiStatus] = useState<'loading' | 'success' | 'error'>('loading');
+  const [apiUrl, setApiUrl] = useState<string>(
+    localStorage.getItem('mbtiApiUrl') || 'https://naviu-backend.ezd.vn/wp-json/tests/v1'
+  );
 
-  // Mock API base URL - thay thế bằng URL WordPress của bạn
-  // Lưu ý: Đây là URL giả định, bạn cần thay thế bằng API thực tế của mình.
-  const API_BASE = '/wp-json/tests/v1'; 
-
-  // Fetch danh sách tests
   useEffect(() => {
-    fetchTests();
-  }, []);
+    localStorage.setItem('mbtiApiUrl', apiUrl);
+  }, [apiUrl]);
+
+  useEffect(() => {
+    if (currentView === 'list') {
+      fetchTests();
+    }
+  }, [currentView, apiUrl]); // Re-fetch tests when view is list or API URL changes
 
   const fetchTests = async () => {
     setLoading(true);
     setError('');
+    setApiStatus('loading');
     try {
-      // Mock API call
-      const mockResponse = {
-        success: true,
-        data: [
-          {
-            id: 'mbti-1',
-            title: 'Trắc nghiệm MBTI Tiêu chuẩn',
-            description: 'Khám phá 16 nhóm tính cách để hiểu sâu hơn về bản thân và cách bạn tương tác với thế giới.',
-            meta: { duration: '15', difficulty_level: 'Trung bình' },
-            total_questions: 70,
-          },
-        ],
-      };
-      
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      setTests(mockResponse.data);
-    } catch (err) {
-      setError('Không thể tải danh sách bài test');
+      const response = await fetch(`${apiUrl}/list`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `API responded with status ${response.status}`);
+      }
+      const data = await response.json();
+      if (data.success) {
+        setTests(data.data);
+        setApiStatus('success');
+      } else {
+        throw new Error(data.message || 'Failed to fetch tests from API.');
+      }
+    } catch (err: any) {
+      console.error("Error fetching tests:", err);
+      setError(err.message || 'Không thể tải danh sách bài test. Vui lòng kiểm tra cấu hình API.');
+      setApiStatus('error');
     }
     setLoading(false);
   };
@@ -56,37 +60,24 @@ const MBTITestApp = () => {
     setLoading(true);
     setError('');
     try {
-      // Mock API call for test questions
-      const mockTestQuestions = {
-        success: true,
-        data: {
-          id: testId,
-          title: 'Trắc nghiệm MBTI Tiêu chuẩn',
-          questions: Array.from({ length: 70 }).map((_, i) => ({
-            id: `q${i + 1}`,
-            group: `Nhóm ${Math.ceil((i + 1) / 10)}`,
-            question_text: `Bạn có xu hướng ${i % 2 === 0 ? 'hướng ngoại' : 'hướng nội'} hơn không? (Câu ${i + 1})`,
-            options: [
-              { key: 'a', text: 'Hoàn toàn đồng ý', value: 'agree_strong' },
-              { key: 'b', text: 'Đồng ý', value: 'agree' },
-              { key: 'c', text: 'Trung lập', value: 'neutral' },
-              { key: 'd', text: 'Không đồng ý', value: 'disagree' },
-              { key: 'e', text: 'Hoàn toàn không đồng ý', value: 'disagree_strong' },
-            ],
-          })),
-        },
-      };
-
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      setCurrentTest(mockTestQuestions.data);
-      setCurrentQuestion(0);
-      setAnswers({});
-      setStartTime(Date.now());
-      setCurrentView('test');
-    } catch (err) {
-      setError('Không thể tải bài test');
+      const response = await fetch(`${apiUrl}/${testId}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `API responded with status ${response.status}`);
+      }
+      const data = await response.json();
+      if (data.success) {
+        setCurrentTest(data.data);
+        setCurrentQuestion(0);
+        setAnswers({});
+        setStartTime(Date.now());
+        setCurrentView('test');
+      } else {
+        throw new Error(data.message || 'Không thể tải bài test.');
+      }
+    } catch (err: any) {
+      console.error("Error starting test:", err);
+      setError(err.message || 'Không thể tải bài test.');
     }
     setLoading(false);
   };
@@ -121,32 +112,32 @@ const MBTITestApp = () => {
     const timeTaken = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0;
 
     try {
-      // Mock API call for submission
-      const mockResult = {
-        success: true,
-        result: {
-          mbti_type: 'INFP',
-          description: 'INFP - Người Lý Tưởng Hóa: Bạn là một tâm hồn tự do, sáng tạo và luôn tràn đầy nhiệt huyết. Bạn nhìn thế giới không phải bằng những gì đang có, mà bằng vô vàn những khả năng tuyệt vời mà nó có thể trở thành.',
-          completion_rate: Math.floor((Object.keys(answers).length / currentTest.questions.length) * 100),
-          time_taken: timeTaken,
-          answered_questions: Object.keys(answers).length,
-          total_questions: currentTest.questions.length,
-          details: {
-            extraversion_introversion: { tendency: 'Introversion', Introversion: '80%', Extraversion: '20%' },
-            sensing_intuition: { tendency: 'Intuition', Intuition: '70%', Sensing: '30%' },
-            thinking_feeling: { tendency: 'Feeling', Feeling: '90%', Thinking: '10%' },
-            judging_perceiving: { tendency: 'Perceiving', Perceiving: '60%', Judging: '40%' },
-          },
+      const response = await fetch(`${apiUrl}/${currentTest.id}/submit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      };
+        body: JSON.stringify({
+          answers: answers,
+          time_taken: timeTaken
+        })
+      });
 
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `API responded with status ${response.status}`);
+      }
 
-      setResult(mockResult.result);
-      setCurrentView('result');
-    } catch (err) {
-      setError('Không thể nộp bài test');
+      const data = await response.json();
+      if (data.success) {
+        setResult(data.result);
+        setCurrentView('result');
+      } else {
+        throw new Error(data.message || 'Có lỗi xảy ra khi nộp bài');
+      }
+    } catch (err: any) {
+      console.error("Error submitting test:", err);
+      setError(err.message || 'Không thể nộp bài test.');
     }
     setLoading(false);
   };
@@ -158,6 +149,7 @@ const MBTITestApp = () => {
     setAnswers({});
     setResult(null);
     setError('');
+    setApiStatus('loading'); // Reset API status to re-fetch
   };
 
   // Test List View
@@ -179,39 +171,48 @@ const MBTITestApp = () => {
           </div>
         ) : (
           <div className="grid gap-6">
-            {tests.map((test: any) => (
-              <Card key={test.id} className="rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-                <CardContent className="p-0 flex flex-col sm:flex-row items-start sm:items-center justify-between">
-                  <div className="flex-1 mb-4 sm:mb-0">
-                    <CardTitle className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">{test.title}</CardTitle>
-                    <p className="text-gray-600 mb-4">{test.description}</p>
-                    
-                    <div className="flex flex-wrap gap-4">
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Clock className="w-4 h-4 mr-1" />
-                        {test.meta.duration} phút
-                      </div>
-                      <div className="flex items-center text-sm text-gray-500">
-                        <User className="w-4 h-4 mr-1" />
-                        {test.total_questions} câu hỏi
-                      </div>
-                      <div className="flex items-center text-sm text-gray-500">
-                        <BarChart3 className="w-4 h-4 mr-1" />
-                        {test.meta.difficulty_level}
+            {tests.length > 0 ? (
+              tests.map((test: any) => (
+                <Card key={test.id} className="rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+                  <CardContent className="p-0 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                    <div className="flex-1 mb-4 sm:mb-0">
+                      <CardTitle className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">{test.title}</CardTitle>
+                      <p className="text-gray-600 mb-4">{test.description}</p>
+                      
+                      <div className="flex flex-wrap gap-4">
+                        <div className="flex items-center text-sm text-gray-500">
+                          <Clock className="w-4 h-4 mr-1" />
+                          {test.meta.duration} phút
+                        </div>
+                        <div className="flex items-center text-sm text-gray-500">
+                          <User className="w-4 h-4 mr-1" />
+                          {test.total_questions} câu hỏi
+                        </div>
+                        <div className="flex items-center text-sm text-gray-500">
+                          <BarChart3 className="w-4 h-4 mr-1" />
+                          {test.meta.difficulty_level}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  <Button
-                    onClick={() => startTest(test.id)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center"
-                  >
-                    Bắt đầu test
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </CardContent>
+                    
+                    <Button
+                      onClick={() => startTest(test.id)}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center"
+                    >
+                      Bắt đầu test
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <Card className="rounded-xl shadow-lg p-6 text-center">
+                <CardTitle className="text-xl font-bold text-gray-800 mb-2">Không có bài test nào</CardTitle>
+                <p className="text-gray-600">
+                  Không tìm thấy bài test nào. Vui lòng kiểm tra lại cấu hình API hoặc thử lại sau.
+                </p>
               </Card>
-            ))}
+            )}
           </div>
         )}
       </div>
@@ -451,8 +452,49 @@ const MBTITestApp = () => {
     );
   };
 
+  // Api Configuration View
+  const ApiConfigView = () => {
+    const [tempApiUrl, setTempApiUrl] = useState(apiUrl);
+
+    const handleSave = () => {
+      setApiUrl(tempApiUrl);
+      setCurrentView('list'); // Go back to list view after saving
+      // fetchTests will be triggered by useEffect due to apiUrl change
+    };
+
+    return (
+      <div className="min-h-[calc(100vh-6rem)] bg-gray-100 flex items-center justify-center p-4">
+        <Card className="rounded-xl p-8 max-w-md w-full text-center">
+          <CardTitle className="text-2xl font-bold text-gray-800 mb-4">Cấu hình API</CardTitle>
+          <p className="text-gray-600 mb-6">
+            Vui lòng nhập URL của API WordPress để tải các bài test.
+          </p>
+          <div className="space-y-4 mb-6">
+            <Label htmlFor="apiUrl" className="sr-only">URL API</Label>
+            <Input
+              id="apiUrl"
+              type="url"
+              placeholder="Ví dụ: https://your-wordpress-site.com/wp-json/tests/v1"
+              value={tempApiUrl}
+              onChange={(e) => setTempApiUrl(e.target.value)}
+              className="w-full"
+            />
+          </div>
+          <div className="flex flex-col gap-3">
+            <Button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700 text-white">
+              Lưu & Tải lại
+            </Button>
+            <Button variant="outline" onClick={() => setCurrentView('list')}>
+              Hủy
+            </Button>
+          </div>
+        </Card>
+      </div>
+    );
+  };
+
   // Error display
-  if (error) {
+  if (error && currentView !== 'config') { // Only show error if not in config view
     return (
       <div className="min-h-[calc(100vh-6rem)] bg-red-50 flex items-center justify-center p-4">
         <Card className="rounded-xl p-8 max-w-md w-full text-center">
@@ -460,22 +502,33 @@ const MBTITestApp = () => {
           <CardTitle className="text-xl font-semibold text-gray-800 mb-2">Có lỗi xảy ra</CardTitle>
           <p className="text-gray-600 mb-6">{error}</p>
           <Button
-            onClick={() => {
-              setError('');
-              if (currentView === 'list') fetchTests();
-            }}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
+            onClick={() => setCurrentView('config')}
+            className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-lg transition-colors"
           >
-            Thử lại
+            <Settings className="w-4 h-4 mr-2" />
+            Cấu hình API
           </Button>
         </Card>
       </div>
     );
   }
 
-  // Main render
+  // Main render with API status check
   return (
     <div>
+      {apiStatus === 'error' && currentView === 'list' && (
+        <div className="fixed top-4 right-4 z-50">
+          <Button
+            onClick={() => setCurrentView('config')}
+            className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center text-sm"
+          >
+            <Settings className="w-4 h-4 mr-2" />
+            Cấu hình API
+          </Button>
+        </div>
+      )}
+      
+      {currentView === 'config' && <ApiConfigView />}
       {currentView === 'list' && <TestListView />}
       {currentView === 'test' && <TestView />}
       {currentView === 'result' && <ResultView />}
