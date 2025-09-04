@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from '@/components/ui/button';
 import { Card, CardTitle } from '@/components/ui/card';
 import { WP_BASE_URL } from '@/lib/auth/api';
-import DGTCResult from "./DGTCResult"; // Đổi import
+import DGTCResult from "./DGTCResult";
 import GenericTestRunner from "./GenericTestRunner";
 import { useNavigate } from 'react-router-dom';
 import { showSuccess } from '@/utils/toast';
@@ -13,13 +13,13 @@ interface Question {
   options: { key: string; text: string }[];
 }
 
-interface DGTCQuizProps { // Đổi tên interface
+interface DGTCQuizProps {
   token: string;
 }
 
-const API_URL = `${WP_BASE_URL}/wp-json/mbti/v1`; // Giữ nguyên endpoint API nhưng đổi tên biến
+const API_URL = `${WP_BASE_URL}/wp-json/mbti/v1`;
 
-export default function DGTCQuiz({ token }: DGTCQuizProps) { // Đổi tên component
+export default function DGTCQuiz({ token }: DGTCQuizProps) {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -37,18 +37,11 @@ export default function DGTCQuiz({ token }: DGTCQuizProps) { // Đổi tên comp
         }
         const data = await res.json();
         
-        // Thêm các lựa chọn A/B mặc định vào mỗi câu hỏi
-        const questionsWithDefaultOptions = data.map((q: any) => ({
-          ...q,
-          options: [
-            { key: 'a', text: 'A' },
-            { key: 'b', text: 'B' },
-          ],
-        }));
-        setQuestions(questionsWithDefaultOptions);
+        // Sử dụng trực tiếp dữ liệu câu hỏi từ API, giả định API đã cung cấp đầy đủ options
+        setQuestions(data);
 
       } catch (err: any) {
-        console.error("Error fetching ĐGTC questions:", err); // Đổi tên log
+        console.error("Error fetching ĐGTC questions:", err);
         setError(err.message || 'Không thể tải câu hỏi ĐGTC.');
       } finally {
         setLoading(false);
@@ -115,7 +108,7 @@ export default function DGTCQuiz({ token }: DGTCQuizProps) { // Đổi tên comp
 
   return (
     <GenericTestRunner
-      title="Trắc nghiệm ĐGTC" // Đổi tên hiển thị
+      title="Trắc nghiệm ĐGTC"
       questions={questions}
       onSubmit={handleSubmit}
       isSubmitting={submitted}
