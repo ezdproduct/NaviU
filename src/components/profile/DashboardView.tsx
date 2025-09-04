@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Radar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -24,10 +24,15 @@ import { competencyData } from '@/data/competencyData';
 import { eqData } from '@/data/eqData';
 import { valuesData } from '@/data/valuesData';
 import CareerSection from './CareerSection';
+import { WP_BASE_URL } from '@/lib/auth/api'; // Import base URL
+import { useAuth } from '@/contexts/AuthContext'; // Import useAuth
+import { Skeleton } from '@/components/ui/skeleton'; // Import Skeleton
 
 interface DashboardViewProps {
   username: string;
 }
+
+const MBTI_API_URL = `${WP_BASE_URL}/wp-json/mbti/v1`;
 
 const EqChart = () => {
     const data = {
@@ -55,11 +60,11 @@ const getWelcomeModalDetails = (username: string) => ({
   ),
 });
 
-const getPersonalityModalDetails = (personalityType: keyof typeof personalityData) => {
-  const pData = personalityData[personalityType];
+const getPersonalityModalDetails = (personalityType: string) => {
+  const pData = personalityData[personalityType as keyof typeof personalityData];
   return {
-    title: `Loại tính cách: ${pData.title} (${personalityType})`,
-    description: pData.description,
+    title: `Loại tính cách: ${pData?.title || 'N/A'} (${personalityType})`,
+    description: pData?.description || 'Không tìm thấy mô tả.',
     content: null,
   };
 };
@@ -128,6 +133,7 @@ const getEqProfileModalDetails = () => ({
 });
 
 const DashboardView = ({ username }: DashboardViewProps) => {
+  const { isAuthenticated } = useAuth();
   const [isWelcomeHovered, setIsWelcomeHovered] = useState(false);
   const [isPersonalityHovered, setIsPersonalityHovered] = useState(false);
   const [isHollandHovered, setIsHollandHovered] = useState(false);
@@ -136,6 +142,55 @@ const DashboardView = ({ username }: DashboardViewProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState<{ title: string; description: React.ReactNode; content?: React.ReactNode } | null>(null);
 
+  // State cho kết quả MBTI gần nhất
+  const [latestMbtiResult, setLatestMbtiResult] = useState<{ type: string; description: string } | null>(null);
+  const [isMbtiLoading, setIsMbtiLoading] = useState(true);
+  const [mbtiError, setMbtiError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchLatestMbti = async () => {
+      setIsMbtiLoading(true);
+      setMbtiError(null);
+      const token = localStorage.getItem('jwt_token');
+
+      if (!isAuthenticated || !token) {
+        setMbtiError('Chưa đăng nhập để xem kết quả MBTI.');
+        setIsMbtiLoading(false);
+        setLatestMbtiResult(null); // Clear previous result if logged out
+        return;
+      }
+
+      try {
+        const res = await fetch(`${MBTI_API_URL}/result`, {
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.message || `Lỗi khi tải kết quả MBTI: ${res.status}`);
+        }
+
+        const data = await res.json();
+        if (data && data.result) {
+          const type = data.result;
+          const description = personalityData[type as keyof typeof personalityData]?.description || 'Không tìm thấy mô tả.';
+          setLatestMbtiResult({ type, description });
+        } else {
+          setMbtiError('Không có kết quả MBTI nào được tìm thấy.');
+          setLatestMbtiResult(null);
+        }
+      } catch (err: any) {
+        console.error("Error fetching latest MBTI result:", err);
+        setMbtiError(err.message || 'Không thể tải kết quả MBTI gần nhất.');
+        setLatestMbtiResult(null);
+      } finally {
+        setIsMbtiLoading(false);
+      }
+    };
+
+    fetchLatestMbti();
+  }, [isAuthenticated, username]); // Re-fetch if auth state or username changes
+
   const handleCardClick = (cardType: string) => {
     let details;
     switch (cardType) {
@@ -143,7 +198,9 @@ const DashboardView = ({ username }: DashboardViewProps) => {
         details = getWelcomeModalDetails(username);
         break;
       case 'personality':
-        details = getPersonalityModalDetails('INFP'); // Assuming INFP for now
+        details = latestMbtiResult
+          ? getPersonalityModalDetails(latestMbtiResult.type)
+          : { title: 'Loại tính cách', description: mbtiError || 'Chưa có kết quả MBTI.', content: null };
         break;
       case 'holland':
         details = getHollandModalDetails(['A', 'I', 'S']); // Assuming AIS for now
@@ -186,8 +243,18 @@ const DashboardView = ({ username }: DashboardViewProps) => {
           onClick={() => handleCardClick('personality')}
         >
           <h3 className="text-gray-500">Loại tính cách</h3>
-          <p className="text-2xl font-bold text-gray-800 mt-2">INFP</p>
-          <p className="text-sm text-gray-500 mt-1">Người Lý Tưởng Hóa</p>
+          {isMbtiLoading ? (
+            <Skeleton className="h-8 w-3/4 mt-2" />
+          ) : mbtiError ? (
+            <p className="text-sm text-red-500 mt-2">{mbtiError}</p>
+          ) : latestMbtiResult ? (
+            <>
+              <p className="text-2xl font-bold text-gray-800 mt-2">{latestMbtiResult.type}</p>
+              <p className="text-sm text-gray-500 mt-1">{latestMbtiResult.description}</p>
+            </>
+          ) : (
+            <p className="text-sm text-gray-500 mt-2">Chưa có kết quả</p>
+          )}
           <HoverViewMore isVisible={isPersonalityHovered} />
         </div>
         <div
