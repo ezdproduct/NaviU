@@ -26,6 +26,7 @@ import UserProfile from '@/pages/UserProfile';
 import TestRunnerPage from "@/components/profile/TestRunnerPage";
 import HistoryView from "@/components/profile/HistoryView";
 import LoadingPage from "@/components/LoadingPage"; // Import LoadingPage mới
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'; // Thêm import này
 
 const queryClient = new QueryClient();
 
