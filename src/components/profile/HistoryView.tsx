@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate
 // Cập nhật interface TestHistoryItem để hỗ trợ nhiều loại bài test
 interface TestHistoryItem {
   id: string;
-  type: 'ĐGTC' | 'Holland' | 'EQ' | 'Values' | string; // Thêm trường type
+  type: 'ĐGTC' | 'Holland' | 'EQ' | 'Values' | 'NaviU' | string; // Thêm 'NaviU'
   title: string;
   result: string; // Kết quả chính (ví dụ: "ENTP" cho ĐGTC)
   scores?: { [key: string]: number }; // Có thể có hoặc không tùy bài test
@@ -28,6 +28,7 @@ interface TestHistoryItem {
 // Định nghĩa các API endpoint cho từng loại bài test
 const API_ENDPOINTS = {
   ĐGTC: `${WP_BASE_URL}/wp-json/mbti/v1/history`, // Giữ nguyên endpoint API nhưng đổi tên loại test
+  NaviU: `${WP_BASE_URL}/wp-json/naviu/v1/history`, // Thêm endpoint cho NaviU Test
   // Thêm các API endpoint cho các bài test khác tại đây
   // HOLLAND: `${WP_BASE_URL}/wp-json/holland/v1/history`,
   // EQ: `${WP_BASE_URL}/wp-json/eq/v1/history`,
@@ -125,6 +126,7 @@ const HistoryView = () => {
       'Holland': 'bg-orange-600',
       'EQ': 'bg-green-600',
       'Values': 'bg-purple-600',
+      'NaviU': 'bg-red-600', // Màu cho NaviU Test
       // Thêm màu cho các loại test khác
       'default': 'bg-gray-500',
     };
@@ -166,6 +168,44 @@ const HistoryView = () => {
     if (item.type === 'ĐGTC') {
       // Điều hướng đến trang bài test ĐGTC và truyền dữ liệu kết quả
       navigate(`/profile/do-test/dgtc`, { state: { resultData: item } });
+    } else if (item.type === 'NaviU') {
+      // Hiển thị chi tiết NaviU Test trong modal
+      const userDisplayName = user?.user_display_name || user?.username || 'Bạn';
+      const title = `Kết quả Tổng hợp NaviU của ${userDisplayName}`;
+      const description = (
+        <p className="mb-2">Kết quả chính: <Badge className={getTypeColor(item.type)}>{item.result || 'Đã hoàn thành'}</Badge></p>
+      );
+      const content = (
+        <div className="space-y-4">
+          {item.details?.mbti && (
+            <div>
+              <h4 className="font-semibold mb-1">Kết quả MBTI:</h4>
+              <pre className="bg-gray-100 p-2 rounded-md text-sm overflow-x-auto">{JSON.stringify(item.details.mbti, null, 2)}</pre>
+            </div>
+          )}
+          {item.details?.eq && (
+            <div>
+              <h4 className="font-semibold mb-1">Kết quả EQ:</h4>
+              <pre className="bg-gray-100 p-2 rounded-md text-sm overflow-x-auto">{JSON.stringify(item.details.eq, null, 2)}</pre>
+            </div>
+          )}
+          {item.details?.cog && (
+            <div>
+              <h4 className="font-semibold mb-1">Kết quả Cognitive:</h4>
+              <pre className="bg-gray-100 p-2 rounded-md text-sm overflow-x-auto">{JSON.stringify(item.details.cog, null, 2)}</pre>
+            </div>
+          )}
+          {item.details?.holland && (
+            <div>
+              <h4 className="font-semibold mb-1">Kết quả Holland:</h4>
+              <pre className="bg-gray-100 p-2 rounded-md text-sm overflow-x-auto">{JSON.stringify(item.details.holland, null, 2)}</pre>
+            </div>
+          )}
+          {!item.details && <p className="text-sm text-gray-600">Không có thông tin chi tiết bổ sung.</p>}
+        </div>
+      );
+      setModalContent({ title, description, content });
+      setIsModalOpen(true);
     } else {
       // Giữ lại modal cho các loại test khác hoặc nếu không có trang riêng
       const userDisplayName = user?.user_display_name || user?.username || 'Bạn';

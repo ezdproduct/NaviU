@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams, useLocation } from 'react-router-dom'; // Import useLocation
 import MBTITestPage from './mbti/MBTITestPage'; // Đổi import từ DGTCQuiz sang MBTITestPage
+import NaviuTestPage from './naviu/NaviuTestPage'; // Import NaviuTestPage mới
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { DGTCResultData } from './mbti/DGTCResult'; // Import DGTCResultData
 
@@ -12,6 +13,8 @@ const TestRunnerPage = () => {
   switch (testId) {
     case 'dgtc': // Đổi tên đường dẫn
       return <MBTITestPage initialResultData={resultDataFromHistory} />; // Truyền dữ liệu kết quả ban đầu
+    case 'naviu': // Thêm case cho NaviU Test
+      return <NaviuTestPage />;
     // Trong tương lai, bạn có thể thêm các bài test khác ở đây
     // case 'holland':
     //   return <HollandTestApp />;
