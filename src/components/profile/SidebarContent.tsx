@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Link, useNavigate } from 'react-router-dom';
 import ConfirmNavigationModal from '@/components/ConfirmNavigationModal';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -15,6 +15,7 @@ import {
   ChevronDoubleRightIcon, // For Expand
   ArrowRightOnRectangleIcon, // For Logout
   Cog6ToothIcon, // For Settings
+  ClockIcon, // For History - New icon
 } from '@heroicons/react/24/outline'; // Sử dụng outline icons cho vẻ ngoài nhẹ nhàng
 
 interface SidebarContentProps {
@@ -28,9 +29,10 @@ const navItems = [
   { id: 'dashboard', name: 'Hồ Sơ Của Bạn', icon: Squares2X2Icon },
   { id: 'report', name: 'Báo cáo Chi tiết', icon: DocumentTextIcon },
   { id: 'testhub', name: 'TEST HUB', icon: ClipboardDocumentListIcon },
-  { id: 'connect', name: 'Kết nối chuyên gia', icon: UsersIcon },
   { id: 'do-test', name: 'Làm Bài Test', icon: PencilSquareIcon },
-  { id: 'settings', name: 'Cài đặt Tài khoản', icon: Cog6ToothIcon }, // Add settings item
+  { id: 'history', name: 'Lịch sử Test', icon: ClockIcon }, // Thêm mục lịch sử test
+  { id: 'connect', name: 'Kết nối chuyên gia', icon: UsersIcon },
+  { id: 'settings', name: 'Cài đặt Tài khoản', icon: Cog6ToothIcon },
 ];
 
 const SidebarContent = ({ activeView, setActiveView, onToggle, isSidebarOpen }: SidebarContentProps) => {
