@@ -168,27 +168,38 @@ const HistoryView = () => {
     // Cập nhật tiêu đề modal cho ĐGTC
     if (item.type === 'ĐGTC') {
       title = `Kết quả ĐGTC của ${userDisplayName} - ${item.result}`;
+      description = (
+        <>
+          <p>Kết quả chính: <Badge className={getResultColor(item.result)}>{item.result}</Badge></p>
+          {item.scores && (
+            <p className="mt-2">
+              <strong>Điểm số:</strong> {Object.entries(item.scores).map(([key, value]) => `${key}: ${value}`).join(', ')}
+            </p>
+          )}
+          {item.percent && (
+            <p>
+              <strong>Phần trăm:</strong> {Object.entries(item.percent).map(([key, value]) => `${key}: ${value}`).join(', ')}
+            </p>
+          )}
+          {item.clarity && (
+            <p>
+              <strong>Độ rõ ràng:</strong> {formatClarity(item.clarity)}
+            </p>
+          )}
+        </>
+      );
     } else {
       title = `Kết quả bài test: ${item.title || 'Không xác định'} (${item.type})`;
     }
 
 
-    if (item.type === 'ĐGTC' && item.scores && item.percent) {
-      description = (
-        <>
-          <p>Kết quả chính: <Badge className={getResultColor(item.result)}>{item.result}</Badge></p>
-          <p className="mt-2">Điểm số: {Object.entries(item.scores).map(([key, value]) => `${key}: ${value}`).join(', ')}</p>
-          <p>Độ rõ ràng: {formatClarity(item.clarity)}</p>
-          <p>Phần trăm: {Object.entries(item.percent).map(([key, value]) => `${key}: ${value}`).join(', ')}</p>
-        </>
-      );
-    } else if (item.details) {
+    if (item.details) {
       content = (
         <pre className="bg-gray-100 p-4 rounded-md text-sm overflow-x-auto">
           {JSON.stringify(item.details, null, 2)}
         </pre>
       );
-    } else {
+    } else if (item.type !== 'ĐGTC') { // Chỉ hiển thị thông báo này nếu không phải ĐGTC và không có details
       content = <p className="text-sm text-gray-600">Không có thông tin chi tiết bổ sung.</p>;
     }
 
@@ -254,7 +265,6 @@ const HistoryView = () => {
                 <TableHead className="w-[150px]">Ngày làm</TableHead>
                 <TableHead>Loại bài test</TableHead>
                 <TableHead>Kết quả chính</TableHead>
-                <TableHead>Độ rõ ràng</TableHead>
                 <TableHead className="text-right">Hành động</TableHead>
               </TableRow>
             </TableHeader>
@@ -278,7 +288,6 @@ const HistoryView = () => {
                     <TableCell>
                       <Badge className={getResultColor(item.result)}>{item.result}</Badge>
                     </TableCell>
-                    <TableCell className="text-sm text-gray-600">{formatClarity(item.clarity)}</TableCell>
                     <TableCell className="text-right">
                       <Button variant="outline" size="sm" onClick={() => handleViewDetails(item)}>
                         Xem chi tiết
