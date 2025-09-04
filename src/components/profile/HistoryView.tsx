@@ -9,6 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Terminal, History, FileQuestion, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import DashboardDetailModal from './DashboardDetailModal'; // Import DashboardDetailModal
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 // Cập nhật interface TestHistoryItem để hỗ trợ nhiều loại bài test
 interface TestHistoryItem {
@@ -41,6 +42,8 @@ const HistoryView = () => {
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState<{ title: string; description: React.ReactNode; content?: React.ReactNode } | null>(null);
+
+  const navigate = useNavigate(); // Khởi tạo useNavigate
 
   const fetchHistory = useCallback(async () => {
     if (!token) {
@@ -160,17 +163,17 @@ const HistoryView = () => {
   };
 
   const handleViewDetails = (item: TestHistoryItem) => {
-    const userDisplayName = user?.user_display_name || user?.username || 'Bạn';
-    let title = `Kết quả bài test: ${item.title} (${item.type})`;
-    let description: React.ReactNode = `Kết quả chính: ${item.result}`;
-    let content: React.ReactNode = null;
-
-    // Cập nhật tiêu đề modal cho ĐGTC
     if (item.type === 'ĐGTC') {
-      title = `Kết quả ĐGTC của ${userDisplayName} - ${item.result}`;
-      description = (
+      // Điều hướng đến trang bài test ĐGTC và truyền dữ liệu kết quả
+      navigate(`/profile/do-test/dgtc`, { state: { resultData: item } });
+    } else {
+      // Giữ lại modal cho các loại test khác hoặc nếu không có trang riêng
+      const userDisplayName = user?.user_display_name || user?.username || 'Bạn';
+      let title = `Kết quả bài test: ${item.title} (${item.type})`;
+      let description: React.ReactNode = (
         <>
           <p className="mb-2">Kết quả chính: <Badge className={getResultColor(item.result)}>{item.result}</Badge></p>
+          {item.submitted_at && <p className="mt-2 text-sm text-gray-700"><strong>Ngày làm:</strong> {formatDate(item.submitted_at)}</p>}
           {item.scores && (
             <div className="mt-2 text-sm text-gray-700">
               <h4 className="font-semibold mb-1">Điểm số:</h4>
@@ -198,23 +201,19 @@ const HistoryView = () => {
           )}
         </>
       );
-    } else {
-      title = `Kết quả bài test: ${item.title || 'Không xác định'} (${item.type})`;
+      let content: React.ReactNode = null;
+      if (item.details) {
+        content = (
+          <pre className="bg-gray-100 p-4 rounded-md text-sm overflow-x-auto">
+            {JSON.stringify(item.details, null, 2)}
+          </pre>
+        );
+      } else {
+        content = <p className="text-sm text-gray-600">Không có thông tin chi tiết bổ sung.</p>;
+      }
+      setModalContent({ title, description, content });
+      setIsModalOpen(true);
     }
-
-
-    if (item.details) {
-      content = (
-        <pre className="bg-gray-100 p-4 rounded-md text-sm overflow-x-auto">
-          {JSON.stringify(item.details, null, 2)}
-        </pre>
-      );
-    } else if (item.type !== 'ĐGTC') { // Chỉ hiển thị thông báo này nếu không phải ĐGTC và không có details
-      content = <p className="text-sm text-gray-600">Không có thông tin chi tiết bổ sung.</p>;
-    }
-
-    setModalContent({ title, description, content });
-    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {

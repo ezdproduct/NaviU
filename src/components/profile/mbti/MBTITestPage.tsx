@@ -39,7 +39,11 @@ interface TestHistoryItem {
 
 const API_URL = `${WP_BASE_URL}/wp-json/mbti/v1`;
 
-export default function MBTITestPage() {
+interface MBTITestPageProps {
+  initialResultData?: DGTCResultData; // Prop mới để nhận dữ liệu kết quả ban đầu
+}
+
+export default function MBTITestPage({ initialResultData }: MBTITestPageProps) {
   const { user } = useAuth();
   const token = user ? localStorage.getItem('jwt_token') : null;
 
@@ -135,10 +139,18 @@ export default function MBTITestPage() {
       setLoadingHistory(false);
       return;
     }
-    fetchQuestions();
-    fetchLatestResult(); // Cố gắng tải kết quả mới nhất khi component mount
-    fetchHistory();
-  }, [token, fetchQuestions, fetchLatestResult, fetchHistory]);
+
+    if (initialResultData) {
+      setCurrentResult(initialResultData);
+      setView('result');
+      setLoadingQuestions(false); // Không cần fetch câu hỏi nếu đang hiển thị kết quả
+      setLoadingHistory(false); // Không cần fetch lịch sử ngay lập tức nếu đang hiển thị kết quả
+    } else {
+      fetchQuestions();
+      fetchLatestResult(); // Chỉ fetch kết quả mới nhất nếu không có dữ liệu ban đầu
+    }
+    fetchHistory(); // Luôn fetch lịch sử trong nền
+  }, [token, fetchQuestions, fetchLatestResult, fetchHistory, initialResultData]); // Thêm initialResultData vào dependencies
 
   const handleSubmit = async (answers: { [key: string]: string }) => {
     setSubmitting(true);
@@ -200,7 +212,7 @@ export default function MBTITestPage() {
     );
   }
 
-  if (loadingQuestions) {
+  if (loadingQuestions && !initialResultData) { // Chỉ hiển thị loading nếu không có initialResultData
     return (
       <div className="min-h-[calc(100vh-6rem)] bg-gray-100 flex items-center justify-center p-4">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>

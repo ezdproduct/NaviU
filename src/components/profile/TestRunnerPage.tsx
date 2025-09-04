@@ -1,14 +1,17 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom'; // Import useLocation
 import MBTITestPage from './mbti/MBTITestPage'; // Đổi import từ DGTCQuiz sang MBTITestPage
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { DGTCResultData } from './mbti/DGTCResult'; // Import DGTCResultData
 
 const TestRunnerPage = () => {
   const { testId } = useParams<{ testId: string }>();
+  const location = useLocation();
+  const resultDataFromHistory = location.state?.resultData as DGTCResultData | undefined; // Lấy dữ liệu kết quả từ state
 
   switch (testId) {
     case 'dgtc': // Đổi tên đường dẫn
-      return <MBTITestPage />; // Render MBTITestPage
+      return <MBTITestPage initialResultData={resultDataFromHistory} />; // Truyền dữ liệu kết quả ban đầu
     // Trong tương lai, bạn có thể thêm các bài test khác ở đây
     // case 'holland':
     //   return <HollandTestApp />;
