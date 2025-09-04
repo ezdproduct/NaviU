@@ -34,7 +34,7 @@ const API_ENDPOINTS = {
 };
 
 const HistoryView = () => {
-  const { user } = useAuth(); // Lấy thông tin user
+  const { user } = useAuth();
   const token = localStorage.getItem('jwt_token');
   const [history, setHistory] = useState<TestHistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -160,11 +160,20 @@ const HistoryView = () => {
   };
 
   const handleViewDetails = (item: TestHistoryItem) => {
+    const userDisplayName = user?.user_display_name || user?.username || 'Bạn';
     let title = `Kết quả bài test: ${item.title} (${item.type})`;
     let description: React.ReactNode = `Kết quả chính: ${item.result}`;
     let content: React.ReactNode = null;
 
-    if (item.type === 'ĐGTC' && item.scores && item.percent) { // Đổi điều kiện
+    // Cập nhật tiêu đề modal cho ĐGTC
+    if (item.type === 'ĐGTC') {
+      title = `Kết quả ĐGTC của ${userDisplayName} - ${item.result}`;
+    } else {
+      title = `Kết quả bài test: ${item.title || 'Không xác định'} (${item.type})`;
+    }
+
+
+    if (item.type === 'ĐGTC' && item.scores && item.percent) {
       description = (
         <>
           <p>Kết quả chính: <Badge className={getResultColor(item.result)}>{item.result}</Badge></p>
@@ -174,7 +183,6 @@ const HistoryView = () => {
         </>
       );
     } else if (item.details) {
-      // Hiển thị chi tiết chung nếu có trường 'details'
       content = (
         <pre className="bg-gray-100 p-4 rounded-md text-sm overflow-x-auto">
           {JSON.stringify(item.details, null, 2)}
@@ -188,12 +196,16 @@ const HistoryView = () => {
     setIsModalOpen(true);
   };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setModalContent(null); // Xóa nội dung modal khi đóng
+  };
+
   return (
     <div className="p-4 sm:p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Lịch sử làm bài test</h1>
         <Button onClick={() => window.location.reload()} disabled={loading} className="flex items-center gap-2">
-          {/* Không cần animate-spin ở đây vì trang sẽ reload ngay lập tức */}
           <RefreshCw className="h-4 w-4" />
           Cập nhật
         </Button>
@@ -241,7 +253,6 @@ const HistoryView = () => {
               <TableRow>
                 <TableHead className="w-[150px]">Ngày làm</TableHead>
                 <TableHead>Loại bài test</TableHead>
-                <TableHead>Tên bài test</TableHead>
                 <TableHead>Kết quả chính</TableHead>
                 <TableHead>Độ rõ ràng</TableHead>
                 <TableHead className="text-right">Hành động</TableHead>
@@ -250,12 +261,11 @@ const HistoryView = () => {
             <TableBody>
               {history.map((item) => {
                 const userDisplayName = user?.user_display_name || user?.username || 'Bạn';
-                let displayTitle = item.title || 'Không xác định';
+                let displayTitle = item.title || 'Không xác định'; // Giữ lại để dùng trong modal
 
                 if (item.type === 'ĐGTC') {
                   displayTitle = `ĐGTC của ${userDisplayName} - ${item.result}`;
                 } else {
-                  // Đối với các loại test khác, nếu tiêu đề từ API có 'MBTI', thay thế nó
                   displayTitle = displayTitle.replace('MBTI', 'ĐGTC');
                 }
 
@@ -265,7 +275,6 @@ const HistoryView = () => {
                     <TableCell>
                       <Badge className={getTypeColor(item.type)}>{item.type}</Badge>
                     </TableCell>
-                    <TableCell>{displayTitle}</TableCell>
                     <TableCell>
                       <Badge className={getResultColor(item.result)}>{item.result}</Badge>
                     </TableCell>
@@ -286,7 +295,7 @@ const HistoryView = () => {
       {modalContent && (
         <DashboardDetailModal
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          onClose={handleCloseModal} // Sử dụng hàm đóng mới
           title={modalContent.title}
           description={modalContent.description}
           content={modalContent.content}
