@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '../contexts/AuthContext';
-import { Link, useSearchParams, useNavigate, useLocation } from 'react-router-dom'; // Import useLocation
+import { Link, useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import PasswordInput from '@/components/PasswordInput';
 import { LoginCredentials } from '@/types'; // Import LoginCredentials from shared types
 
@@ -13,31 +13,28 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { login, isAuthenticated } = useAuth(); // Lấy isAuthenticated từ AuthContext
+  const { login, isAuthenticated, isLoadingAuth } = useAuth(); // Lấy isLoadingAuth
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const location = useLocation(); // Lấy location để truy cập state
+  const location = useLocation();
   const registrationSuccess = searchParams.get('registered') === 'true';
 
-  // Lấy đường dẫn 'from' từ state được truyền bởi ProtectedRoute
-  const from = location.state?.from?.pathname || '/profile'; // Mặc định về /profile
+  const from = location.state?.from?.pathname || '/profile';
 
-  // Thêm useEffect để kiểm tra trạng thái đăng nhập
   useEffect(() => {
-    if (isAuthenticated) {
-      // Nếu đã xác thực, chuyển hướng đến đường dẫn 'from' hoặc profile mặc định
+    // Chỉ điều hướng nếu không còn trong trạng thái tải xác thực và đã xác thực
+    if (!isLoadingAuth && isAuthenticated) {
       navigate(from, { replace: true });
     }
-  }, [isAuthenticated, navigate, from]); // Chạy khi isAuthenticated, navigate hoặc from thay đổi
+  }, [isAuthenticated, navigate, from, isLoadingAuth]); // Thêm isLoadingAuth vào dependencies
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
     try {
-      const credentials: LoginCredentials = { username, password }; // Use LoginCredentials type
+      const credentials: LoginCredentials = { username, password };
       const loggedInUsername = await login(credentials);
-      // Sau khi đăng nhập thành công, chuyển hướng đến đường dẫn 'from' hoặc profile mặc định
       navigate(from, { state: { showWelcome: true, username: loggedInUsername }, replace: true });
     } catch (err: any) {
       setError(err.message || 'Tên đăng nhập hoặc mật khẩu không đúng.');

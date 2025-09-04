@@ -12,7 +12,7 @@ import Index from "./pages/Index";
 import Layout from "./components/Layout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import { useAuth } from "./contexts/AuthContext";
+import { useAuth } from "./contexts/AuthContext"; // Import useAuth
 import ProtectedRoute from "./components/ProtectedRoute";
 import ProfileLayout from "./components/profile/ProfileLayout";
 import LandingLayout from "./components/landing/LandingLayout";
@@ -25,8 +25,8 @@ import ConnectView from '@/components/profile/ConnectView';
 import DoTestView from '@/components/profile/DoTestView';
 import UserProfile from '@/pages/UserProfile';
 import TestRunnerPage from "@/components/profile/TestRunnerPage";
-import HistoryView from "@/components/profile/HistoryView"; // Import HistoryView
-import { useEffect } from "react";
+import HistoryView from "@/components/profile/HistoryView";
+// import { useEffect } from "react"; // Không cần useEffect này nữa
 
 const queryClient = new QueryClient();
 
@@ -65,7 +65,7 @@ export const routes: RouteObject[] = [
       { path: "do-test", element: <DoTestView /> },
       { path: "do-test/:testId", element: <TestRunnerPage /> },
       { path: "settings", element: <UserProfile /> },
-      { path: "history", element: <HistoryView /> }, // Thêm route cho lịch sử test
+      { path: "history", element: <HistoryView /> },
     ],
   },
   {
@@ -75,16 +75,18 @@ export const routes: RouteObject[] = [
 ];
 
 const App = () => {
-  const { isAuthenticated } = useAuth();
-  const navigate = useNavigate();
+  const { isLoadingAuth } = useAuth(); // Lấy trạng thái tải xác thực
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
-        navigate('/login');
-      }
-    }
-  }, [isAuthenticated, navigate]);
+  // Loại bỏ useEffect điều hướng không cần thiết ở đây
+  // Logic bảo vệ route sẽ được xử lý bởi ProtectedRoute và trạng thái isLoadingAuth
+
+  if (isLoadingAuth) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <QueryClientProvider client={queryClient}>

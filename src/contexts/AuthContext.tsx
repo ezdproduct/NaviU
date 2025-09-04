@@ -9,15 +9,18 @@ interface AuthContextType {
   login: (credentials: LoginCredentials) => Promise<string>;
   logout: () => void;
   updateUserInfo: (newUser: User) => void;
+  isLoadingAuth: boolean; // Thêm trạng thái tải xác thực
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider = ({ children }: { ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
+  const [isLoadingAuth, setIsLoadingAuth] = useState(true); // Khởi tạo là true
 
   const fetchUser = useCallback(async () => {
+    setIsLoadingAuth(true); // Bắt đầu tải
     const token = getToken();
     if (token) {
       try {
@@ -34,6 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsAuthenticated(false);
       setUser(null);
     }
+    setIsLoadingAuth(false); // Kết thúc tải
   }, []);
 
   useEffect(() => {
@@ -75,7 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, updateUserInfo }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, updateUserInfo, isLoadingAuth }}>
       {children}
     </AuthContext.Provider>
   );
