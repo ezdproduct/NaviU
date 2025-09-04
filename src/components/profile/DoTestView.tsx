@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useNavigate, useBlocker } from 'react-router-dom'; // Import useBlocker
+import { useNavigate, useBlocker } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import ConfirmNavigationModal from '@/components/ConfirmNavigationModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { showSuccess, showError, showLoading, dismissToast } from '@/utils/toast';
-import BasicTestView from './BasicTestView'; // Import BasicTestView
-import { questionsData, Question } from '@/data/questionsData'; // Import questionsData và Question type
+import BasicTestView from './BasicTestView';
+import MBTITestApp from './MBTITestApp'; // Import MBTITestApp
+import { questionsData, Question } from '@/data/questionsData';
 
 type Message = {
   sender: 'ai' | 'user';
@@ -23,8 +23,8 @@ const DoTestView = () => {
   const [isAiTyping, setIsAiTyping] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [testMode, setTestMode] = useState<'ai' | 'basic'>('ai'); // State mới để quản lý chế độ test
-  const [basicTestAnswers, setBasicTestAnswers] = useState<{ [key: string]: string } | null>(null); // State để lưu câu trả lời từ BasicTestView
+  const [testMode, setTestMode] = useState<'ai' | 'basic' | 'mbti'>('ai'); // Thêm 'mbti' vào state
+  const [basicTestAnswers, setBasicTestAnswers] = useState<{ [key: string]: string } | null>(null);
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -39,26 +39,26 @@ const DoTestView = () => {
     if (testMode === 'ai' && messages.length === 0) {
       setIsAiTyping(true);
       setTimeout(() => {
-        setMessages([{ sender: 'ai', text: questionsData[0].text }]); // Sử dụng questionsData
+        setMessages([{ sender: 'ai', text: questionsData[0].text }]);
         setIsAiTyping(false);
       }, 1000);
-    } else if (testMode === 'basic') {
-      // Reset AI chat if switching to basic mode
+    } else {
+      // Reset AI chat state when switching modes
       setMessages([]);
       setCurrentQuestionIndex(0);
       setIsAiTyping(false);
     }
-  }, [testMode, messages.length]);
+  }, [testMode]); // Chỉ chạy khi testMode thay đổi
 
   const handleAnswerSelect = (answer: string) => {
     setMessages((prev) => [...prev, { sender: 'user', text: answer }]);
     const nextQuestionIndex = currentQuestionIndex + 1;
 
-    if (nextQuestionIndex < questionsData.length) { // Sử dụng questionsData
+    if (nextQuestionIndex < questionsData.length) {
       setCurrentQuestionIndex(nextQuestionIndex);
       setIsAiTyping(true);
       setTimeout(() => {
-        setMessages((prev) => [...prev, { sender: 'ai', text: questionsData[nextQuestionIndex].text }]); // Sử dụng questionsData
+        setMessages((prev) => [...prev, { sender: 'ai', text: questionsData[nextQuestionIndex].text }]);
         setIsAiTyping(false);
       }, 1500);
     } else {
@@ -72,7 +72,7 @@ const DoTestView = () => {
 
   const handleFinishTest = async (answers?: { [key: string]: string }) => {
     if (testMode === 'basic' && answers) {
-      setBasicTestAnswers(answers); // Lưu trữ câu trả lời từ BasicTestView
+      setBasicTestAnswers(answers);
     }
     setShowConfirmModal(true);
   };
@@ -93,22 +93,21 @@ const DoTestView = () => {
           .filter(msg => msg.sender === 'user')
           .map(msg => msg.text);
 
-        questionsData.forEach((q, index) => { // Sử dụng questionsData
+        questionsData.forEach((q, index) => {
             submissionData[`Question ${index + 1}`] = userAnswers[index] || '';
         });
+        submissionData['Test Type'] = 'AI Chat Test';
       } else if (testMode === 'basic' && basicTestAnswers) {
-        // Sử dụng câu trả lời từ BasicTestView
         Object.keys(basicTestAnswers).forEach(questionId => {
           submissionData[questionId] = basicTestAnswers[questionId];
         });
         submissionData['Test Type'] = 'Basic Test';
       } else {
-        // Fallback nếu không có câu trả lời nào được thu thập
         submissionData['Test Type'] = 'Unknown';
         submissionData['Status'] = 'Completed (No answers collected)';
       }
 
-      const response = await fetch('https://script.google.com/macros/s/AKfycbzDnYuQtbgUeqqz_XfAQ2MhEP7xi3-W1eHAMcRgDqPbD18YATPnTLVJQ4tBx4mOhW3Y/exec', {
+      const response = await fetch('https://script.google.com/macros/s/AKfycbzDnYuQtbgUeqqz_XfAQ2MhEP7xi3-W1eHAMcRgDqPbD18YATP1TLVJQ4tBx4mOhW3Y/exec', { // Updated Google Sheet URL
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -128,22 +127,22 @@ const DoTestView = () => {
     } finally {
       dismissToast(loadingToastId);
       setIsSubmitting(false);
-      setBasicTestAnswers(null); // Xóa câu trả lời tạm thời
-      navigate('/profile/dashboard'); // Chuyển hướng đến tab dashboard
+      setBasicTestAnswers(null);
+      navigate('/profile/dashboard');
     }
   };
 
-  const currentOptions = questionsData[currentQuestionIndex]?.options || []; // Sử dụng questionsData
-  const isTestFinished = currentQuestionIndex >= questionsData.length; // Sử dụng questionsData
+  const currentOptions = questionsData[currentQuestionIndex]?.options || [];
+  const isAiTestFinished = currentQuestionIndex >= questionsData.length;
 
-  // Xác định khi nào bài test đang diễn ra
-  const isTestInProgress = (testMode === 'ai' && currentQuestionIndex > 0 && !isTestFinished) ||
-                           (testMode === 'basic' && Object.keys(basicTestAnswers || {}).length > 0 && !isTestFinished); // Kiểm tra basicTestAnswers
+  // Xác định khi nào bài test AI hoặc Basic đang diễn ra
+  const isAiOrBasicTestInProgress = (testMode === 'ai' && currentQuestionIndex > 0 && !isAiTestFinished) ||
+                                   (testMode === 'basic' && Object.keys(basicTestAnswers || {}).length > 0);
 
   // Sử dụng useBlocker để chặn điều hướng
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
-      isTestInProgress &&
+      isAiOrBasicTestInProgress &&
       currentLocation.pathname !== nextLocation.pathname
   );
 
@@ -156,21 +155,21 @@ const DoTestView = () => {
   const handleConfirmNavigation = () => {
     setShowConfirmModal(false);
     if (blocker.state === 'blocked') {
-      blocker.proceed(); // Cho phép điều hướng
+      blocker.proceed();
     }
   };
 
   const handleCancelNavigation = () => {
     setShowConfirmModal(false);
     if (blocker.state === 'blocked') {
-      blocker.reset(); // Hủy điều hướng
+      blocker.reset();
     }
   };
 
   return (
     <div className="flex flex-col bg-white flex-1">
       {/* Header cho các nút chuyển đổi chế độ test */}
-      <div className="p-4 border-b flex justify-center gap-4 bg-gray-50">
+      <div className="p-4 border-b flex justify-center gap-4 bg-gray-50 flex-wrap">
         <Button
           variant={testMode === 'ai' ? 'default' : 'outline'}
           onClick={() => setTestMode('ai')}
@@ -184,6 +183,13 @@ const DoTestView = () => {
           className={cn(testMode === 'basic' ? 'bg-blue-600 text-white hover:bg-blue-700' : 'border-blue-600 text-blue-600 hover:bg-blue-50')}
         >
           Trắc nghiệm cơ bản
+        </Button>
+        <Button
+          variant={testMode === 'mbti' ? 'default' : 'outline'}
+          onClick={() => setTestMode('mbti')}
+          className={cn(testMode === 'mbti' ? 'bg-blue-600 text-white hover:bg-blue-700' : 'border-blue-600 text-blue-600 hover:bg-blue-50')}
+        >
+          Trắc nghiệm MBTI
         </Button>
       </div>
 
@@ -227,7 +233,7 @@ const DoTestView = () => {
           </div>
           <div className="bg-gray-50 border-t p-4">
             <div className="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {!isAiTyping && !isTestFinished && currentOptions.map((option, index) => (
+              {!isAiTyping && !isAiTestFinished && currentOptions.map((option, index) => (
                 <Button
                   key={index}
                   variant="outline"
@@ -246,20 +252,22 @@ const DoTestView = () => {
                 className="flex-grow"
                 disabled
               />
-              <Button onClick={() => handleFinishTest()} disabled={isSubmitting || !isTestFinished}>
+              <Button onClick={() => handleFinishTest()} disabled={isSubmitting || !isAiTestFinished}>
                 {isSubmitting ? 'Đang gửi...' : 'Kết thúc'}
               </Button>
             </div>
           </div>
         </>
-      ) : (
+      ) : testMode === 'basic' ? (
         <BasicTestView onFinishTest={handleFinishTest} />
+      ) : ( // testMode === 'mbti'
+        <MBTITestApp />
       )}
 
       <ConfirmNavigationModal
         isOpen={showConfirmModal}
-        onClose={handleCancelNavigation} // Sử dụng handleCancelNavigation cho onClose
-        onConfirm={handleConfirmNavigation} // Sử dụng handleConfirmNavigation cho onConfirm
+        onClose={handleCancelNavigation}
+        onConfirm={handleConfirmNavigation}
       />
     </div>
   );
