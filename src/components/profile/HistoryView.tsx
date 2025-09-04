@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'; // Import useCallback
+import React, { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { WP_BASE_URL } from '@/lib/auth/api';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -6,30 +6,37 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Terminal, History, FileQuestion, RefreshCw } from 'lucide-react'; // Import RefreshCw icon
-import { Button } from '@/components/ui/button'; // Import Button
+import { Terminal, History, FileQuestion, RefreshCw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import DashboardDetailModal from './DashboardDetailModal'; // Import DashboardDetailModal
 
+// Cập nhật interface TestHistoryItem để hỗ trợ nhiều loại bài test
 interface TestHistoryItem {
   id: string;
+  type: 'MBTI' | 'Holland' | 'EQ' | 'Values' | string; // Thêm trường type
   title: string;
-  result: string; // e.g., "ENTP"
-  scores: { [key: string]: number };
-  clarity: { [key: string]: string };
-  percent: { [key: string]: string };
+  result: string; // Kết quả chính (ví dụ: "ENTP" cho MBTI)
+  scores?: { [key: string]: number }; // Có thể có hoặc không tùy bài test
+  clarity?: { [key: string]: string }; // Có thể có hoặc không tùy bài test
+  percent?: { [key: string]: string }; // Có thể có hoặc không tùy bài test
+  details?: any; // Chi tiết kết quả đầy đủ, có thể là JSON object
   started_at: string;
   submitted_at: string;
 }
 
-const API_URL = `${WP_BASE_URL}/wp-json/mbti/v1`;
+// Giả định một API endpoint chung cho lịch sử tất cả các bài test
+const API_ALL_TESTS_HISTORY_URL = `${WP_BASE_URL}/wp-json/tests/v1/history`; // URL giả định
 
 const HistoryView = () => {
   const { user } = useAuth();
-  const token = localStorage.getItem('jwt_token'); // Get token from localStorage
+  const token = localStorage.getItem('jwt_token');
   const [history, setHistory] = useState<TestHistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState<{ title: string; description: React.ReactNode; content?: React.ReactNode } | null>(null);
 
-  const fetchHistory = useCallback(async () => { // Wrap fetchHistory in useCallback
+  const fetchHistory = useCallback(async () => {
     if (!token) {
       setError('Bạn chưa đăng nhập. Vui lòng đăng nhập để xem lịch sử.');
       setLoading(false);
@@ -39,7 +46,7 @@ const HistoryView = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_URL}/history`, {
+      const response = await fetch(API_ALL_TESTS_HISTORY_URL, { // Sử dụng URL chung
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -54,28 +61,41 @@ const HistoryView = () => {
       const data: TestHistoryItem[] = await response.json();
       setHistory(data);
     } catch (err: any) {
-      console.error("Error fetching MBTI history:", err);
-      setError(err.message || 'Không thể tải lịch sử bài test.');
+      console.error("Error fetching all tests history:", err);
+      setError(err.message || 'Không thể tải lịch sử bài test. Vui lòng kiểm tra cấu hình API.');
     } finally {
       setLoading(false);
     }
-  }, [token]); // Dependency array for useCallback
+  }, [token]);
 
   useEffect(() => {
     fetchHistory();
-  }, [fetchHistory]); // Call fetchHistory when component mounts or fetchHistory changes
+  }, [fetchHistory]);
 
   const getTypeColor = (type: string) => {
     const colors: { [key: string]: string } = {
+      'MBTI': 'bg-blue-600',
+      'Holland': 'bg-orange-600',
+      'EQ': 'bg-green-600',
+      'Values': 'bg-purple-600',
+      // Thêm màu cho các loại test khác
+      'default': 'bg-gray-500',
+    };
+    return colors[type] || colors['default'];
+  };
+
+  const getResultColor = (result: string) => {
+    const mbtiColors: { [key: string]: string } = {
       'INTJ': 'bg-purple-600', 'INTP': 'bg-blue-600', 'ENTJ': 'bg-red-600', 'ENTP': 'bg-orange-600',
       'INFJ': 'bg-green-600', 'INFP': 'bg-teal-600', 'ENFJ': 'bg-pink-600', 'ENFP': 'bg-yellow-600',
       'ISTJ': 'bg-gray-700', 'ISFJ': 'bg-indigo-600', 'ESTJ': 'bg-red-700', 'ESFJ': 'bg-pink-700',
       'ISTP': 'bg-gray-600', 'ISFP': 'bg-green-500', 'ESTP': 'bg-orange-700', 'ESFP': 'bg-yellow-700'
     };
-    return colors[type] || 'bg-gray-500';
+    return mbtiColors[result] || 'bg-gray-500';
   };
 
-  const formatClarity = (clarity: { [key: string]: string }) => {
+  const formatClarity = (clarity: { [key: string]: string } | undefined) => {
+    if (!clarity) return 'N/A';
     return Object.entries(clarity)
       .map(([key, value]) => `${key}: ${value}`)
       .join(', ');
@@ -91,14 +111,43 @@ const HistoryView = () => {
         minute: '2-digit',
       });
     } catch {
-      return dateString; // Fallback if date is invalid
+      return dateString;
     }
+  };
+
+  const handleViewDetails = (item: TestHistoryItem) => {
+    let title = `Kết quả bài test: ${item.title} (${item.type})`;
+    let description: React.ReactNode = `Kết quả chính: ${item.result}`;
+    let content: React.ReactNode = null;
+
+    if (item.type === 'MBTI' && item.scores && item.percent) {
+      description = (
+        <>
+          <p>Kết quả chính: <Badge className={getResultColor(item.result)}>{item.result}</Badge></p>
+          <p className="mt-2">Điểm số: {Object.entries(item.scores).map(([key, value]) => `${key}: ${value}`).join(', ')}</p>
+          <p>Độ rõ ràng: {formatClarity(item.clarity)}</p>
+          <p>Phần trăm: {Object.entries(item.percent).map(([key, value]) => `${key}: ${value}`).join(', ')}</p>
+        </>
+      );
+    } else if (item.details) {
+      // Hiển thị chi tiết chung nếu có trường 'details'
+      content = (
+        <pre className="bg-gray-100 p-4 rounded-md text-sm overflow-x-auto">
+          {JSON.stringify(item.details, null, 2)}
+        </pre>
+      );
+    } else {
+      content = <p className="text-sm text-gray-600">Không có thông tin chi tiết bổ sung.</p>;
+    }
+
+    setModalContent({ title, description, content });
+    setIsModalOpen(true);
   };
 
   return (
     <div className="p-4 sm:p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Lịch sử làm bài test MBTI</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Lịch sử làm bài test</h1>
         <Button onClick={fetchHistory} disabled={loading} className="flex items-center gap-2">
           {loading ? (
             <RefreshCw className="h-4 w-4 animate-spin" />
@@ -108,7 +157,7 @@ const HistoryView = () => {
           Cập nhật
         </Button>
       </div>
-      <p className="text-gray-600 mb-8">Xem lại các bài test MBTI bạn đã hoàn thành và kết quả của chúng.</p>
+      <p className="text-gray-600 mb-8">Xem lại tất cả các bài test bạn đã hoàn thành và kết quả của chúng.</p>
 
       {loading && (
         <Card className="p-6">
@@ -140,7 +189,7 @@ const HistoryView = () => {
         <Card className="p-6 text-center">
           <FileQuestion className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <CardTitle className="text-xl font-bold text-gray-800 mb-2">Chưa có bài test nào</CardTitle>
-          <CardDescription>Bạn chưa hoàn thành bài test MBTI nào. Hãy bắt đầu làm một bài test mới!</CardDescription>
+          <CardDescription>Bạn chưa hoàn thành bài test nào. Hãy bắt đầu làm một bài test mới!</CardDescription>
         </Card>
       )}
 
@@ -150,29 +199,45 @@ const HistoryView = () => {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[150px]">Ngày làm</TableHead>
+                <TableHead>Loại bài test</TableHead> {/* Cột mới */}
                 <TableHead>Tên bài test</TableHead>
-                <TableHead>Kết quả</TableHead>
+                <TableHead>Kết quả chính</TableHead>
                 <TableHead>Độ rõ ràng</TableHead>
-                {/* <TableHead>Chi tiết</TableHead> */} {/* Tạm ẩn chi tiết để giữ bảng gọn gàng */}
+                <TableHead className="text-right">Hành động</TableHead> {/* Cột mới */}
               </TableRow>
             </TableHeader>
             <TableBody>
               {history.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell className="font-medium">{formatDate(item.submitted_at)}</TableCell>
-                  <TableCell>{item.title || 'Trắc nghiệm MBTI'}</TableCell>
                   <TableCell>
-                    <Badge className={getTypeColor(item.result)}>{item.result}</Badge>
+                    <Badge className={getTypeColor(item.type)}>{item.type}</Badge>
+                  </TableCell>
+                  <TableCell>{item.title || 'Không xác định'}</TableCell>
+                  <TableCell>
+                    <Badge className={getResultColor(item.result)}>{item.result}</Badge>
                   </TableCell>
                   <TableCell className="text-sm text-gray-600">{formatClarity(item.clarity)}</TableCell>
-                  {/* <TableCell>
-                    <Button variant="outline" size="sm">Xem chi tiết</Button>
-                  </TableCell> */}
+                  <TableCell className="text-right">
+                    <Button variant="outline" size="sm" onClick={() => handleViewDetails(item)}>
+                      Xem chi tiết
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </Card>
+      )}
+
+      {modalContent && (
+        <DashboardDetailModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          title={modalContent.title}
+          description={modalContent.description}
+          content={modalContent.content}
+        />
       )}
     </div>
   );
