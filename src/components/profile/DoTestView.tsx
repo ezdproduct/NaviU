@@ -11,12 +11,6 @@ const availableTests = [
     description: 'Khám phá 16 nhóm tính cách để hiểu sâu hơn về bản thân và cách bạn tương tác với thế giới.',
     link: '/profile/do-test/dgtc', // Đổi đường dẫn
   },
-  {
-    id: 'naviu',
-    title: 'Trắc nghiệm Tổng hợp NaviU',
-    description: 'Tổng hợp và gửi kết quả từ các bài test khác (MBTI, EQ, Holland, Cognitive) để có báo cáo toàn diện.',
-    link: '/profile/do-test/naviu',
-  },
   // Thêm các bài test khác ở đây trong tương lai
   // {
   //   id: 'holland',

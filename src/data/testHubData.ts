@@ -41,14 +41,6 @@ export const testHubData: { [key: string]: TestInfo[] } = {
       headerBgClass: "bg-green-50",
       tagColorPalette: ["bg-green-100 text-green-800", "bg-teal-100 text-teal-800"],
     },
-    {
-      title: "Trắc nghiệm Tổng hợp NaviU",
-      description: "Tổng hợp và gửi kết quả từ các bài test khác (MBTI, EQ, Holland, Cognitive) để có báo cáo toàn diện.",
-      duration: "5 phút",
-      tags: ["Tổng hợp", "Định hướng"],
-      headerBgClass: "bg-red-50",
-      tagColorPalette: ["bg-red-100 text-red-800", "bg-pink-100 text-pink-800"],
-    },
   ],
   hieuTruong: [
     {
