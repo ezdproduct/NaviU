@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react'; // Import useCallback
 import { useAuth } from '@/contexts/AuthContext';
 import { WP_BASE_URL } from '@/lib/auth/api';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -6,7 +6,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Terminal, History, FileQuestion } from 'lucide-react'; // Using lucide-react for icons
+import { Terminal, History, FileQuestion, RefreshCw } from 'lucide-react'; // Import RefreshCw icon
+import { Button } from '@/components/ui/button'; // Import Button
 
 interface TestHistoryItem {
   id: string;
@@ -28,41 +29,41 @@ const HistoryView = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const fetchHistory = useCallback(async () => { // Wrap fetchHistory in useCallback
+    if (!token) {
+      setError('Bạn chưa đăng nhập. Vui lòng đăng nhập để xem lịch sử.');
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_URL}/history`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `Lỗi khi tải lịch sử: ${response.status}`);
+      }
+
+      const data: TestHistoryItem[] = await response.json();
+      setHistory(data);
+    } catch (err: any) {
+      console.error("Error fetching MBTI history:", err);
+      setError(err.message || 'Không thể tải lịch sử bài test.');
+    } finally {
+      setLoading(false);
+    }
+  }, [token]); // Dependency array for useCallback
+
   useEffect(() => {
-    const fetchHistory = async () => {
-      if (!token) {
-        setError('Bạn chưa đăng nhập. Vui lòng đăng nhập để xem lịch sử.');
-        setLoading(false);
-        return;
-      }
-
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(`${API_URL}/history`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || `Lỗi khi tải lịch sử: ${response.status}`);
-        }
-
-        const data: TestHistoryItem[] = await response.json();
-        setHistory(data);
-      } catch (err: any) {
-        console.error("Error fetching MBTI history:", err);
-        setError(err.message || 'Không thể tải lịch sử bài test.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchHistory();
-  }, [token]);
+  }, [fetchHistory]); // Call fetchHistory when component mounts or fetchHistory changes
 
   const getTypeColor = (type: string) => {
     const colors: { [key: string]: string } = {
@@ -96,7 +97,17 @@ const HistoryView = () => {
 
   return (
     <div className="p-4 sm:p-6">
-      <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">Lịch sử làm bài test MBTI</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Lịch sử làm bài test MBTI</h1>
+        <Button onClick={fetchHistory} disabled={loading} className="flex items-center gap-2">
+          {loading ? (
+            <RefreshCw className="h-4 w-4 animate-spin" />
+          ) : (
+            <RefreshCw className="h-4 w-4" />
+          )}
+          Cập nhật
+        </Button>
+      </div>
       <p className="text-gray-600 mb-8">Xem lại các bài test MBTI bạn đã hoàn thành và kết quả của chúng.</p>
 
       {loading && (
