@@ -12,7 +12,7 @@ import Index from "./pages/Index";
 import Layout from "./components/Layout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import { useAuth } from "./contexts/AuthContext"; // Import useAuth
+import { useAuth } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ProfileLayout from "./components/profile/ProfileLayout";
 import LandingLayout from "./components/landing/LandingLayout";
@@ -26,7 +26,6 @@ import DoTestView from '@/components/profile/DoTestView';
 import UserProfile from '@/pages/UserProfile';
 import TestRunnerPage from "@/components/profile/TestRunnerPage";
 import HistoryView from "@/components/profile/HistoryView";
-// import { useEffect } from "react"; // Không cần useEffect này nữa
 
 const queryClient = new QueryClient();
 
@@ -75,25 +74,20 @@ export const routes: RouteObject[] = [
 ];
 
 const App = () => {
-  const { isLoadingAuth } = useAuth(); // Lấy trạng thái tải xác thực
-
-  // Loại bỏ useEffect điều hướng không cần thiết ở đây
-  // Logic bảo vệ route sẽ được xử lý bởi ProtectedRoute và trạng thái isLoadingAuth
-
-  if (isLoadingAuth) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
+  const { isLoadingAuth } = useAuth();
 
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <Outlet />
+        <Outlet /> {/* Luôn render Outlet để nội dung trang có thể hiển thị bên dưới */}
+
+        {isLoadingAuth && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        )}
       </TooltipProvider>
     </QueryClientProvider>
   );
