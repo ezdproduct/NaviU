@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import ConfirmNavigationModal from '@/components/ConfirmNavigationModal';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -15,7 +15,7 @@ import {
   ChevronDoubleRightIcon,
   ArrowRightOnRectangleIcon,
   Cog6ToothIcon,
-  ClockIcon, // Import icon cho lịch sử
+  ClockIcon, // Import icon mới
 } from '@heroicons/react/24/outline';
 
 interface SidebarContentProps {
@@ -31,7 +31,7 @@ const navItems = [
   { id: 'testhub', name: 'TEST HUB', icon: ClipboardDocumentListIcon },
   { id: 'connect', name: 'Kết nối chuyên gia', icon: UsersIcon },
   { id: 'do-test', name: 'Làm Bài Test', icon: PencilSquareIcon },
-  { id: 'history', name: 'Lịch sử Test', icon: ClockIcon }, // Thêm mục lịch sử
+  { id: 'history', name: 'Lịch sử làm test', icon: ClockIcon }, // Thêm mục mới
   { id: 'settings', name: 'Cài đặt Tài khoản', icon: Cog6ToothIcon },
 ];
 

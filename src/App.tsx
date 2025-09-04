@@ -25,7 +25,7 @@ import ConnectView from '@/components/profile/ConnectView';
 import DoTestView from '@/components/profile/DoTestView';
 import UserProfile from '@/pages/UserProfile';
 import TestRunnerPage from "@/components/profile/TestRunnerPage";
-import HistoryView from "@/components/profile/HistoryView"; // Import trang lịch sử
+import TestHistoryView from "@/components/profile/TestHistoryView"; // Import trang lịch sử
 import { useEffect } from "react";
 
 const queryClient = new QueryClient();
@@ -65,7 +65,7 @@ export const routes: RouteObject[] = [
       { path: "do-test", element: <DoTestView /> },
       { path: "do-test/:testId", element: <TestRunnerPage /> },
       { path: "settings", element: <UserProfile /> },
-      { path: "history", element: <HistoryView /> }, // Thêm route lịch sử
+      { path: "history", element: <TestHistoryView /> }, // Thêm route mới
     ],
   },
   {
