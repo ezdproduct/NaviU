@@ -78,7 +78,7 @@ const GenericTestRunner: React.FC<GenericTestRunnerProps> = ({
                 {currentQuestion.text}
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {currentQuestion.options.map((option) => (
+                {(currentQuestion.options || []).map((option) => (
                   <Button
                     key={option.key}
                     onClick={() => handleAnswer(currentQuestion.id, option.key)}
