@@ -18,7 +18,7 @@ import { personalityData } from '@/data/personalityData';
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
-interface DGTCResultData { // Đổi tên interface
+export interface DGTCResultData { // Đổi tên interface
   result: string;
   scores: { [key: string]: number };
   clarity: { [key: string]: string };
@@ -27,52 +27,22 @@ interface DGTCResultData { // Đổi tên interface
 }
 
 interface DGTCResultProps { // Đổi tên interface
-  token: string;
+  resultData: DGTCResultData | null; // Nhận dữ liệu kết quả qua prop
   onRetake: () => void;
+  loading: boolean; // Thêm prop loading
+  error: string | null; // Thêm prop error
 }
 
-const API_URL = `${WP_BASE_URL}/wp-json/mbti/v1`; // Giữ nguyên endpoint API nhưng đổi tên biến
-
-const DGTCResult: React.FC<DGTCResultProps> = ({ token, onRetake }) => { // Đổi tên component
-  const [result, setResult] = useState<DGTCResultData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+const DGTCResult: React.FC<DGTCResultProps> = ({ resultData, onRetake, loading, error }) => { // Đổi tên component
   const [dgtcDescription, setDgtcDescription] = useState<string | null>(null); // Đổi tên biến
 
   useEffect(() => {
-    async function fetchResult() {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await fetch(`${API_URL}/result`, {
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        });
-        if (!res.ok) {
-          const errorData = await res.json();
-          throw new Error(errorData.message || `Lỗi khi tải kết quả ĐGTC: ${res.status}`); // Đổi tên log
-        }
-        const data: DGTCResultData = await res.json();
-        
-        setResult(data);
-
-        // Lấy mô tả từ personalityData
-        if (data.result && personalityData[data.result as keyof typeof personalityData]) {
-          setDgtcDescription(personalityData[data.result as keyof typeof personalityData].description); // Đổi tên biến
-        } else {
-          setDgtcDescription('Không tìm thấy mô tả cho loại tính cách này.'); // Đổi tên biến
-        }
-
-      } catch (err: any) {
-        console.error("Error fetching ĐGTC result:", err); // Đổi tên log
-        setError(err.message || 'Không thể tải kết quả ĐGTC.');
-      } finally {
-        setLoading(false);
-      }
+    if (resultData && resultData.result && personalityData[resultData.result as keyof typeof personalityData]) {
+      setDgtcDescription(personalityData[resultData.result as keyof typeof personalityData].description);
+    } else {
+      setDgtcDescription('Không tìm thấy mô tả cho loại tính cách này.');
     }
-    fetchResult();
-  }, [token]);
+  }, [resultData]);
 
   if (loading) {
     return (
@@ -97,7 +67,7 @@ const DGTCResult: React.FC<DGTCResultProps> = ({ token, onRetake }) => { // Đ�
     );
   }
 
-  if (!result) {
+  if (!resultData) {
     return (
       <div className="min-h-[calc(100vh-6rem)] bg-gray-100 flex items-center justify-center p-4">
         <Card className="rounded-xl p-8 max-w-md w-full text-center">
@@ -128,14 +98,14 @@ const DGTCResult: React.FC<DGTCResultProps> = ({ token, onRetake }) => { // Đ�
       {
         label: 'Điểm số',
         data: [
-          result.scores.E || 0,
-          result.scores.S || 0,
-          result.scores.T || 0,
-          result.scores.J || 0,
-          result.scores.I || 0,
-          result.scores.N || 0,
-          result.scores.F || 0,
-          result.scores.P || 0,
+          resultData.scores.E || 0,
+          resultData.scores.S || 0,
+          resultData.scores.T || 0,
+          resultData.scores.J || 0,
+          resultData.scores.I || 0,
+          resultData.scores.N || 0,
+          resultData.scores.F || 0,
+          resultData.scores.P || 0,
         ],
         backgroundColor: 'rgba(59, 130, 246, 0.2)',
         borderColor: 'rgba(59, 130, 246, 1)',
@@ -190,8 +160,8 @@ const DGTCResult: React.FC<DGTCResultProps> = ({ token, onRetake }) => { // Đ�
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full text-white text-2xl font-bold mb-4 ${getTypeColor(result.result)}`}>
-            {result.result}
+          <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full text-white text-2xl font-bold mb-4 ${getTypeColor(resultData.result)}`}>
+            {resultData.result}
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">
             Kết Quả ĐGTC Của Bạn
@@ -212,10 +182,10 @@ const DGTCResult: React.FC<DGTCResultProps> = ({ token, onRetake }) => { // Đ�
             </CardHeader>
             <CardContent className="p-0">
               <div className="space-y-3">
-                {Object.entries(result.percent).map(([key, percentage]: [string, any]) => {
+                {Object.entries(resultData.percent).map(([key, percentage]: [string, any]) => {
                   const [type1, type2] = key.split('');
                   const [val1, val2] = percentage.split(' - ').map((s: string) => parseFloat(s.replace('%', '')));
-                  const tendency = result.clarity[key];
+                  const tendency = resultData.clarity[key];
 
                   return (
                     <div key={key} className="space-y-2">
