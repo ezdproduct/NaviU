@@ -59,6 +59,7 @@ const Register = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={8} // Thêm minLength cho mật khẩu
               />
             </div>
             {error && <p className="text-sm text-red-500">{error}</p>}

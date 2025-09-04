@@ -115,21 +115,29 @@ const UserProfile = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="last_name">Họ</Label>
-              <Input id="last_name" name="last_name" value={formData.last_name} onChange={handleChange} />
+              <Input id="last_name" name="last_name" value={formData.last_name} onChange={handleChange} maxLength={50} /> {/* Thêm maxLength */}
             </div>
             <div className="space-y-2">
               <Label htmlFor="first_name">Tên</Label>
-              <Input id="first_name" name="first_name" value={formData.first_name} onChange={handleChange} />
+              <Input id="first_name" name="first_name" value={formData.first_name} onChange={handleChange} maxLength={50} /> {/* Thêm maxLength */}
             </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="display_name">Tên hiển thị</Label>
-            <Input id="display_name" name="display_name" value={formData.display_name} onChange={handleChange} />
+            <Input id="display_name" name="display_name" value={formData.display_name} onChange={handleChange} maxLength={100} /> {/* Thêm maxLength */}
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="phone">Số điện thoại</Label>
-              <Input id="phone" name="phone" type="tel" value={formData.phone} onChange={handleChange} />
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={handleChange}
+                pattern="[0-9]{10,15}" // Ví dụ: 10-15 chữ số
+                title="Số điện thoại phải có từ 10 đến 15 chữ số."
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="birthday">Ngày sinh</Label>
