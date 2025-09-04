@@ -1,14 +1,14 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import MBTITestApp from './MBTITestApp';
+import DGTCQuiz from './mbti/DGTCQuiz'; // Đổi import từ MBTITestApp sang DGTCQuiz
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
 const TestRunnerPage = () => {
   const { testId } = useParams<{ testId: string }>();
 
   switch (testId) {
-    case 'mbti':
-      return <MBTITestApp />;
+    case 'dgtc': // Đổi tên đường dẫn
+      return <DGTCQuiz />;
     // Trong tương lai, bạn có thể thêm các bài test khác ở đây
     // case 'holland':
     //   return <HollandTestApp />;

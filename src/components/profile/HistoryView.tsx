@@ -13,9 +13,9 @@ import DashboardDetailModal from './DashboardDetailModal'; // Import DashboardDe
 // Cập nhật interface TestHistoryItem để hỗ trợ nhiều loại bài test
 interface TestHistoryItem {
   id: string;
-  type: 'MBTI' | 'Holland' | 'EQ' | 'Values' | string; // Thêm trường type
+  type: 'ĐGTC' | 'Holland' | 'EQ' | 'Values' | string; // Thêm trường type
   title: string;
-  result: string; // Kết quả chính (ví dụ: "ENTP" cho MBTI)
+  result: string; // Kết quả chính (ví dụ: "ENTP" cho ĐGTC)
   scores?: { [key: string]: number }; // Có thể có hoặc không tùy bài test
   clarity?: { [key: string]: string }; // Có thể có hoặc không tùy bài test
   percent?: { [key: string]: string }; // Có thể có hoặc không tùy bài test
@@ -26,7 +26,7 @@ interface TestHistoryItem {
 
 // Định nghĩa các API endpoint cho từng loại bài test
 const API_ENDPOINTS = {
-  MBTI: `${WP_BASE_URL}/wp-json/mbti/v1/history`,
+  ĐGTC: `${WP_BASE_URL}/wp-json/mbti/v1/history`, // Giữ nguyên endpoint API nhưng đổi tên loại test
   // Thêm các API endpoint cho các bài test khác tại đây
   // HOLLAND: `${WP_BASE_URL}/wp-json/holland/v1/history`,
   // EQ: `${WP_BASE_URL}/wp-json/eq/v1/history`,
@@ -118,7 +118,7 @@ const HistoryView = () => {
 
   const getTypeColor = (type: string) => {
     const colors: { [key: string]: string } = {
-      'MBTI': 'bg-blue-600',
+      'ĐGTC': 'bg-blue-600', // Đổi màu cho ĐGTC
       'Holland': 'bg-orange-600',
       'EQ': 'bg-green-600',
       'Values': 'bg-purple-600',
@@ -129,13 +129,13 @@ const HistoryView = () => {
   };
 
   const getResultColor = (result: string) => {
-    const mbtiColors: { [key: string]: string } = {
+    const dgtcColors: { [key: string]: string } = { // Đổi tên biến
       'INTJ': 'bg-purple-600', 'INTP': 'bg-blue-600', 'ENTJ': 'bg-red-600', 'ENTP': 'bg-orange-600',
       'INFJ': 'bg-green-600', 'INFP': 'bg-teal-600', 'ENFJ': 'bg-pink-600', 'ENFP': 'bg-yellow-600',
       'ISTJ': 'bg-gray-700', 'ISFJ': 'bg-indigo-600', 'ESTJ': 'bg-red-700', 'ESFJ': 'bg-pink-700',
       'ISTP': 'bg-gray-600', 'ISFP': 'bg-green-500', 'ESTP': 'bg-orange-700', 'ESFP': 'bg-yellow-700'
     };
-    return mbtiColors[result] || 'bg-gray-500';
+    return dgtcColors[result] || 'bg-gray-500';
   };
 
   const formatClarity = (clarity: { [key: string]: string } | undefined) => {
@@ -164,7 +164,7 @@ const HistoryView = () => {
     let description: React.ReactNode = `Kết quả chính: ${item.result}`;
     let content: React.ReactNode = null;
 
-    if (item.type === 'MBTI' && item.scores && item.percent) {
+    if (item.type === 'ĐGTC' && item.scores && item.percent) { // Đổi điều kiện
       description = (
         <>
           <p>Kết quả chính: <Badge className={getResultColor(item.result)}>{item.result}</Badge></p>
@@ -243,11 +243,11 @@ const HistoryView = () => {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[150px]">Ngày làm</TableHead>
-                <TableHead>Loại bài test</TableHead> {/* Cột mới */}
+                <TableHead>Loại bài test</TableHead>
                 <TableHead>Tên bài test</TableHead>
                 <TableHead>Kết quả chính</TableHead>
                 <TableHead>Độ rõ ràng</TableHead>
-                <TableHead className="text-right">Hành động</TableHead> {/* Cột mới */}
+                <TableHead className="text-right">Hành động</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

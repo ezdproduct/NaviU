@@ -6,10 +6,10 @@ import { ArrowRight } from 'lucide-react';
 
 const availableTests = [
   {
-    id: 'mbti',
-    title: 'Trắc nghiệm MBTI',
+    id: 'dgtc', // Đổi ID
+    title: 'Trắc nghiệm ĐGTC', // Đổi tên hiển thị
     description: 'Khám phá 16 nhóm tính cách để hiểu sâu hơn về bản thân và cách bạn tương tác với thế giới.',
-    link: '/profile/do-test/mbti',
+    link: '/profile/do-test/dgtc', // Đổi đường dẫn
   },
   // Thêm các bài test khác ở đây trong tương lai
   // {

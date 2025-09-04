@@ -10,7 +10,7 @@ export interface TestInfo {
 export const testHubData: { [key: string]: TestInfo[] } = {
   hieuMinh: [
     {
-      title: "Trắc nghiệm MBTI",
+      title: "Trắc nghiệm ĐGTC", // Đổi tên hiển thị
       description: "Khám phá 16 nhóm tính cách để hiểu sâu hơn về bản thân và cách bạn tương tác với thế giới.",
       duration: "15 phút",
       tags: ["Tính cách", "Nội tâm"],

@@ -4,8 +4,8 @@ import { testHubData } from '@/data/testHubData';
 import TestCard from './TestCard';
 
 const getTestLink = (testTitle: string): string => {
-  if (testTitle.toLowerCase().includes('mbti')) {
-    return '/profile/do-test/mbti';
+  if (testTitle.toLowerCase().includes('đgtc')) { // Đổi điều kiện kiểm tra
+    return '/profile/do-test/dgtc'; // Đổi đường dẫn
   }
   // Thêm các bài test khác ở đây
   return '#'; // Đường dẫn mặc định
