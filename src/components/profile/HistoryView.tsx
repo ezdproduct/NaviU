@@ -192,12 +192,9 @@ const HistoryView = () => {
     <div className="p-4 sm:p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Lịch sử làm bài test</h1>
-        <Button onClick={fetchHistory} disabled={loading} className="flex items-center gap-2">
-          {loading ? (
-            <RefreshCw className="h-4 w-4 animate-spin" />
-          ) : (
-            <RefreshCw className="h-4 w-4" />
-          )}
+        <Button onClick={() => window.location.reload()} disabled={loading} className="flex items-center gap-2">
+          {/* Không cần animate-spin ở đây vì trang sẽ reload ngay lập tức */}
+          <RefreshCw className="h-4 w-4" />
           Cập nhật
         </Button>
       </div>
@@ -251,28 +248,36 @@ const HistoryView = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {history.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell className="font-medium">{formatDate(item.submitted_at)}</TableCell>
-                  <TableCell>
-                    <Badge className={getTypeColor(item.type)}>{item.type}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    {item.type === 'ĐGTC'
-                      ? `ĐGTC của ${user?.user_display_name || user?.username || 'Bạn'} - ${item.result}`
-                      : item.title || 'Không xác định'}
-                  </TableCell>
-                  <TableCell>
-                    <Badge className={getResultColor(item.result)}>{item.result}</Badge>
-                  </TableCell>
-                  <TableCell className="text-sm text-gray-600">{formatClarity(item.clarity)}</TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="outline" size="sm" onClick={() => handleViewDetails(item)}>
-                      Xem chi tiết
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {history.map((item) => {
+                const userDisplayName = user?.user_display_name || user?.username || 'Bạn';
+                let displayTitle = item.title || 'Không xác định';
+
+                if (item.type === 'ĐGTC') {
+                  displayTitle = `ĐGTC của ${userDisplayName} - ${item.result}`;
+                } else {
+                  // Đối với các loại test khác, nếu tiêu đề từ API có 'MBTI', thay thế nó
+                  displayTitle = displayTitle.replace('MBTI', 'ĐGTC');
+                }
+
+                return (
+                  <TableRow key={item.id}>
+                    <TableCell className="font-medium">{formatDate(item.submitted_at)}</TableCell>
+                    <TableCell>
+                      <Badge className={getTypeColor(item.type)}>{item.type}</Badge>
+                    </TableCell>
+                    <TableCell>{displayTitle}</TableCell>
+                    <TableCell>
+                      <Badge className={getResultColor(item.result)}>{item.result}</Badge>
+                    </TableCell>
+                    <TableCell className="text-sm text-gray-600">{formatClarity(item.clarity)}</TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="outline" size="sm" onClick={() => handleViewDetails(item)}>
+                        Xem chi tiết
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </Card>
