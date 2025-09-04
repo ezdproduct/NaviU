@@ -1,20 +1,34 @@
-import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom'; // Import useLocation
-import { useAuth } from '../contexts/AuthContext';
+import React, { ReactNode, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const { isAuthenticated } = useAuth();
-  const location = useLocation(); // Lấy vị trí hiện tại
+const ProtectedRoute = ({ children }: { children: ReactNode }) => {
+  const { isAuthenticated, isLoadingAuth } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  if (!isAuthenticated) {
-    // Chuyển hướng đến trang /login, nhưng lưu lại vị trí hiện tại mà họ đang cố gắng
-    // truy cập khi bị chuyển hướng. Điều này cho phép chúng ta đưa họ trở lại
-    // trang đó sau khi họ đăng nhập, mang lại trải nghiệm người dùng tốt hơn
-    // là đưa họ về trang chủ.
-    return <Navigate to="/login" state={{ from: location }} replace />;
+  useEffect(() => {
+    // Chỉ chuyển hướng nếu quá trình loading đã hoàn tất VÀ người dùng chưa được xác thực
+    if (!isLoadingAuth && !isAuthenticated) {
+      navigate('/login', { state: { from: location.pathname }, replace: true });
+    }
+  }, [isAuthenticated, isLoadingAuth, navigate, location]);
+
+  // QUAN TRỌNG: Trong khi trạng thái xác thực đang được xác định, KHÔNG render nội dung con.
+  // Lớp phủ loading toàn cục trong App.tsx sẽ xử lý phản hồi trực quan.
+  if (isLoadingAuth) {
+    return null; // Trả về null để không hiển thị gì trong khi đang tải
   }
 
-  return children;
+  // Nếu quá trình loading đã hoàn tất và người dùng chưa được xác thực,
+  // useEffect ở trên sẽ kích hoạt chuyển hướng.
+  // Đoạn mã này là một biện pháp bảo vệ.
+  if (!isAuthenticated) {
+    return null;
+  }
+
+  // Nếu quá trình loading đã hoàn tất và người dùng đã được xác thực, render nội dung con
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;
