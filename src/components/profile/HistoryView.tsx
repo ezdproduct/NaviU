@@ -34,7 +34,7 @@ const API_ENDPOINTS = {
 };
 
 const HistoryView = () => {
-  const { user } = useAuth();
+  const { user } = useAuth(); // Lấy thông tin user
   const token = localStorage.getItem('jwt_token');
   const [history, setHistory] = useState<TestHistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -257,7 +257,11 @@ const HistoryView = () => {
                   <TableCell>
                     <Badge className={getTypeColor(item.type)}>{item.type}</Badge>
                   </TableCell>
-                  <TableCell>{item.title || 'Không xác định'}</TableCell>
+                  <TableCell>
+                    {item.type === 'ĐGTC'
+                      ? `ĐGTC của ${user?.user_display_name || user?.username || 'Bạn'} - ${item.result}`
+                      : item.title || 'Không xác định'}
+                  </TableCell>
                   <TableCell>
                     <Badge className={getResultColor(item.result)}>{item.result}</Badge>
                   </TableCell>
