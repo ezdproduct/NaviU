@@ -35,7 +35,17 @@ export default function MBTIQuiz({ token }: MBTIQuizProps) {
           throw new Error(`Lỗi HTTP! Trạng thái: ${res.status}`);
         }
         const data = await res.json();
-        setQuestions(data);
+        
+        // Thêm các lựa chọn A/B mặc định vào mỗi câu hỏi
+        const questionsWithDefaultOptions = data.map((q: any) => ({
+          ...q,
+          options: [
+            { key: 'a', text: 'A' },
+            { key: 'b', text: 'B' },
+          ],
+        }));
+        setQuestions(questionsWithDefaultOptions);
+
       } catch (err: any) {
         console.error("Error fetching MBTI questions:", err);
         setError(err.message || 'Không thể tải câu hỏi MBTI.');
