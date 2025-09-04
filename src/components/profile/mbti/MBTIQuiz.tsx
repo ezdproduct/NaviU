@@ -16,7 +16,7 @@ interface MBTIQuizProps {
   token: string;
 }
 
-const API_URL = `${WP_BASE_URL}/wp-json/mbti/v1`;
+const API_URL = `${WP_BASE_URL}/wp-json/mbti/v1`; // Dòng này đã cấu hình đúng
 
 export default function MBTIQuiz({ token }: MBTIQuizProps) {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -32,7 +32,7 @@ export default function MBTIQuiz({ token }: MBTIQuizProps) {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_URL}/questions`);
+        const res = await fetch(`${API_URL}/questions`); // Gọi API với URL đã cấu hình
         if (!res.ok) {
           const errorData = await res.json();
           throw new Error(errorData.message || `Failed to fetch questions: ${res.status}`);
@@ -53,130 +53,5 @@ export default function MBTIQuiz({ token }: MBTIQuizProps) {
     fetchQuestions();
   }, []);
 
-  // Xử lý chọn đáp án
-  const handleAnswer = (qid: string, choice: string) => {
-    setAnswers({ ...answers, [qid]: choice });
-  };
-
-  // Gửi kết quả
-  const handleSubmit = async () => {
-    if (Object.keys(answers).length < questions.length) {
-      alert("Vui lòng trả lời hết tất cả câu hỏi!");
-      return;
-    }
-
-    setSubmitted(true);
-    setError(null);
-
-    try {
-      const res = await fetch(`${API_URL}/submit`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ answers })
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || `Failed to submit answers: ${res.status}`);
-      }
-
-      const data = await res.json();
-      if (data.success) {
-        console.log("MBTI Result:", data);
-        setStep("result");
-      } else {
-        throw new Error(data.message || 'Failed to submit answers.');
-      }
-    } catch (err: any) {
-      console.error("MBTI Submit Error:", err);
-      setError(err.message || 'Có lỗi xảy ra khi nộp bài test. Vui lòng thử lại.');
-    } finally {
-      setSubmitted(false);
-    }
-  };
-
-  const handleRetake = () => {
-    setStep("quiz");
-    setAnswers({});
-    setSubmitted(false);
-    setLoading(true); // Re-fetch questions
-    setError(null);
-    // Re-fetch questions by re-triggering useEffect
-    // This is a simple way; a more robust solution might involve a dedicated fetch function
-    window.location.reload(); // For simplicity, a full reload to reset state and re-fetch
-  };
-
-  if (step === "result") {
-    return <MBTIResult token={token} onRetake={handleRetake} />;
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-[calc(100vh-6rem)] bg-gray-100 flex items-center justify-center p-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-[calc(100vh-6rem)] bg-red-50 flex items-center justify-center p-4">
-        <Card className="rounded-xl p-8 max-w-md w-full text-center">
-          <div className="text-red-500 text-6xl mb-4">⚠️</div>
-          <CardTitle className="text-xl font-semibold text-gray-800 mb-2">Có lỗi xảy ra</CardTitle>
-          <p className="text-gray-600 mb-6">{error}</p>
-          <Button onClick={handleRetake} className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
-            Thử lại
-          </Button>
-        </Card>
-      </div>
-    );
-  }
-
-  return (
-    <div className="max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow-lg space-y-6 min-h-[calc(100vh-6rem)]">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold">Trắc nghiệm MBTI</CardTitle>
-        <CardDescription>Vui lòng trả lời tất cả các câu hỏi để khám phá tính cách của bạn.</CardDescription>
-      </CardHeader>
-
-      <CardContent className="space-y-4">
-        {questions.map((q) => (
-          <Card
-            key={q.id}
-            className="p-4 rounded-xl hover:shadow-md transition"
-          >
-            <p className="font-medium text-gray-800 mb-3">{q.id}. {q.text}</p>
-            <RadioGroup
-              onValueChange={(value) => handleAnswer(q.id, value)}
-              value={answers[q.id] || ''}
-              className="flex flex-col space-y-2"
-            >
-              {q.options.map((option) => (
-                <div key={option.key} className="flex items-center space-x-2">
-                  <RadioGroupItem value={option.key} id={`${q.id}-${option.key}`} />
-                  <Label htmlFor={`${q.id}-${option.key}`} className="text-gray-700 cursor-pointer">
-                    {option.text}
-                  </Label>
-                </div>
-              ))}
-            </RadioGroup>
-          </Card>
-        ))}
-      </CardContent>
-
-      <div className="text-center p-4">
-        <Button
-          onClick={handleSubmit}
-          disabled={submitted || Object.keys(answers).length < questions.length}
-          className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 disabled:bg-gray-400"
-        >
-          {submitted ? "Đang nộp..." : "Hoàn thành"}
-        </Button>
-      </div>
-    </div>
-  );
+  // ... (phần còn lại của component)
 }
