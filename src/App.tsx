@@ -26,6 +26,7 @@ import DoTestView from '@/components/profile/DoTestView';
 import UserProfile from '@/pages/UserProfile';
 import TestRunnerPage from "@/components/profile/TestRunnerPage";
 import HistoryView from "@/components/profile/HistoryView";
+import LoadingPage from "@/components/LoadingPage"; // Import LoadingPage mới
 
 const queryClient = new QueryClient();
 
@@ -76,18 +77,16 @@ export const routes: RouteObject[] = [
 const App = () => {
   const { isLoadingAuth } = useAuth();
 
+  if (isLoadingAuth) {
+    return <LoadingPage />; // Sử dụng component LoadingPage mới
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <Outlet /> {/* Luôn render Outlet để nội dung trang có thể hiển thị bên dưới */}
-
-        {isLoadingAuth && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
-          </div>
-        )}
+        <Outlet />
       </TooltipProvider>
     </QueryClientProvider>
   );
