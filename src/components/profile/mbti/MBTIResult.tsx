@@ -14,22 +14,17 @@ import {
   Legend,
 } from 'chart.js';
 import { WP_BASE_URL } from '@/lib/auth/api'; // Import base URL
+import { personalityData } from '@/data/personalityData'; // Import personalityData for descriptions
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
+// Cập nhật interface MBTIResultData để phù hợp với output API mới
 interface MBTIResultData {
-  mbti_type: string;
-  description: string;
-  completion_rate: number;
-  time_taken: number;
-  answered_questions: number;
-  total_questions: number;
-  details: {
-    extraversion_introversion: { tendency: string; Introversion: string; Extraversion: string; };
-    sensing_intuition: { tendency: string; Intuition: string; Sensing: string; };
-    thinking_feeling: { tendency: string; Feeling: string; Thinking: string; };
-    judging_perceiving: { tendency: string; Perceiving: string; Judging: string; };
-  };
+  result: string; // e.g., "ENTP"
+  scores: { [key: string]: number }; // e.g., { "E": 7, "I": 3, ... }
+  clarity: { [key: string]: string }; // e.g., { "EI": "Rõ ràng", ... }
+  percent: { [key: string]: string }; // e.g., { "EI": "70% E - 30% I", ... }
+  answers: { [key: string]: string }; // e.g., { "1": "a", "2": "b", ... }
 }
 
 interface MBTIResultProps {
@@ -43,6 +38,7 @@ const MBTIResult: React.FC<MBTIResultProps> = ({ token, onRetake }) => {
   const [result, setResult] = useState<MBTIResultData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [mbtiDescription, setMbtiDescription] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchResult() {
@@ -58,12 +54,17 @@ const MBTIResult: React.FC<MBTIResultProps> = ({ token, onRetake }) => {
           const errorData = await res.json();
           throw new Error(errorData.message || `Failed to fetch MBTI result: ${res.status}`);
         }
-        const data = await res.json();
-        if (data.success) {
-          setResult(data.data);
+        const data: MBTIResultData = await res.json(); // API trả về trực tiếp dữ liệu
+        
+        setResult(data);
+
+        // Lấy mô tả từ personalityData
+        if (data.result && personalityData[data.result as keyof typeof personalityData]) {
+          setMbtiDescription(personalityData[data.result as keyof typeof personalityData].description);
         } else {
-          throw new Error(data.message || 'Failed to fetch MBTI result.');
+          setMbtiDescription('Không tìm thấy mô tả cho loại tính cách này.');
         }
+
       } catch (err: any) {
         console.error("Error fetching MBTI result:", err);
         setError(err.message || 'Không thể tải kết quả MBTI.');
@@ -121,20 +122,21 @@ const MBTIResult: React.FC<MBTIResultProps> = ({ token, onRetake }) => {
     return colors[type] || 'bg-gray-500';
   };
 
+  // Dữ liệu cho biểu đồ radar
   const radarData = {
-    labels: ['Hướng ngoại (E)', 'Cảm giác (S)', 'Lý trí (T)', 'Phán đoán (J)', 'Hướng nội (I)', 'Trực giác (N)', 'Cảm xúc (F)', 'Linh hoạt (P)'],
+    labels: ['E', 'S', 'T', 'J', 'I', 'N', 'F', 'P'],
     datasets: [
       {
         label: 'Điểm số',
         data: [
-          parseFloat(result.details.extraversion_introversion.Extraversion),
-          parseFloat(result.details.sensing_intuition.Sensing),
-          parseFloat(result.details.thinking_feeling.Thinking),
-          parseFloat(result.details.judging_perceiving.Judging),
-          parseFloat(result.details.extraversion_introversion.Introversion),
-          parseFloat(result.details.sensing_intuition.Intuition),
-          parseFloat(result.details.thinking_feeling.Feeling),
-          parseFloat(result.details.judging_perceiving.Perceiving),
+          result.scores.E || 0,
+          result.scores.S || 0,
+          result.scores.T || 0,
+          result.scores.J || 0,
+          result.scores.I || 0,
+          result.scores.N || 0,
+          result.scores.F || 0,
+          result.scores.P || 0,
         ],
         backgroundColor: 'rgba(59, 130, 246, 0.2)',
         borderColor: 'rgba(59, 130, 246, 1)',
@@ -153,7 +155,7 @@ const MBTIResult: React.FC<MBTIResultProps> = ({ token, onRetake }) => {
     scales: {
       r: {
         beginAtZero: true,
-        max: 100,
+        max: 10, // Điểm số từ 0-10
         angleLines: {
           color: 'rgba(0, 0, 0, 0.1)'
         },
@@ -178,7 +180,7 @@ const MBTIResult: React.FC<MBTIResultProps> = ({ token, onRetake }) => {
       },
       tooltip: {
         callbacks: {
-          label: (context: any) => `${context.label}: ${context.raw}%`,
+          label: (context: any) => `${context.label}: ${context.raw}`,
         },
       },
     },
@@ -189,17 +191,17 @@ const MBTIResult: React.FC<MBTIResultProps> = ({ token, onRetake }) => {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full text-white text-2xl font-bold mb-4 ${getTypeColor(result.mbti_type)}`}>
-            {result.mbti_type}
+          <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full text-white text-2xl font-bold mb-4 ${getTypeColor(result.result)}`}>
+            {result.result}
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">
             Kết Quả MBTI Của Bạn
           </h1>
-          <p className="text-gray-600 text-base sm:text-lg">{result.description}</p>
+          <p className="text-gray-600 text-base sm:text-lg">{mbtiDescription}</p>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {/* Stats - Removed as data is not available from new API output */}
+        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card className="rounded-xl p-6 text-center">
             <Zap className="w-8 h-8 text-blue-600 mx-auto mb-2" />
             <div className="text-2xl font-bold text-gray-800">
@@ -223,7 +225,7 @@ const MBTIResult: React.FC<MBTIResultProps> = ({ token, onRetake }) => {
             </div>
             <div className="text-sm text-gray-600">Câu đã trả lời</div>
           </Card>
-        </div>
+        </div> */}
 
         {/* Detailed Results and Radar Chart */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
@@ -233,34 +235,26 @@ const MBTIResult: React.FC<MBTIResultProps> = ({ token, onRetake }) => {
                 Phân tích chi tiết
               </CardTitle>
               <CardDescription>
-                Điểm số của bạn trên các khía cạnh tính cách MBTI.
+                Điểm số và độ rõ ràng của bạn trên các khía cạnh tính cách MBTI.
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
               <div className="space-y-3">
-                {Object.entries(result.details).map(([key, detail]: [string, any]) => {
-                  const titles: { [key: string]: string } = {
-                    'extraversion_introversion': 'Hướng ngoại - Hướng nội',
-                    'sensing_intuition': 'Cảm giác - Trực giác', 
-                    'thinking_feeling': 'Lý trí - Cảm xúc',
-                    'judging_perceiving': 'Phán đoán - Linh hoạt'
-                  };
+                {Object.entries(result.percent).map(([key, percentage]: [string, any]) => {
+                  const [type1, type2] = key.split('');
+                  const [val1, val2] = percentage.split(' - ').map((s: string) => parseFloat(s.replace('%', '')));
+                  const tendency = result.clarity[key];
 
                   return (
                     <div key={key} className="space-y-2">
-                      <h4 className="font-medium text-gray-700">{titles[key]}</h4>
+                      <h4 className="font-medium text-gray-700">{type1} - {type2}</h4>
                       <div className="flex items-center justify-between text-sm">
-                        <span>{Object.keys(detail)[1]}</span>
-                        <Progress value={parseFloat(Object.values(detail)[1] as string)} className="w-24 h-2 mx-2" />
-                        <span>{Object.values(detail)[1]}</span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span>{Object.keys(detail)[2]}</span>
-                        <Progress value={parseFloat(Object.values(detail)[2] as string)} className="w-24 h-2 mx-2" />
-                        <span>{Object.values(detail)[2]}</span>
+                        <span>{type1} ({val1}%)</span>
+                        <Progress value={val1} className="w-24 h-2 mx-2" />
+                        <span>{type2} ({val2}%)</span>
                       </div>
                       <p className="text-xs text-blue-700 font-medium mt-1">
-                        Xu hướng: {detail.tendency}
+                        Độ rõ ràng: {tendency}
                       </p>
                     </div>
                   );
