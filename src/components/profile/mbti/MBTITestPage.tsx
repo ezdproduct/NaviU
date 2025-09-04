@@ -302,7 +302,7 @@ export default function MBTITestPage() {
                   <TableRow>
                     <TableHead className="w-[150px]">Ngày làm</TableHead>
                     <TableHead>Kết quả chính</TableHead>
-                    <TableHead>Độ rõ ràng</TableHead>
+                    {/* Đã loại bỏ cột Độ rõ ràng */}
                     <TableHead className="text-right">Hành động</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -313,9 +313,7 @@ export default function MBTITestPage() {
                       <TableCell>
                         <Badge className={`bg-blue-600 text-white`}>{item.result}</Badge>
                       </TableCell>
-                      <TableCell className="text-sm text-gray-600">
-                        {item.clarity ? Object.entries(item.clarity).map(([key, value]) => `${key}: ${value}`).join(', ') : 'N/A'}
-                      </TableCell>
+                      {/* Đã loại bỏ cột Độ rõ ràng */}
                       <TableCell className="text-right">
                         <Button variant="outline" size="sm" onClick={() => { setCurrentResult(item as DGTCResultData); setView('result'); }}>
                           Xem chi tiết
