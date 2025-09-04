@@ -170,19 +170,29 @@ const HistoryView = () => {
       title = `Kết quả ĐGTC của ${userDisplayName} - ${item.result}`;
       description = (
         <>
-          <p>Kết quả chính: <Badge className={getResultColor(item.result)}>{item.result}</Badge></p>
+          <p className="mb-2">Kết quả chính: <Badge className={getResultColor(item.result)}>{item.result}</Badge></p>
           {item.scores && (
-            <p className="mt-2">
-              <strong>Điểm số:</strong> {Object.entries(item.scores).map(([key, value]) => `${key}: ${value}`).join(', ')}
-            </p>
+            <div className="mt-2 text-sm text-gray-700">
+              <h4 className="font-semibold mb-1">Điểm số:</h4>
+              <ul className="list-disc list-inside ml-4">
+                {Object.entries(item.scores).map(([key, value]) => (
+                  <li key={key}>{key}: {value}</li>
+                ))}
+              </ul>
+            </div>
           )}
           {item.percent && (
-            <p>
-              <strong>Phần trăm:</strong> {Object.entries(item.percent).map(([key, value]) => `${key}: ${value}`).join(', ')}
-            </p>
+            <div className="mt-2 text-sm text-gray-700">
+              <h4 className="font-semibold mb-1">Phần trăm:</h4>
+              <ul className="list-disc list-inside ml-4">
+                {Object.entries(item.percent).map(([key, value]) => (
+                  <li key={key}>{key}: {value}</li>
+                ))}
+              </ul>
+            </div>
           )}
           {item.clarity && (
-            <p>
+            <p className="mt-2 text-sm text-gray-700">
               <strong>Độ rõ ràng:</strong> {formatClarity(item.clarity)}
             </p>
           )}
@@ -214,9 +224,9 @@ const HistoryView = () => {
 
   return (
     <div className="p-4 sm:p-6">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Lịch sử làm bài test</h1>
-        <Button onClick={() => window.location.reload()} disabled={loading} className="flex items-center gap-2">
+        <Button onClick={fetchHistory} disabled={loading} className="flex items-center gap-2 self-start sm:self-auto">
           <RefreshCw className="h-4 w-4" />
           Cập nhật
         </Button>
@@ -225,19 +235,29 @@ const HistoryView = () => {
 
       {loading && (
         <Card className="p-6">
-          <Skeleton className="h-8 w-1/3 mb-4" />
-          <div className="space-y-3">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="flex items-center space-x-4">
-                <Skeleton className="h-10 w-10 rounded-full" />
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-[250px]" />
-                  <Skeleton className="h-4 w-[200px]" />
-                </div>
-              </div>
-            ))}
+          <div className="space-y-4">
+            <Skeleton className="h-8 w-1/3" />
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[150px]"><Skeleton className="h-4 w-24" /></TableHead>
+                  <TableHead><Skeleton className="h-4 w-20" /></TableHead>
+                  <TableHead><Skeleton className="h-4 w-24" /></TableHead>
+                  <TableHead className="text-right"><Skeleton className="h-4 w-20" /></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {[...Array(5)].map((_, i) => (
+                  <TableRow key={i}>
+                    <TableCell className="font-medium"><Skeleton className="h-4 w-32" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                    <TableCell className="text-right"><Skeleton className="h-8 w-20" /></TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
-          <Skeleton className="h-10 w-full mt-6" />
         </Card>
       )}
 
@@ -250,10 +270,13 @@ const HistoryView = () => {
       )}
 
       {!loading && !error && history.length === 0 && (
-        <Card className="p-6 text-center">
-          <FileQuestion className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <CardTitle className="text-xl font-bold text-gray-800 mb-2">Chưa có bài test nào</CardTitle>
-          <CardDescription>Bạn chưa hoàn thành bài test nào. Hãy bắt đầu làm một bài test mới!</CardDescription>
+        <Card className="p-8 text-center border-2 border-dashed border-gray-300 bg-gray-50">
+          <FileQuestion className="h-16 w-16 text-gray-400 mx-auto mb-6" />
+          <CardTitle className="text-2xl font-bold text-gray-800 mb-3">Chưa có bài test nào</CardTitle>
+          <CardDescription className="text-lg text-gray-600">
+            Bạn chưa hoàn thành bài test nào. Hãy bắt đầu làm một bài test mới để xem lịch sử của bạn tại đây!
+          </CardDescription>
+          {/* Có thể thêm nút điều hướng đến trang làm bài test ở đây */}
         </Card>
       )}
 
@@ -263,7 +286,7 @@ const HistoryView = () => {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[150px]">Ngày làm</TableHead>
-                <TableHead>Loại bài test</TableHead>
+                <TableHead className="w-[120px]">Loại bài test</TableHead>
                 <TableHead>Kết quả chính</TableHead>
                 <TableHead className="text-right">Hành động</TableHead>
               </TableRow>
