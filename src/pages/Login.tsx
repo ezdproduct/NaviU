@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '../contexts/AuthContext';
-import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate, useLocation } from 'react-router-dom'; // Import useLocation
 import PasswordInput from '@/components/PasswordInput';
 import { LoginCredentials } from '@/types'; // Import LoginCredentials from shared types
 
@@ -16,14 +16,19 @@ const Login = () => {
   const { login, isAuthenticated } = useAuth(); // Lấy isAuthenticated từ AuthContext
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation(); // Lấy location để truy cập state
   const registrationSuccess = searchParams.get('registered') === 'true';
+
+  // Lấy đường dẫn 'from' từ state được truyền bởi ProtectedRoute
+  const from = location.state?.from?.pathname || '/profile'; // Mặc định về /profile
 
   // Thêm useEffect để kiểm tra trạng thái đăng nhập
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/profile', { replace: true }); // Điều hướng đến trang profile nếu đã đăng nhập
+      // Nếu đã xác thực, chuyển hướng đến đường dẫn 'from' hoặc profile mặc định
+      navigate(from, { replace: true });
     }
-  }, [isAuthenticated, navigate]); // Chạy khi isAuthenticated hoặc navigate thay đổi
+  }, [isAuthenticated, navigate, from]); // Chạy khi isAuthenticated, navigate hoặc from thay đổi
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +37,8 @@ const Login = () => {
     try {
       const credentials: LoginCredentials = { username, password }; // Use LoginCredentials type
       const loggedInUsername = await login(credentials);
-      navigate('/profile', { state: { initialView: 'do-test', showWelcome: true, username: loggedInUsername } });
+      // Sau khi đăng nhập thành công, chuyển hướng đến đường dẫn 'from' hoặc profile mặc định
+      navigate(from, { state: { showWelcome: true, username: loggedInUsername }, replace: true });
     } catch (err: any) {
       setError(err.message || 'Tên đăng nhập hoặc mật khẩu không đúng.');
     } finally {
