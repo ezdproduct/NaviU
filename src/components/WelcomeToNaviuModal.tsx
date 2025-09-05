@@ -13,10 +13,10 @@ const WelcomeToNaviuModal = ({ isOpen, onClose, username }: WelcomeToNaviuModalP
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden rounded-2xl">
-        <div className="bg-blue-600 text-white p-8 text-center"> {/* Changed from gradient to solid bg-blue-600 */}
+        <div className="bg-white text-blue-800 p-8 text-center"> {/* Changed background to white and text to dark blue */}
           <DialogHeader className="space-y-4">
             <DialogTitle className="text-3xl font-bold">Chào mừng bạn đến với NaviU!</DialogTitle>
-            <DialogDescription className="text-lg opacity-90">
+            <DialogDescription className="text-lg text-blue-700"> {/* Adjusted description text color for contrast */}
               Bạn chưa có báo cáo nào. Hãy làm bài test MBTI NaviU để khám phá tiềm năng của mình.
             </DialogDescription>
           </DialogHeader>
