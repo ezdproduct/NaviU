@@ -364,7 +364,7 @@ const Index = () => {
           <div className="max-w-3xl mx-auto px-4">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Sẵn sàng kiến tạo tương lai của bạn?</h2>
             <p className="text-lg mb-8 opacity-90">
-              Tham gia NaviU ngay hôm nay để bắt đầu hành trình khám phá bản thân và định hướng sự nghiệp.
+              Tham gia NaviU ngay hôm nay để bắt đầu hành trình khám phá bản thân <br /> và định hướng sự nghiệp.
             </p>
             <Link to="/register">
               <Button size="lg" className="bg-blue-600 text-white hover:bg-blue-700 text-lg px-8 py-6 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
