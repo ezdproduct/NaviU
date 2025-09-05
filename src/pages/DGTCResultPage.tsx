@@ -18,7 +18,7 @@ import {
 import { personalityData } from '@/data/personalityData';
 import { Progress } from '@/components/ui/progress'; // Import Progress
 import { Download } from 'lucide-react'; // Import Download icon
-import html2canvas from 'html22canvas'; // Import html2canvas
+import html2canvas from 'html2canvas'; // Import html2canvas
 import jsPDF from 'jspdf'; // Import jspdf
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
