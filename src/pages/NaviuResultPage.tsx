@@ -171,10 +171,10 @@ const NaviuResultPage: React.FC = () => {
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="rounded-xl"><CardHeader><CardTitle className="flex items-center gap-2"><BrainCircuit className="text-purple-500"/>MBTI</CardTitle></CardHeader><CardContent><p className="text-2xl font-bold">{result.mbti?.result || 'N/A'}</p></CardContent></Card>
-          <Card className="rounded-xl"><CardHeader><CardTitle className="flex items-center gap-2"><Compass className="text-orange-500"/>Holland</CardTitle></CardHeader><CardContent><p className="text-2xl font-bold">{topHollandCodes.join('') || 'N/A'}</p></CardContent></Card>
-          <Card className="rounded-xl"><CardHeader><CardTitle className="flex items-center gap-2"><Sparkles className="text-blue-500"/>Năng lực</CardTitle></CardHeader><CardContent><p className="text-xl font-bold">{getCognitiveSummary()}</p></CardContent></Card>
-          <Card className="rounded-xl"><CardHeader><CardTitle className="flex items-center gap-2"><HeartHandshake className="text-green-500"/>EQ</CardTitle></CardHeader><CardContent><p className="text-xl font-bold">{getEqSummary()}</p></CardContent></Card>
+          <Card className="rounded-xl group"><CardHeader><CardTitle className="flex items-center gap-2"><BrainCircuit className="text-purple-500 drop-shadow-md transition-all duration-200 group-hover:scale-110"/>MBTI</CardTitle></CardHeader><CardContent><p className="text-2xl font-bold">{result.mbti?.result || 'N/A'}</p></CardContent></Card>
+          <Card className="rounded-xl group"><CardHeader><CardTitle className="flex items-center gap-2"><Compass className="text-orange-500 drop-shadow-md transition-all duration-200 group-hover:scale-110"/>Holland</CardTitle></CardHeader><CardContent><p className="text-2xl font-bold">{topHollandCodes.join('') || 'N/A'}</p></CardContent></Card>
+          <Card className="rounded-xl group"><CardHeader><CardTitle className="flex items-center gap-2"><Sparkles className="text-blue-500 drop-shadow-md transition-all duration-200 group-hover:scale-110"/>Năng lực</CardTitle></CardHeader><CardContent><p className="text-xl font-bold">{getCognitiveSummary()}</p></CardContent></Card>
+          <Card className="rounded-xl group"><CardHeader><CardTitle className="flex items-center gap-2"><HeartHandshake className="text-green-500 drop-shadow-md transition-all duration-200 group-hover:scale-110"/>EQ</CardTitle></CardHeader><CardContent><p className="text-xl font-bold">{getEqSummary()}</p></CardContent></Card>
         </div>
 
         {/* MBTI Details */}
@@ -278,7 +278,7 @@ const NaviuResultPage: React.FC = () => {
         {/* Career Suggestions */}
         <Card className="bg-blue-50 border-blue-200 rounded-xl">
             <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-blue-800"><Briefcase/>Gợi ý Nghề nghiệp</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-blue-800"><Briefcase className="drop-shadow-md transition-all duration-200 group-hover:scale-110"/>Gợi ý Nghề nghiệp</CardTitle>
                 <CardDescription>Dựa trên kết quả phân tích, đây là một số ngành nghề phù hợp với bạn:</CardDescription>
             </CardHeader>
             <CardContent>
