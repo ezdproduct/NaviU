@@ -94,3 +94,15 @@ export interface NaviuHistoryItem {
   holland?: NaviuResultData['holland'] | string; // Allow object or string
   details?: NaviuResultData; // Full details for result page
 }
+
+export interface DGTCResultData {
+  id: string;
+  type: string;
+  title: string;
+  result: string;
+  scores?: { [key: string]: number };
+  clarity?: { [key: string]: string };
+  percent?: { [key: string]: string };
+  started_at: string;
+  submitted_at: string;
+}

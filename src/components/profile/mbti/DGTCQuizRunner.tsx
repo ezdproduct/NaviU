@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { WP_BASE_URL } from '@/lib/auth/api';
-import { DGTCResultData } from "@/components/profile/mbti/DGTCResult";
+import { DGTCResultData } from "@/types";
 import GenericTestRunner from "./GenericTestRunner";
 import { showSuccess, showError } from '@/utils/toast';
 import { Card, CardTitle } from "@/components/ui/card";

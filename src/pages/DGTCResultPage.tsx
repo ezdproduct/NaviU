@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { showError } from '@/utils/toast';
-import { DGTCResultData } from '@/components/profile/mbti/DGTCResult'; // Import DGTCResultData
+import { DGTCResultData } from '@/types'; // Import DGTCResultData
 import { Radar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,

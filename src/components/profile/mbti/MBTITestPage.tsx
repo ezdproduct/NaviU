@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardTitle, CardDescription, CardHeader, CardContent } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { DGTCResultData } from "./DGTCResult";
+import { DGTCResultData } from "@/types";
 
 interface MBTITestPageProps {
   initialResultData?: DGTCResultData;
