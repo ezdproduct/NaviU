@@ -84,7 +84,7 @@ const DGTCResultPage: React.FC = () => {
             if (latestResult.result && personalityData[latestResult.result as keyof typeof personalityData]) {
               setDgtcDescription(personalityData[latestResult.result as keyof typeof personalityData].description);
             } else {
-              setDgtcDescription('Không tìm thấy mô tả cho loại tính cách này.');
+                setDgtcDescription('Không tìm thấy mô tả cho loại tính cách này.');
             }
           } else {
             // No history found, generate mock result
@@ -101,7 +101,7 @@ const DGTCResultPage: React.FC = () => {
       } else {
         // Fallback if no relevant state is found
         showError("Không tìm thấy dữ liệu kết quả bài test ĐGTC.");
-        navigate('/profile/do-test/dgtc', { replace: true });
+        navigate('/profile/test/dgtc/do-test', { replace: true }); // Changed to do-test/dgtc
       }
       setLoadingResult(false);
     };
@@ -208,16 +208,16 @@ const DGTCResultPage: React.FC = () => {
         beginAtZero: true,
         max: 10,
         angleLines: {
-          color: 'rgba(0, 0, 0, 0.1)'
+          color: 'rgba(255, 255, 255, 0.2)' // Adjusted for dark background
         },
         grid: {
-          color: 'rgba(0, 0, 0, 0.1)'
+          color: 'rgba(255, 255, 255, 0.2)' // Adjusted for dark background
         },
         pointLabels: {
           font: {
             size: 12
           },
-          color: '#333'
+          color: '#fff' // Adjusted for dark background
         },
         ticks: {
           display: false,
@@ -238,25 +238,25 @@ const DGTCResultPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-6rem)] bg-gradient-to-br from-green-50 to-blue-100 p-4 sm:p-6">
-      <div ref={resultRef} className="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-lg">
+    <div className="min-h-[calc(100vh-6rem)] bg-profile-gradient p-4 sm:p-6 text-white"> {/* Changed bg-gradient-to-br from-green-50 to-blue-100 to bg-profile-gradient and added text-white */}
+      <div ref={resultRef} className="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-lg"> {/* Keep inner content white for readability */}
         <div className="text-center mb-8">
           <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full text-white text-2xl font-bold mb-4 ${getTypeColor(result.result)}`}>
             {result.result}
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2"> {/* Keep text-gray-800 for contrast on white card */}
             Kết Quả ĐGTC Của Bạn
           </h1>
-          <p className="text-gray-600 text-base sm:text-lg">{dgtcDescription}</p>
+          <p className="text-gray-600 text-base sm:text-lg">{dgtcDescription}</p> {/* Keep text-gray-600 for contrast on white card */}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <Card className="rounded-xl p-6">
             <CardHeader className="p-0 mb-4">
-              <CardTitle className="text-lg font-semibold text-gray-800">
+              <CardTitle className="text-lg font-semibold text-gray-800"> {/* Keep text-gray-800 */}
                 Phân tích chi tiết
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-gray-600"> {/* Keep text-gray-600 */}
                 Điểm số và độ rõ ràng của bạn trên các khía cạnh tính cách ĐGTC.
               </CardDescription>
             </CardHeader>
@@ -286,7 +286,7 @@ const DGTCResultPage: React.FC = () => {
           </Card>
 
           <Card className="rounded-xl p-6 flex flex-col items-center justify-center">
-            <CardTitle className="text-lg font-semibold text-gray-800 mb-4">
+            <CardTitle className="text-lg font-semibold text-gray-800 mb-4"> {/* Keep text-gray-800 */}
               Biểu đồ Tổng quan
             </CardTitle>
             <div className="relative w-full h-80">
@@ -299,11 +299,11 @@ const DGTCResultPage: React.FC = () => {
       <div className="text-center pt-8 space-x-4">
         <Button
           onClick={handleRetake}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+          className="bg-blue-800 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors" // Adjusted button color
         >
           Làm lại test
         </Button>
-        <Button onClick={handleExportPdf} size="lg" className="bg-green-600 text-white hover:bg-green-700 rounded-lg">
+        <Button onClick={handleExportPdf} size="lg" className="bg-green-500 text-white hover:bg-green-600 rounded-lg"> {/* Adjusted button color */}
           <Download className="mr-2 h-5 w-5" /> Tải PDF
         </Button>
       </div>

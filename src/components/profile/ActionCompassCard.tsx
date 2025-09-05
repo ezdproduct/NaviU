@@ -19,7 +19,8 @@ const ActionCompassCard = ({ onClick, valueData, isFaded = false, icon: Icon }: 
   return (
     <Card
       className={cn(
-        "group relative flex flex-col h-full rounded-2xl cursor-pointer bg-white text-gray-800 shadow-sm border border-gray-200",
+        "group relative flex flex-col h-full rounded-2xl cursor-pointer shadow-sm border",
+        isFaded ? "bg-blue-800 border-blue-700 text-white" : "bg-white text-gray-800", // Changed default bg-white to bg-blue-800 when faded
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -27,24 +28,24 @@ const ActionCompassCard = ({ onClick, valueData, isFaded = false, icon: Icon }: 
     >
       <CardHeader>
         <div className="flex items-center gap-3 mb-2">
-          {Icon && <Icon className="h-6 w-6 text-blue-600" />}
-          <CardTitle className="text-lg font-bold text-gray-800">KIM CHỈ NAM HÀNH ĐỘNG</CardTitle>
+          {Icon && <Icon className={cn("h-6 w-6", isFaded ? "text-white" : "text-blue-600")} />} {/* Adjusted icon color */}
+          <CardTitle className={cn("text-lg font-bold", isFaded ? "text-white" : "text-gray-800")}>KIM CHỈ NAM HÀNH ĐỘNG</CardTitle> {/* Adjusted title color */}
         </div>
       </CardHeader>
       <CardContent className="flex-grow">
         {valueData ? (
           <>
-            <h3 className="text-2xl font-bold text-gray-800 mb-2">{valueData.name}</h3>
-            <p className="text-gray-700 leading-relaxed">{valueData.description}</p>
+            <h3 className={cn("text-2xl font-bold mb-2", isFaded ? "text-white" : "text-gray-800")}>{valueData.name}</h3> {/* Adjusted text color */}
+            <p className={cn("leading-relaxed", isFaded ? "text-blue-100" : "text-gray-700")}>{valueData.description}</p> {/* Adjusted text color */}
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center h-full text-gray-500 text-center space-y-3">
+          <div className="flex flex-col items-center justify-center h-full text-blue-100 text-center space-y-3"> {/* Changed text-gray-500 to text-blue-100 */}
             <p>Chưa có dữ liệu giá trị nghề nghiệp.</p>
-            <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')} size="sm" className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Làm Bài Test Toàn Diện NaviU</Button>
+            <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')} size="sm" className="bg-blue-900 text-white hover:bg-blue-700 rounded-lg">Làm Bài Test Toàn Diện NaviU</Button> {/* Adjusted button color */}
           </div>
         )}
       </CardContent>
-      <HoverViewMore isVisible={isHovered} className="text-gray-800" />
+      <HoverViewMore isVisible={isHovered} className={cn(isFaded ? "text-white" : "text-gray-800")} /> {/* Adjusted hover text color */}
     </Card>
   );
 };

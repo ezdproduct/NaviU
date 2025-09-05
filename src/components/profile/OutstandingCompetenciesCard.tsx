@@ -26,7 +26,8 @@ const OutstandingCompetenciesCard = ({ onClick, competencies, isFaded = false, i
   return (
     <Card
       className={cn(
-        "group relative flex flex-col h-full rounded-2xl cursor-pointer bg-white text-gray-800 shadow-sm border border-gray-200",
+        "group relative flex flex-col h-full rounded-2xl cursor-pointer shadow-sm border",
+        isFaded ? "bg-blue-800 border-blue-700 text-white" : "bg-white text-gray-800", // Changed default bg-white to bg-blue-800 when faded
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -34,26 +35,26 @@ const OutstandingCompetenciesCard = ({ onClick, competencies, isFaded = false, i
     >
       <CardHeader>
         <div className="flex items-center gap-3 mb-2">
-          {Icon && <Icon className="h-6 w-6 text-blue-600" />}
-          <CardTitle className="text-lg font-bold text-gray-800">NĂNG LỰC NỔI TRỘI</CardTitle>
+          {Icon && <Icon className={cn("h-6 w-6", isFaded ? "text-white" : "text-blue-600")} />} {/* Adjusted icon color */}
+          <CardTitle className={cn("text-lg font-bold", isFaded ? "text-white" : "text-gray-800")}>NĂNG LỰC NỔI TRỘI</CardTitle> {/* Adjusted title color */}
         </div>
       </CardHeader>
       <CardContent className="flex-grow space-y-4">
         {topCompetencies.length > 0 ? (
           topCompetencies.map(([key, value]) => (
             <div key={key}>
-              <p className="text-gray-700 mb-2">{getCognitiveTitle(key, competencyData)}</p>
+              <p className={cn("mb-2", isFaded ? "text-blue-100" : "text-gray-700")}>{getCognitiveTitle(key, competencyData)}</p> {/* Adjusted text color */}
               <CustomProgress value={value} className="h-2" indicatorClassName="bg-blue-500" />
             </div>
           ))
         ) : (
-          <div className="flex flex-col items-center justify-center h-full text-gray-500 text-center space-y-3">
+          <div className="flex flex-col items-center justify-center h-full text-blue-100 text-center space-y-3"> {/* Changed text-gray-500 to text-blue-100 */}
             <p>Chưa có dữ liệu năng lực nhận thức.</p>
-            <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')} size="sm" className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Làm Bài Test Toàn Diện NaviU</Button>
+            <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')} size="sm" className="bg-blue-900 text-white hover:bg-blue-700 rounded-lg">Làm Bài Test Toàn Diện NaviU</Button> {/* Adjusted button color */}
           </div>
         )}
       </CardContent>
-      <HoverViewMore isVisible={isHovered} className="text-gray-800" />
+      <HoverViewMore isVisible={isHovered} className={cn(isFaded ? "text-white" : "text-gray-800")} /> {/* Adjusted hover text color */}
     </Card>
   );
 };
