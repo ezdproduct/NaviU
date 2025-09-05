@@ -74,9 +74,9 @@ const Index = () => {
         {/* Roadmap & Savings Section */}
         <section className="py-16 md:py-24 bg-blue-50/50">
             <div className="container mx-auto px-6">
-                <div className="grid lg:grid-cols-2 gap-16 items-center">
+                <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center"> {/* Adjusted gap for responsiveness */}
                     <div className="order-2 lg:order-1">
-                        <div className="text-left mb-8">
+                        <div className="text-center lg:text-left mb-8"> {/* Adjusted text alignment for responsiveness */}
                             <span className="text-blue-600 font-semibold tracking-wider">LỘ TRÌNH VỮNG CHẮC</span>
                             <h2 className="text-3xl md:text-4xl font-bold mb-4 mt-2">Đầu Tư Thông Minh Cho Tương Lai</h2>
                             <p className="text-gray-600">Việc chọn đúng ngành ngay từ đầu không chỉ là một quyết định sự nghiệp, mà còn là một khoản đầu tư tài chính khôn ngoan. NaviU giúp bạn tiết kiệm chi phí và thời gian khổng lồ.</p>
