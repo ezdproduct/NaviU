@@ -51,3 +51,46 @@ export interface UpdateProfilePayload {
   phone?: string;
   birthday?: string;
 }
+
+// Interfaces for NaviU Test Results and History
+export interface NaviuResultData {
+  result?: { // This seems to be the major_group_name/code
+    major_group_name: string;
+    major_group_code: string;
+  };
+  mbti?: {
+    result: string;
+    scores: { [key: string]: number };
+    clarity: { [key: string]: string };
+    percent: { [key: string]: string };
+  };
+  eq?: {
+    scores: { [key: string]: number };
+    levels: { [key: string]: string };
+  };
+  cognitive?: {
+    Logic: number;
+    Ngôn_ngữ: number;
+    Không_gian: number;
+  };
+  holland?: {
+    R: number;
+    I: number;
+    A: number;
+    S: number;
+    E: number;
+    C: number;
+  };
+  values?: { [key: string]: number };
+}
+
+export interface NaviuHistoryItem {
+  id: string;
+  title: string;
+  submitted_at: string;
+  mbti?: string; // These are summary strings for history view
+  eq?: string;
+  cog?: string;
+  holland?: string;
+  details?: NaviuResultData; // Full details for result page
+}

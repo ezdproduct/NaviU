@@ -25,14 +25,7 @@ export const testHubData: { [key: string]: TestInfo[] } = {
       headerBgClass: "bg-green-50",
       tagColorPalette: ["bg-green-100 text-green-800", "bg-teal-100 text-teal-800"],
     },
-    {
-      title: "Bài Test Toàn Diện NaviU", // Cập nhật tên hiển thị
-      description: "Khám phá toàn diện về bản thân với bài test tổng hợp từ NaviU.",
-      duration: "30 phút", // Cập nhật thời lượng nếu cần
-      tags: ["Tổng hợp", "Định hướng"],
-      headerBgClass: "bg-purple-50",
-      tagColorPalette: ["bg-purple-100 text-purple-800", "bg-indigo-100 text-indigo-800"],
-    },
+    // Đã xóa mục "Bài Test Toàn Diện NaviU"
     {
       title: "Trắc nghiệm Holland",
       description: "Xác định 6 nhóm sở thích nghề nghiệp cốt lõi của bạn để tìm ra môi trường làm việc lý tưởng.",

@@ -27,12 +27,12 @@ import TestRunnerPage from "@/components/profile/TestRunnerPage";
 import LoadingPage from "@/components/LoadingPage";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import NaviuResultPage from "./pages/NaviuResultPage";
-import DGTCResultPage from "./pages/DGTCResultPage"; // Cập nhật import
+import DGTCResultPage from "./pages/DGTCResultPage";
 import NaviuHistoryPage from "./pages/NaviuHistoryPage";
 import DGTCHistoryPage from "./pages/DGTCHistoryPage";
-import DGTCQuizRunner from "./components/profile/mbti/DGTCQuizRunner"; // Import runner
-import NaviuTestRunner from "./components/profile/naviu/NaviuTestRunner"; // Import runner
-import NaviuMBTITestRunner from "./components/profile/naviu/NaviuMBTITestRunner"; // Import NaviuMBTITestRunner
+import DGTCQuizRunner from "./components/profile/mbti/DGTCQuizRunner";
+// import NaviuTestRunner from "./components/profile/naviu/NaviuTestRunner"; // Đã xóa
+import NaviuMBTITestRunner from "./components/profile/naviu/NaviuMBTITestRunner";
 
 const queryClient = new QueryClient();
 
@@ -71,11 +71,11 @@ export const routes: RouteObject[] = [
       { path: "do-test", element: <DoTestView /> },
       { path: "do-test/:testId", element: <TestRunnerPage /> },
       { path: "test/dgtc/do-test", element: <DGTCQuizRunner /> },
-      { path: "test/naviu/do-test", element: <NaviuTestRunner /> },
+      // { path: "test/naviu/do-test", element: <NaviuTestRunner /> }, // Đã xóa
       // New route for NaviU MBTI
       { path: "test/naviu-mbti/do-test", element: <NaviuMBTITestRunner /> }, 
       { path: "naviu-result", element: <NaviuResultPage /> },
-      { path: "dgtc-result", element: <DGTCResultPage /> }, // Cập nhật route
+      { path: "dgtc-result", element: <DGTCResultPage /> },
       { path: "history/naviu", element: <NaviuHistoryPage /> },
       { path: "history/dgtc", element: <DGTCHistoryPage /> },
       { path: "settings", element: <UserProfile /> },

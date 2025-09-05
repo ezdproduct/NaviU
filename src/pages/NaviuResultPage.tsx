@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { showError } from '@/utils/toast';
-import { NaviuResultData } from '@/components/profile/NaviUTestPage';
+import { NaviuResultData } from '@/types'; // Cập nhật import
 import { personalityData } from '@/data/personalityData';
 import { hollandCodeData } from '@/data/hollandCodeData';
 import { competencyData } from '@/data/competencyData';
@@ -29,12 +29,12 @@ const NaviuResultPage: React.FC = () => {
       setResult(resultData);
     } else {
       showError("Không tìm thấy dữ liệu kết quả bài test NaviU.");
-      navigate('/profile/do-test/naviu', { replace: true });
+      navigate('/profile/do-test/naviu-mbti', { replace: true }); // Chuyển hướng đến MBTI NaviU
     }
   }, [location.state, navigate]);
 
   const handleRetake = () => {
-    navigate('/profile/test/naviu/do-test', { replace: true });
+    navigate('/profile/test/naviu-mbti/do-test', { replace: true }); // Trỏ đến bài test MBTI NaviU
   };
 
   const getTopHollandCodes = (hollandScores: any) => {
@@ -225,7 +225,7 @@ const NaviuResultPage: React.FC = () => {
           <NoDataCard
             title="Chưa có kết quả Holland"
             description="Hãy làm bài test Holland để xác định sở thích nghề nghiệp của bạn."
-            testLink="/profile/test/naviu/do-test" // Hoặc một link cụ thể cho Holland nếu có
+            testLink="/profile/test/naviu-mbti/do-test" // Trỏ đến MBTI NaviU
           />
         )}
 
@@ -246,7 +246,7 @@ const NaviuResultPage: React.FC = () => {
             <NoDataCard
               title="Chưa có kết quả Năng lực Nhận thức"
               description="Hoàn thành bài test NaviU toàn diện để đánh giá năng lực của bạn."
-              testLink="/profile/test/naviu/do-test"
+              testLink="/profile/test/naviu-mbti/do-test" // Trỏ đến MBTI NaviU
             />
           )}
 
@@ -265,7 +265,7 @@ const NaviuResultPage: React.FC = () => {
             <NoDataCard
               title="Chưa có kết quả EQ"
               description="Hoàn thành bài test NaviU toàn diện để đánh giá trí tuệ cảm xúc của bạn."
-              testLink="/profile/test/naviu/do-test"
+              testLink="/profile/test/naviu-mbti/do-test" // Trỏ đến MBTI NaviU
             />
           )}
         </div>

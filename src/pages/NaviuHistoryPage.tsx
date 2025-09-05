@@ -8,22 +8,7 @@ import { History, FileQuestion, ArrowLeft } from 'lucide-react';
 import { WP_BASE_URL } from '@/lib/auth/api';
 import { useAuth } from '@/contexts/AuthContext';
 import { showError } from '@/utils/toast';
-
-interface NaviuHistoryItem {
-  id: string;
-  title: string;
-  result?: {
-    major_group_name: string;
-    major_group_code: string;
-  };
-  submitted_at: string;
-  result_details: {
-    mbti?: string;
-    eq?: string;
-    cog?: string;
-    holland?: any; // Cho phép holland là bất kỳ kiểu dữ liệu nào
-  };
-}
+import { NaviuHistoryItem } from '@/types'; // Cập nhật import
 
 const API_URL = `${WP_BASE_URL}/wp-json/naviu/v1`;
 
@@ -87,7 +72,7 @@ const NaviuHistoryPage: React.FC = () => {
 
   const handleViewDetails = (item: NaviuHistoryItem) => {
     navigate('/profile/naviu-result', {
-      state: { resultData: item.result_details, testId: item.id },
+      state: { resultData: item.details, testId: item.id },
     });
   };
 
@@ -131,7 +116,7 @@ const NaviuHistoryPage: React.FC = () => {
                 <ArrowLeft className="h-4 w-4" />
                 Quay lại
             </Button>
-            <Button onClick={() => navigate('/profile/test/naviu/do-test')} className="flex items-center gap-2">
+            <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')} className="flex items-center gap-2">
                 <FileQuestion className="h-4 w-4" />
                 Làm bài test mới
             </Button>
@@ -155,7 +140,7 @@ const NaviuHistoryPage: React.FC = () => {
           <FileQuestion className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <CardTitle className="text-xl font-bold text-gray-800 mb-2">Chưa có bài test nào</CardTitle>
           <CardDescription>Bạn chưa hoàn thành bài test NaviU nào. Hãy bắt đầu làm một bài test mới!</CardDescription>
-          <Button onClick={() => navigate('/profile/test/naviu/do-test')} className="mt-4">Bắt đầu làm bài</Button>
+          <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')} className="mt-4">Bắt đầu làm bài</Button>
         </Card>
       )}
 
@@ -175,11 +160,11 @@ const NaviuHistoryPage: React.FC = () => {
                   <TableCell className="font-medium">{formatDate(item.submitted_at)}</TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-1">
-                      {item.result_details?.mbti && <Badge variant="secondary">MBTI: {item.result_details.mbti}</Badge>}
-                      {item.result_details?.eq && <Badge variant="secondary">EQ: {item.result_details.eq}</Badge>}
-                      {item.result_details?.cog && <Badge variant="secondary">Cog: {item.result_details.cog}</Badge>}
-                      {item.result_details?.holland && <Badge variant="secondary">Holland: {renderHollandHistory(item.result_details.holland)}</Badge>}
-                      {!item.result_details?.mbti && !item.result_details?.eq && !item.result_details?.cog && !item.result_details?.holland && (
+                      {item.mbti && <Badge variant="secondary">MBTI: {item.mbti}</Badge>}
+                      {item.eq && <Badge variant="secondary">EQ: {item.eq}</Badge>}
+                      {item.cog && <Badge variant="secondary">Cog: {item.cog}</Badge>}
+                      {item.holland && <Badge variant="secondary">Holland: {renderHollandHistory(item.holland)}</Badge>}
+                      {!item.mbti && !item.eq && !item.cog && !item.holland && (
                         <Badge variant="outline">Không có chi tiết</Badge>
                       )}
                     </div>

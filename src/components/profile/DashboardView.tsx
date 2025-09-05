@@ -174,7 +174,6 @@ const getEqProfileModalDetails = (eqScores: { [key: string]: number } | undefine
         ))}
       </div>
     ),
-    // Đã loại bỏ dòng 'content: null,' trùng lặp ở đây
   };
 };
 
@@ -277,9 +276,9 @@ const DashboardView = ({ username }: DashboardViewProps) => {
         <Card className="col-span-1 md:col-span-2 lg:col-span-4 p-8 text-center">
           <CardTitle>Chào mừng bạn đến với NaviU!</CardTitle>
           <CardDescription className="mt-2 mb-4">
-            Bạn chưa có báo cáo nào. Hãy làm bài test toàn diện để khám phá tiềm năng của mình.
+            Bạn chưa có báo cáo nào. Hãy làm bài test MBTI NaviU để khám phá tiềm năng của mình.
           </CardDescription>
-          <Button onClick={() => navigate('/profile/test/naviu/do-test')}>Làm bài test Toàn Diện NaviU</Button>
+          <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')}>Làm bài test MBTI NaviU</Button>
         </Card>
       )}
 
