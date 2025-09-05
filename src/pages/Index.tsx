@@ -141,12 +141,7 @@ const Index = () => {
                         <h3 className="text-xl font-semibold mb-2">Trí thông minh (MRTI)</h3>
                         <p className="text-gray-600 text-sm">Hiểu rõ 8 loại hình trí tuệ để phát huy tối đa tiềm năng.</p>
                     </div>
-                    {/* Feature Card */}
-                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                        <Compass className="w-10 h-10 text-blue-500 mb-4" />
-                        <h3 className="text-xl font-semibold mb-2">La bàn (Holland)</h3>
-                        <p className="text-gray-600 text-sm">Xác định các giá trị quan trọng, định hướng cuộc sống và sự nghiệp.</p>
-                    </div>
+                    {/* Removed "La bàn (Holland)" card */}
                     {/* Feature Card */}
                     <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                         <Briefcase className="w-10 h-10 text-blue-500 mb-4" />
