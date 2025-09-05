@@ -3,8 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { showError, showSuccess } from '@/utils/toast'; // Import showSuccess
-import { DGTCResultData } from '@/types'; // Import DGTCResultData
+import { showError, showSuccess } from '@/utils/toast';
+import { DGTCResultData } from '@/types';
 import { Radar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -16,47 +16,111 @@ import {
   Legend,
 } from 'chart.js';
 import { personalityData } from '@/data/personalityData';
-import { Progress } from '@/components/ui/progress'; // Import Progress
-import { Download } from 'lucide-react'; // Import Download icon
-import html2canvas from 'html2canvas'; // Import html2canvas
-import jsPDF from 'jspdf'; // Import jspdf
+import { Progress } from '@/components/ui/progress';
+import { Download } from 'lucide-react';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { WP_BASE_URL } from '@/lib/auth/api'; // Import WP_BASE_URL
+import { useAuth } from '@/contexts/AuthContext'; // Import useAuth
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
+
+const API_URL_DGTC = `${WP_BASE_URL}/wp-json/mbti/v1`; // Define API URL for DGTC
 
 const DGTCResultPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth(); // Get user for token
+  const token = user ? localStorage.getItem('jwt_token') : null;
+
   const [result, setResult] = useState<DGTCResultData | null>(null);
   const [dgtcDescription, setDgtcDescription] = useState<string | null>(null);
-  const resultRef = useRef<HTMLDivElement>(null); // Ref for the content to be exported
+  const [loadingResult, setLoadingResult] = useState(true); // New loading state
+  const resultRef = useRef<HTMLDivElement>(null);
+
+  const generateMockDGTCResult = (): DGTCResultData => ({
+    id: 'mock-dgtc',
+    type: 'ĐGTC',
+    title: 'Trắc nghiệm ĐGTC (Kết quả mẫu)',
+    result: 'N/A',
+    scores: { E: 0, S: 0, T: 0, J: 0, I: 0, N: 0, F: 0, P: 0 },
+    clarity: { 'EI': 'Không rõ ràng', 'SN': 'Không rõ ràng', 'TF': 'Không rõ ràng', 'JP': 'Không rõ ràng' },
+    percent: { 'EI': '0% - 0%', 'SN': '0% - 0%', 'TF': '0% - 0%', 'JP': '0% - 0%' },
+    started_at: new Date().toISOString(),
+    submitted_at: new Date().toISOString(),
+  });
 
   useEffect(() => {
-    if (location.state && location.state.resultData) {
-      const resultData = location.state.resultData as DGTCResultData;
-      setResult(resultData);
-      if (resultData.result && personalityData[resultData.result as keyof typeof personalityData]) {
-        setDgtcDescription(personalityData[resultData.result as keyof typeof personalityData].description);
+    const fetchOrSetResult = async () => {
+      setLoadingResult(true);
+      if (location.state && location.state.resultData) {
+        // Case 1: Result data is directly provided (e.g., from history page)
+        const resultData = location.state.resultData as DGTCResultData;
+        setResult(resultData);
+        if (resultData.result && personalityData[resultData.result as keyof typeof personalityData]) {
+          setDgtcDescription(personalityData[resultData.result as keyof typeof personalityData].description);
+        } else {
+          setDgtcDescription('Không tìm thấy mô tả cho loại tính cách này.');
+        }
+      } else if (location.state && location.state.testType === 'dgtc') {
+        // Case 2: User clicked "Xem báo cáo" from TestHub, no direct result data
+        if (!token) {
+          showError("Bạn chưa đăng nhập. Vui lòng đăng nhập để xem báo cáo.");
+          navigate('/login', { replace: true });
+          setLoadingResult(false);
+          return;
+        }
+        try {
+          const res = await fetch(`${API_URL_DGTC}/history`, {
+            headers: { "Authorization": `Bearer ${token}` }
+          });
+          if (!res.ok) {
+            throw new Error(`Lỗi khi tải lịch sử ĐGTC: ${res.status}`);
+          }
+          const historyData: DGTCResultData[] = await res.json();
+          if (historyData && historyData.length > 0) {
+            const latestResult = historyData.sort((a, b) => new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime())[0];
+            setResult(latestResult);
+            if (latestResult.result && personalityData[latestResult.result as keyof typeof personalityData]) {
+              setDgtcDescription(personalityData[latestResult.result as keyof typeof personalityData].description);
+            } else {
+              setDgtcDescription('Không tìm thấy mô tả cho loại tính cách này.');
+            }
+          } else {
+            // No history found, generate mock result
+            setResult(generateMockDGTCResult());
+            setDgtcDescription('Bạn chưa hoàn thành bài test ĐGTC nào. Đây là báo cáo mẫu với điểm số mặc định.');
+            showError("Bạn chưa có kết quả ĐGTC. Đang hiển thị báo cáo mẫu.");
+          }
+        } catch (err: any) {
+          console.error("Error fetching DGTC history for report:", err);
+          showError(err.message || 'Không thể tải báo cáo ĐGTC. Đang hiển thị báo cáo mẫu.');
+          setResult(generateMockDGTCResult());
+          setDgtcDescription('Đã xảy ra lỗi khi tải báo cáo. Đây là báo cáo mẫu với điểm số mặc định.');
+        }
       } else {
-        setDgtcDescription('Không tìm thấy mô tả cho loại tính cách này.');
+        // Fallback if no relevant state is found
+        showError("Không tìm thấy dữ liệu kết quả bài test ĐGTC.");
+        navigate('/profile/do-test/dgtc', { replace: true });
       }
-    } else {
-      showError("Không tìm thấy dữ liệu kết quả bài test ĐGTC.");
-      navigate('/profile/do-test/dgtc', { replace: true }); // Quay về trang làm bài test nếu không có dữ liệu
-    }
-  }, [location.state, navigate]);
+      setLoadingResult(false);
+    };
+
+    fetchOrSetResult();
+  }, [location.state, navigate, token]);
 
   const handleRetake = () => {
-    navigate('/profile/do-test/dgtc', { replace: true }); // Quay về trang làm bài test ĐGTC
+    navigate('/profile/test/dgtc/do-test', { replace: true });
   };
 
   const handleExportPdf = async () => {
     if (resultRef.current) {
       showSuccess("Đang tạo PDF báo cáo...");
-      const canvas = await html2canvas(resultRef.current, { scale: 2 }); // Tăng scale để chất lượng tốt hơn
+      const canvas = await html2canvas(resultRef.current, { scale: 2 });
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = 210; // A4 width in mm
-      const pageHeight = 297; // A4 height in mm
+      const imgWidth = 210;
+      const pageHeight = 297;
       const imgHeight = canvas.height * imgWidth / canvas.width;
       let heightLeft = imgHeight;
       let position = 0;
@@ -77,10 +141,25 @@ const DGTCResultPage: React.FC = () => {
     }
   };
 
-  if (!result) {
+  if (loadingResult) {
     return (
       <div className="min-h-[calc(100vh-6rem)] bg-gray-100 flex items-center justify-center p-4">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (!result) {
+    return (
+      <div className="min-h-[calc(100vh-6rem)] bg-red-50 flex items-center justify-center p-4">
+        <Card className="rounded-xl p-8 max-w-md w-full text-center">
+          <div className="text-red-500 text-6xl mb-4">⚠️</div>
+          <CardTitle className="text-xl font-semibold text-gray-800 mb-2">Không có dữ liệu báo cáo</CardTitle>
+          <p className="text-gray-600 mb-6">Đã xảy ra lỗi khi tải báo cáo hoặc không tìm thấy dữ liệu.</p>
+          <Button onClick={() => navigate('/profile/do-test')} className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
+            Quay lại Test Hub
+          </Button>
+        </Card>
       </div>
     );
   }
@@ -160,7 +239,7 @@ const DGTCResultPage: React.FC = () => {
 
   return (
     <div className="min-h-[calc(100vh-6rem)] bg-gradient-to-br from-green-50 to-blue-100 p-4 sm:p-6">
-      <div ref={resultRef} className="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-lg"> {/* Added ref and styling for PDF export */}
+      <div ref={resultRef} className="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-lg">
         <div className="text-center mb-8">
           <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full text-white text-2xl font-bold mb-4 ${getTypeColor(result.result)}`}>
             {result.result}
@@ -215,7 +294,7 @@ const DGTCResultPage: React.FC = () => {
             </div>
           </Card>
         </div>
-      </div> {/* End of resultRef div */}
+      </div>
 
       <div className="text-center pt-8 space-x-4">
         <Button

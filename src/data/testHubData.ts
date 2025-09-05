@@ -9,6 +9,8 @@ export interface TestInfo {
   icon: IconType; // Thay đổi LucideIcon thành IconType
   iconBgColor: string; // Tailwind color class for icon background
   iconColor: string; // Tailwind color class for icon color
+  resultLink: string; // Link to the result page
+  testType: string; // Identifier for the test type (e.g., 'dgtc', 'naviu-mbti')
 }
 
 export const testHubData: { [key: string]: TestInfo[] } = {
@@ -21,6 +23,8 @@ export const testHubData: { [key: string]: TestInfo[] } = {
       icon: MdPeople, // Sử dụng MdPeople
       iconBgColor: "bg-blue-100",
       iconColor: "text-blue-600",
+      resultLink: "/profile/dgtc-result", // Added
+      testType: "dgtc", // Added
     },
     {
       title: "Bài Test Toàn Diện NaviU",
@@ -30,6 +34,8 @@ export const testHubData: { [key: string]: TestInfo[] } = {
       icon: MdPsychology, // Sử dụng MdPsychology
       iconBgColor: "bg-indigo-100",
       iconColor: "text-indigo-600",
+      resultLink: "/profile/naviu-result", // Added
+      testType: "naviu-mbti", // Added
     },
     {
       title: "Trắc nghiệm Holland",
@@ -39,6 +45,8 @@ export const testHubData: { [key: string]: TestInfo[] } = {
       icon: MdExplore, // Sử dụng MdExplore
       iconBgColor: "bg-orange-100",
       iconColor: "text-orange-600",
+      resultLink: "/profile/naviu-result", // Holland results are part of NaviU result
+      testType: "naviu-mbti", // Holland is part of naviu-mbti test
     },
     {
       title: "Đánh giá Trí tuệ Cảm xúc (EQ)",
@@ -48,6 +56,8 @@ export const testHubData: { [key: string]: TestInfo[] } = {
       icon: MdHandshake, // Sử dụng MdHandshake
       iconBgColor: "bg-purple-100",
       iconColor: "text-purple-600",
+      resultLink: "/profile/naviu-result", // EQ results are part of NaviU result
+      testType: "naviu-mbti", // EQ is part of naviu-mbti test
     },
     {
       title: "Khám phá Giá trị Nghề nghiệp",
@@ -57,6 +67,8 @@ export const testHubData: { [key: string]: TestInfo[] } = {
       icon: MdFlag, // Sử dụng MdFlag
       iconBgColor: "bg-green-100",
       iconColor: "text-green-600",
+      resultLink: "/profile/naviu-result", // Values results are part of NaviU result
+      testType: "naviu-mbti", // Values is part of naviu-mbti test
     },
   ],
   hieuTruong: [
@@ -68,6 +80,8 @@ export const testHubData: { [key: string]: TestInfo[] } = {
       icon: MdSchool, // Sử dụng MdSchool
       iconBgColor: "bg-yellow-100",
       iconColor: "text-yellow-600",
+      resultLink: "#", // No specific result page yet
+      testType: "mock-school",
     },
     {
       title: "So sánh các trường Đại học",
@@ -77,6 +91,8 @@ export const testHubData: { [key: string]: TestInfo[] } = {
       icon: MdBalance, // Sử dụng MdBalance
       iconBgColor: "bg-red-100",
       iconColor: "text-red-600",
+      resultLink: "#", // No specific result page yet
+      testType: "mock-compare",
     },
   ],
   hieuNganh: [
@@ -88,6 +104,8 @@ export const testHubData: { [key: string]: TestInfo[] } = {
       icon: MdBuild, // Sử dụng MdBuild
       iconBgColor: "bg-teal-100",
       iconColor: "text-teal-600",
+      resultLink: "#", // No specific result page yet
+      testType: "mock-tech",
     },
     {
       title: "Tìm hiểu khối ngành Kinh tế",
@@ -97,6 +115,8 @@ export const testHubData: { [key: string]: TestInfo[] } = {
       icon: MdWork, // Sử dụng MdWork
       iconBgColor: "bg-amber-100",
       iconColor: "text-amber-600",
+      resultLink: "#", // No specific result page yet
+      testType: "mock-economy",
     },
     {
       title: "Bạn có phù hợp với ngành Y?",
@@ -106,6 +126,8 @@ export const testHubData: { [key: string]: TestInfo[] } = {
       icon: MdMedicalServices, // Sử dụng MdMedicalServices
       iconBgColor: "bg-pink-100",
       iconColor: "text-pink-600",
+      resultLink: "#", // No specific result page yet
+      testType: "mock-medical",
     },
   ],
 };
