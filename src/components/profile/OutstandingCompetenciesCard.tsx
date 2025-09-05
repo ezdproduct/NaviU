@@ -5,6 +5,8 @@ import HoverViewMore from '@/components/HoverViewMore';
 import { competencyData } from '@/data/competencyData';
 import { getCognitiveTitle } from '@/utils/dataMapping';
 import { cn } from '@/lib/utils'; // Import cn utility
+import { Button } from '@/components/ui/button'; // Import Button
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 interface OutstandingCompetenciesCardProps {
   onClick: () => void;
@@ -15,6 +17,7 @@ interface OutstandingCompetenciesCardProps {
 
 const OutstandingCompetenciesCard = ({ onClick, competencies, isFaded = false, icon: Icon }: OutstandingCompetenciesCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const topCompetencies = Object.entries(competencies || {})
     .sort(([, a], [, b]) => (b as number) - (a as number))
@@ -24,7 +27,6 @@ const OutstandingCompetenciesCard = ({ onClick, competencies, isFaded = false, i
     <Card
       className={cn(
         "group relative flex flex-col h-full rounded-2xl cursor-pointer bg-white text-gray-800 shadow-sm border border-gray-200",
-        // isFaded && "opacity-50 grayscale" // Removed opacity-50 grayscale
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -45,7 +47,10 @@ const OutstandingCompetenciesCard = ({ onClick, competencies, isFaded = false, i
             </div>
           ))
         ) : (
-          <p className="text-gray-500 text-center">Chưa có dữ liệu năng lực nhận thức.</p> 
+          <div className="flex flex-col items-center justify-center h-full text-gray-500 text-center space-y-3">
+            <p>Chưa có dữ liệu năng lực nhận thức.</p>
+            <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')} size="sm">Làm bài test MBTI NaviU</Button>
+          </div>
         )}
       </CardContent>
       <HoverViewMore isVisible={isHovered} className="text-gray-800" />

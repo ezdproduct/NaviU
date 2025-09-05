@@ -2,16 +2,19 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import HoverViewMore from '@/components/HoverViewMore';
 import { cn } from '@/lib/utils'; // Import cn utility
+import { Button } from '@/components/ui/button'; // Import Button
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 interface ActionCompassCardProps {
   onClick: () => void;
   valueData?: { name: string; description: string }; // New prop: full value data
   isFaded?: boolean;
-  icon?: React.ElementType; // Add icon prop here
+  icon?: React.ElementType; // Add icon prop
 }
 
 const ActionCompassCard = ({ onClick, valueData, isFaded = false, icon: Icon }: ActionCompassCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   return (
     <Card
@@ -35,7 +38,10 @@ const ActionCompassCard = ({ onClick, valueData, isFaded = false, icon: Icon }: 
             <p className="text-gray-700 leading-relaxed">{valueData.description}</p>
           </>
         ) : (
-          <p className="text-gray-500 text-center">Chưa có dữ liệu giá trị nghề nghiệp.</p> 
+          <div className="flex flex-col items-center justify-center h-full text-gray-500 text-center space-y-3">
+            <p>Chưa có dữ liệu giá trị nghề nghiệp.</p>
+            <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')} size="sm">Làm bài test MBTI NaviU</Button>
+          </div>
         )}
       </CardContent>
       <HoverViewMore isVisible={isHovered} className="text-gray-800" />

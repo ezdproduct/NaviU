@@ -52,8 +52,7 @@ const InterestsSection = ({ onCardClick, hollandScores }: InterestsSectionProps)
 
     return (
         <div className={cn(
-            "bg-gray-50 rounded-2xl shadow-sm p-6", // Changed background to bg-gray-50
-            // !hasHollandScores && "opacity-50 grayscale" // Removed opacity-50 grayscale
+            "bg-gray-50 rounded-2xl shadow-sm p-6",
         )}>
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 border-b pb-4 mb-6">Khám phá Sở thích Cốt lõi</h2>
             
@@ -62,7 +61,7 @@ const InterestsSection = ({ onCardClick, hollandScores }: InterestsSectionProps)
                     {hasHollandScores ? (
                         <HollandChart data={hollandChartData} options={hollandChartOptions} />
                     ) : (
-                        <div className="text-center text-gray-500">
+                        <div className="text-center text-gray-500 space-y-3">
                             <p className="mb-4">Chưa có dữ liệu Holland. Hãy làm bài test để xem biểu đồ của bạn!</p>
                             <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')}>Làm bài test MBTI NaviU</Button>
                         </div>
@@ -91,7 +90,7 @@ const InterestsSection = ({ onCardClick, hollandScores }: InterestsSectionProps)
                             );
                         })
                     ) : (
-                        <Card className="p-4 text-center text-gray-500 bg-gray-100 border-gray-200">
+                        <Card className="p-4 text-center text-gray-500 bg-gray-100 border-gray-200 space-y-3">
                             <CardTitle className="text-lg font-bold mb-2">Chưa có kết quả Holland</CardTitle>
                             <p>Hãy làm bài test MBTI NaviU để khám phá sở thích nghề nghiệp của bạn.</p>
                             <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')} className="mt-4">Làm bài test ngay</Button>

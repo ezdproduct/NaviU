@@ -356,7 +356,10 @@ const DashboardView = ({ username }: DashboardViewProps) => {
               {hasEqResult ? (
                 <DynamicEqChart scores={naviuResult!.eq!.scores} />
               ) : (
-                <div className="flex items-center justify-center h-full text-gray-500">Chưa có dữ liệu EQ.</div> 
+                <div className="flex flex-col items-center justify-center h-full text-gray-500 text-center space-y-3">
+                  <p>Chưa có dữ liệu EQ.</p>
+                  <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')} size="sm">Làm bài test MBTI NaviU</Button>
+                </div>
               )}
             </div>
             <HoverViewMore isVisible={isEqHovered} className="text-gray-800" />
