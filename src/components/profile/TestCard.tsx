@@ -3,21 +3,27 @@ import { TestInfo } from '@/data/testHubData';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, FileText } from 'lucide-react'; // Import FileText icon
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils'; // Import cn utility
 import { IconType } from 'react-icons'; // Import IconType
 
 interface TestCardProps {
-  test: TestInfo & { link?: string; resultLink?: string; testType: string }; // Add resultLink and testType
+  test: TestInfo & { link?: string; resultLink?: string; testType: string };
+  hasResult: boolean; // New prop to indicate if a result exists
+  onShowSampleReportConfirm: (testTitle: string, testType: string) => void; // New prop for showing modal
 }
 
-const TestCard = ({ test }: TestCardProps) => {
+const TestCard = ({ test, hasResult, onShowSampleReportConfirm }: TestCardProps) => {
   const IconComponent: IconType = test.icon;
-  const navigate = useNavigate();
 
   const handleViewReport = () => {
-    // Navigate to the result page, passing the testType
-    navigate(test.resultLink || '#', { state: { testType: test.testType } });
+    if (hasResult) {
+      // If result exists, navigate to the actual result page
+      window.location.href = test.resultLink || '#'; // Use window.location.href for full page reload if needed
+    } else {
+      // If no result, show the confirmation modal for sample report
+      onShowSampleReportConfirm(test.title, test.testType);
+    }
   };
 
   return (
