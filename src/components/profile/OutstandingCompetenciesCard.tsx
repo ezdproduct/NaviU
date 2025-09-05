@@ -5,6 +5,7 @@ import HoverViewMore from '@/components/HoverViewMore';
 import { competencyData } from '@/data/competencyData';
 import { getCognitiveTitle } from '@/utils/dataMapping';
 import { cn } from '@/lib/utils'; // Import cn utility
+import { Sparkles } from 'lucide-react'; // Import Sparkles icon
 
 interface OutstandingCompetenciesCardProps {
   onClick: () => void;
@@ -23,14 +24,16 @@ const OutstandingCompetenciesCard = ({ onClick, competencies, isFaded = false }:
     <Card
       className={cn(
         "group relative flex flex-col h-full rounded-2xl cursor-pointer bg-white text-gray-800 shadow-sm border border-gray-200",
-        // isFaded && "opacity-50 grayscale" // Removed opacity-50 grayscale
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
     >
       <CardHeader>
-        <CardTitle className="text-lg font-bold text-gray-800">NĂNG LỰC NỔI TRỘI</CardTitle>
+        <div className="flex items-center gap-3 mb-2">
+          <Sparkles className="h-6 w-6 text-teal-600" />
+          <CardTitle className="text-lg font-bold text-gray-800">NĂNG LỰC NỔI TRỘI</CardTitle>
+        </div>
       </CardHeader>
       <CardContent className="flex-grow space-y-4">
         {topCompetencies.length > 0 ? (

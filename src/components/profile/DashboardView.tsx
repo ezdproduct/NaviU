@@ -27,6 +27,7 @@ import { valuesData } from '@/data/valuesData'; // Import valuesData
 import { getCognitiveTitle, getEqTitle } from '@/utils/dataMapping';
 import CareerSection from './CareerSection';
 import { cn } from '@/lib/utils'; // Import cn utility
+import { FileText, BrainCircuit, Compass, HeartHandshake } from 'lucide-react'; // Import new icons
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
@@ -180,6 +181,7 @@ const getEqProfileModalDetails = (eqScores: { [key: string]: number } | undefine
         ))}
       </div>
     ),
+    content: null,
   };
 };
 
@@ -287,7 +289,10 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             onMouseLeave={() => setIsWelcomeHovered(false)}
             onClick={() => navigate('/profile/report')}
           >
-            <h3 className="text-lg font-semibold opacity-80">Chào mừng trở lại, {username}!</h3>
+            <div className="flex items-center gap-3 mb-2">
+              <FileText className="h-6 w-6 text-white" />
+              <h3 className="text-lg font-semibold opacity-80">Chào mừng trở lại, {username}!</h3>
+            </div>
             <p className="text-4xl font-bold mt-2">Hồ sơ Hướng nghiệp</p>
             <p className="opacity-80 mt-1">Đây là phân tích tổng quan về tiềm năng của bạn.</p>
             <HoverViewMore isVisible={isWelcomeHovered} className="text-white" />
@@ -300,7 +305,10 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             onMouseLeave={() => setIsPersonalityHovered(false)}
             onClick={() => handleCardClick('personality')}
           >
-            <h3 className="text-gray-500">Loại tính cách</h3>
+            <div className="flex items-center gap-3 mb-2">
+              <BrainCircuit className="h-6 w-6 text-blue-600" />
+              <h3 className="text-gray-500">Loại tính cách</h3>
+            </div>
             <p className="text-2xl font-bold text-gray-800 mt-2">{naviuResult?.mbti?.result || 'N/A'}</p>
             <p className="text-sm text-gray-700 mt-1">
             {hasMbtiResult ? personalityData[naviuResult!.mbti!.result as keyof typeof personalityData]?.title : 'Chưa có dữ liệu'}
@@ -315,7 +323,10 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             onMouseLeave={() => setIsHollandHovered(false)}
             onClick={() => handleCardClick('holland')}
           >
-            <h3 className="text-gray-500">Mã Holland</h3>
+            <div className="flex items-center gap-3 mb-2">
+              <Compass className="h-6 w-6 text-orange-500" />
+              <h3 className="text-gray-500">Mã Holland</h3>
+            </div>
             <p className="text-2xl font-bold text-gray-800 mt-2">
               {topHollandCodes.map(([code]) => code).join('') || 'N/A'}
             </p>
@@ -346,7 +357,10 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             onMouseLeave={() => setIsEqHovered(false)}
             onClick={() => handleCardClick('eq-profile')}
           >
-            <h3 className="font-semibold text-gray-800 flex-shrink-0">Hồ sơ Trí tuệ Cảm xúc</h3>
+            <div className="flex items-center gap-3 mb-2">
+              <HeartHandshake className="h-6 w-6 text-green-600" />
+              <h3 className="font-semibold text-gray-800 flex-shrink-0">Hồ sơ Trí tuệ Cảm xúc</h3>
+            </div>
             <div className="relative flex-1 mt-4">
               {hasEqResult ? (
                 <DynamicEqChart scores={naviuResult!.eq!.scores} />
@@ -369,8 +383,8 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             title={modalContent.title}
             description={modalContent.description}
             content={modalContent.content}
-            testLink={modalContent.testLink} // Pass new prop
-            noDataDescription={modalContent.noDataDescription} // Pass new prop
+            testLink={modalContent.testLink}
+            noDataDescription={modalContent.noDataDescription}
           />
         )}
       </div>
