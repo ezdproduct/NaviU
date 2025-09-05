@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, useLocation } from 'react-router-dom'; // Import useLocation
 import MBTITestPage from './mbti/MBTITestPage'; // Đổi import từ DGTCQuiz sang MBTITestPage
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { DGTCResultData } from './mbti/DGTCResult'; // Import DGTCResultData
+import { DGTCResultData } from '@/types'; // Cập nhật import DGTCResultData từ @/types
 import UnavailableTestCard from './UnavailableTestCard'; // Import component mới
 
 const TestRunnerPage = () => {
