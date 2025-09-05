@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge'; // Import Badge component
 import { cn } from '@/lib/utils'; // Import cn utility
 
 const CareerSection = () => (
-    <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+    <div className="bg-gray-50 rounded-2xl shadow-lg p-6 sm:p-8"> {/* Changed background to bg-gray-50 */}
         {/* Đã loại bỏ dòng <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 border-b pb-4 mb-6">Chương 6: La bàn Sự nghiệp</h2> */}
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 border-b pb-4 mb-6">La bàn Sự nghiệp</h2>
         <p className="text-lg text-gray-600 mb-6">Dựa trên phân tích đa chiều, đây là 5 ngành nghề phù hợp nhất với bạn.</p>
@@ -12,7 +12,7 @@ const CareerSection = () => (
         {/* Mobile View - Cards */}
         <div className="md:hidden space-y-4">
             {careerData.map(job => (
-                <div key={job.rank} className={`rounded-lg border p-4 ${job.highlight ? 'bg-blue-50 border-blue-200' : 'bg-white'}`}>
+                <div key={job.rank} className={`rounded-lg border p-4 ${job.highlight ? 'bg-blue-100 border-blue-200' : 'bg-white'}`}> {/* Updated highlight color */}
                     <div className="flex justify-between items-start">
                         <h3 className="font-bold text-gray-800 pr-4">{job.rank}. {job.name}</h3>
                         <span className={`font-bold text-lg ${job.highlight ? 'text-blue-600' : 'text-gray-700'}`}>{job.score}</span>
@@ -28,7 +28,7 @@ const CareerSection = () => (
         {/* Desktop View - Table */}
         <div className="hidden md:block overflow-x-auto rounded-lg border">
             <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+                <thead className="bg-gray-100"> {/* Changed table header background */}
                     <tr>
                         <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">#</th>
                         <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Tên Ngành/Nghề</th>
