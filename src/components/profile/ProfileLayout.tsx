@@ -102,7 +102,7 @@ const ProfileLayout = () => {
           ref={mainContentRef} 
           className={cn(
             "flex-1 min-h-0 overflow-y-auto no-scrollbar flex flex-col",
-            !isDoTestView && "px-4 pt-6" // Chỉ áp dụng padding nếu không phải trang do-test
+            !isDoTestView && "px-4 pt-10" // Đã thay đổi pt-6 thành pt-10
           )}
         >
           <Outlet /> {/* Render the nested route component here */}
