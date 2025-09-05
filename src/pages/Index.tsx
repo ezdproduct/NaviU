@@ -21,6 +21,8 @@ import {
   ClipboardList, // New icon
   Target, // New icon
   MessageCircle, // New icon
+  XCircle, // New icon for Roadmap & Savings
+  CheckCircle2, // New icon for Roadmap & Savings
 } from 'lucide-react'; // Import icons from lucide-react
 
 const Index = () => {
@@ -71,6 +73,54 @@ const Index = () => {
           ctaText="Bắt đầu ngay"
           ctaLink="/register"
         />
+
+        {/* Roadmap & Savings Section */}
+        <section className="py-16 md:py-24 bg-blue-50/50">
+            <div className="container mx-auto px-6">
+                <div className="grid lg:grid-cols-2 gap-16 items-center">
+                    <div className="order-2 lg:order-1">
+                        <div className="text-left mb-8">
+                            <span className="text-blue-600 font-semibold tracking-wider">LỘ TRÌNH VỮNG CHẮC</span>
+                            <h2 className="text-3xl md:text-4xl font-bold mb-4 mt-2">Đầu Tư Thông Minh Cho Tương Lai</h2>
+                            <p className="text-gray-600">Việc chọn đúng ngành ngay từ đầu không chỉ là một quyết định sự nghiệp, mà còn là một khoản đầu tư tài chính khôn ngoan. NaviU giúp bạn tiết kiệm chi phí và thời gian khổng lồ.</p>
+                        </div>
+                        <div className="space-y-6">
+                            {/* Without NaviU Card */}
+                            <div className="bg-white p-6 rounded-xl border-l-4 border-red-500 shadow-sm transition-all duration-300 hover:shadow-md">
+                                <div className="flex items-start space-x-4">
+                                     <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-red-100 text-red-600 rounded-full">
+                                        <XCircle className="w-6 h-6" /> {/* Changed to Lucide icon */}
+                                    </div>
+                                    <div>
+                                        <h4 className="font-semibold text-lg">Khi không có định hướng</h4>
+                                        <p className="text-gray-600 mt-1">Rủi ro chọn sai ngành, lãng phí <strong className="text-red-600">~4 năm học</strong> và chi phí lên tới <strong className="text-red-600">hàng trăm triệu đồng</strong>. Áp lực, hoang mang và phải bắt đầu lại từ đầu.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* With NaviU Card */}
+                             <div className="bg-white p-6 rounded-xl border-l-4 border-blue-500 shadow-sm transition-all duration-300 hover:shadow-md">
+                                <div className="flex items-start space-x-4">
+                                    <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-blue-100 text-blue-600 rounded-full">
+                                        <CheckCircle2 className="w-6 h-6" /> {/* Changed to Lucide icon */}
+                                    </div>
+                                    <div>
+                                        <h4 className="font-semibold text-lg">Với lộ trình từ NaviU</h4>
+                                        <p className="text-gray-600 mt-1">Một khoản đầu tư nhỏ cho sự <strong className="text-blue-600">tự tin, chắc chắn</strong>. Tiết kiệm thời gian, tiền bạc và đi đúng con đường sự nghiệp mơ ước ngay từ bước đầu tiên.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="order-1 lg:order-2">
+                        <img src="https://images.unsplash.com/photo-1543286386-713bdd548da4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                             alt="Biểu đồ tài chính và tiết kiệm" 
+                             className="rounded-xl shadow-2xl w-full h-auto object-cover aspect-[4/3]"
+                             // onerror="this.onerror=null;this.src='https://placehold.co/600x450/e2e8f0/4a5568?text=Tiet+Kiem';" // Removed onerror for React
+                        />
+                    </div>
+                </div>
+            </div>
+        </section>
 
         {/* Feature Section 3: Kết Nối Chuyên Gia */}
         <FeatureSection
