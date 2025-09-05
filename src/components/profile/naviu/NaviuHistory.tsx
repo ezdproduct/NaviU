@@ -15,6 +15,19 @@ interface NaviuHistoryProps {
   onStartNewTest: () => void;
 }
 
+const renderHollandHistory = (hollandData: any) => {
+  if (!hollandData) return null;
+  if (typeof hollandData === 'string') return hollandData;
+  if (typeof hollandData === 'object' && hollandData !== null) {
+    return Object.entries(hollandData)
+      .sort(([, a], [, b]) => (b as number) - (a as number))
+      .slice(0, 3)
+      .map(([code]) => code)
+      .join('');
+  }
+  return 'N/A';
+}
+
 const NaviuHistory: React.FC<NaviuHistoryProps> = ({ history, loadingHistory, onViewDetails, onStartNewTest }) => {
   const navigate = useNavigate(); // Khởi tạo useNavigate
 
@@ -92,8 +105,8 @@ const NaviuHistory: React.FC<NaviuHistoryProps> = ({ history, loadingHistory, on
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[150px]">Ngày làm</TableHead>
-                <TableHead>Kết quả chính</TableHead>
+                <TableHead className="w-[180px]">Ngày hoàn thành</TableHead>
+                <TableHead>Kết quả</TableHead>
                 <TableHead className="text-right">Hành động</TableHead>
               </TableRow>
             </TableHeader>
@@ -107,6 +120,9 @@ const NaviuHistory: React.FC<NaviuHistoryProps> = ({ history, loadingHistory, on
                       {h.eq && <Badge variant="secondary">EQ: {h.eq}</Badge>}
                       {h.cog && <Badge variant="secondary">Cog: {h.cog}</Badge>}
                       {h.holland && <Badge variant="secondary">Holland: {renderHollandHistory(h.holland)}</Badge>}
+                      {!h.mbti && !h.eq && !h.cog && !h.holland && (
+                        <Badge variant="outline">Không có chi tiết</Badge>
+                      )}
                     </div>
                   </TableCell>
                   <TableCell className="text-right">
