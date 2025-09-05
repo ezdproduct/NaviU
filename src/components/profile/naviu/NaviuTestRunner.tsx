@@ -8,10 +8,15 @@ import { NaviuResultData } from '../NaviUTestPage';
 import { Card, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+interface ApiChoice {
+  label: string;
+  score: string; // Đã thêm trường 'score'
+}
+
 interface ApiQuestion {
   id: string;
   text: string;
-  choices: { [key: string]: { label: string } };
+  choices: { [key: string]: ApiChoice }; // Đã cập nhật để sử dụng ApiChoice
 }
 
 interface QuestionGroup {
