@@ -12,7 +12,7 @@ import { competencyData } from '@/data/competencyData';
 import { eqData } from '@/data/eqData';
 import { Radar } from 'react-chartjs-2';
 import { Chart as ChartJS, RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend } from 'chart.js';
-import { BrainCircuit, Compass, HeartHandshake, Sparkles, Briefcase } from 'lucide-react'; // Đã thay đổi HeartHand thành HeartHandshake
+import { BrainCircuit, Compass, HeartHandshake, Sparkles, Briefcase } from 'lucide-react';
 import { getCognitiveTitle, getEqTitle } from '@/utils/dataMapping';
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
@@ -38,7 +38,7 @@ const NaviuResultPage: React.FC = () => {
   };
 
   const getTopHollandCodes = (hollandScores: any) => {
-    if (!hollandScores || typeof hollandScores !== 'object') return [];
+    if (!hollandScores || typeof hollandScores !== 'object' || Object.keys(hollandScores).length === 0) return [];
     return Object.entries(hollandScores)
       .sort(([, a], [, b]) => (b as number) - (a as number))
       .slice(0, 3)
@@ -52,6 +52,11 @@ const NaviuResultPage: React.FC = () => {
       </div>
     );
   }
+
+  const hasMbtiResult = !!result.mbti?.result && personalityData[result.mbti.result as keyof typeof personalityData];
+  const hasHollandResult = !!result.holland && Object.keys(result.holland).length > 0;
+  const hasCognitiveResult = !!result.cognitive && Object.keys(result.cognitive).length > 0;
+  const hasEqResult = !!result.eq?.scores && Object.keys(result.eq.scores).length > 0;
 
   const topHollandCodes = getTopHollandCodes(result.holland);
   const hollandRadarData = {
@@ -72,7 +77,6 @@ const NaviuResultPage: React.FC = () => {
     }],
   };
 
-  // MBTI Radar Data
   const mbtiRadarData = {
     labels: ['E', 'S', 'T', 'J', 'I', 'N', 'F', 'P'],
     datasets: [
@@ -88,7 +92,7 @@ const NaviuResultPage: React.FC = () => {
           result.mbti?.scores?.F || 0,
           result.mbti?.scores?.P || 0,
         ],
-        backgroundColor: 'rgba(139, 92, 246, 0.2)', // Purple shade
+        backgroundColor: 'rgba(139, 92, 246, 0.2)',
         borderColor: 'rgba(139, 92, 246, 1)',
         borderWidth: 2,
         pointBackgroundColor: 'rgba(139, 92, 246, 1)',
@@ -115,15 +119,14 @@ const NaviuResultPage: React.FC = () => {
     plugins: { legend: { display: false }, tooltip: { callbacks: { label: (context: any) => `${context.label}: ${context.raw}` } } },
   };
 
-  // Logic để hiển thị tóm tắt cho Cognitive và EQ trên Summary Cards
   const getCognitiveSummary = () => {
     if (!result.cognitive || Object.keys(result.cognitive).length === 0) return 'N/A';
     const topCognitive = Object.entries(result.cognitive)
       .sort(([, a], [, b]) => (b as number) - (a as number))
-      .find(([key]) => key in competencyData); // Tìm key có ánh xạ
+      .find(([key]) => key in competencyData);
     
     if (topCognitive) {
-      const mappedKey = topCognitive[0] as keyof typeof competencyData; // Cast to correct type
+      const mappedKey = topCognitive[0] as keyof typeof competencyData;
       return `${competencyData[mappedKey]?.title || topCognitive[0]}: ${topCognitive[1] || 0}`;
     }
     return 'Có dữ liệu';
@@ -133,14 +136,22 @@ const NaviuResultPage: React.FC = () => {
     if (!result.eq?.scores || Object.keys(result.eq.scores).length === 0) return 'N/A';
     const topEq = Object.entries(result.eq.scores)
       .sort(([, a], [, b]) => (b as number) - (a as number))
-      .find(([key]) => key in eqData); // Tìm key có ánh xạ
+      .find(([key]) => key in eqData);
 
     if (topEq) {
-      const mappedKey = topEq[0] as keyof typeof eqData; // Cast to correct type
+      const mappedKey = topEq[0] as keyof typeof eqData;
       return `${eqData[mappedKey]?.title || topEq[0]}: ${result.eq.levels?.[topEq[0]] || 'N/A'}`;
     }
     return 'Có dữ liệu';
   };
+
+  const NoDataCard = ({ title, description, testLink }: { title: string; description: string; testLink: string }) => (
+    <Card className="bg-gray-50 border-dashed border-gray-300 text-center p-6 flex flex-col items-center justify-center">
+      <CardTitle className="text-xl font-bold text-gray-700 mb-2">{title}</CardTitle>
+      <CardDescription className="text-gray-500 mb-4">{description}</CardDescription>
+      <Button variant="outline" onClick={() => navigate(testLink)}>Làm bài test</Button>
+    </Card>
+  );
 
   return (
     <div className="min-h-[calc(100vh-6rem)] bg-gray-50 p-4 sm:p-8">
@@ -158,25 +169,25 @@ const NaviuResultPage: React.FC = () => {
           <Card><CardHeader><CardTitle className="flex items-center gap-2"><BrainCircuit className="text-purple-500"/>MBTI</CardTitle></CardHeader><CardContent><p className="text-2xl font-bold">{result.mbti?.result || 'N/A'}</p></CardContent></Card>
           <Card><CardHeader><CardTitle className="flex items-center gap-2"><Compass className="text-orange-500"/>Holland</CardTitle></CardHeader><CardContent><p className="text-2xl font-bold">{topHollandCodes.join('') || 'N/A'}</p></CardContent></Card>
           <Card><CardHeader><CardTitle className="flex items-center gap-2"><Sparkles className="text-blue-500"/>Năng lực</CardTitle></CardHeader><CardContent><p className="text-xl font-bold">{getCognitiveSummary()}</p></CardContent></Card>
-          <Card><CardHeader><CardTitle className="flex items-center gap-2"><HeartHandshake className="text-green-500"/>EQ</CardTitle></CardHeader><CardContent><p className="text-xl font-bold">{getEqSummary()}</p></CardContent></Card> {/* Đã thay đổi HeartHand thành HeartHandshake */}
+          <Card><CardHeader><CardTitle className="flex items-center gap-2"><HeartHandshake className="text-green-500"/>EQ</CardTitle></CardHeader><CardContent><p className="text-xl font-bold">{getEqSummary()}</p></CardContent></Card>
         </div>
 
         {/* MBTI Details */}
-        {result.mbti && personalityData[result.mbti.result as keyof typeof personalityData] && (
+        {hasMbtiResult ? (
           <Card>
-            <CardHeader><CardTitle>Phân tích Tính cách (MBTI): {result.mbti.result}</CardTitle></CardHeader>
+            <CardHeader><CardTitle>Phân tích Tính cách (MBTI): {result.mbti?.result}</CardTitle></CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
               <div>
-                <p className="text-gray-700">{personalityData[result.mbti.result as keyof typeof personalityData].description}</p>
+                <p className="text-gray-700">{personalityData[result.mbti!.result as keyof typeof personalityData].description}</p>
                 <div className="space-y-3 pt-4">
-                  {result.mbti.percent && Object.entries(result.mbti.percent).map(([key, value]) => {
+                  {result.mbti?.percent && Object.entries(result.mbti.percent).map(([key, value]) => {
                     const [type1, type2] = key.split('');
                     const [val1] = (value as string).split(' - ').map(s => parseFloat(s.replace('%', '')));
                     return (
                       <div key={key}>
                         <div className="flex justify-between font-medium text-sm mb-1"><span>{type1}</span><span>{type2}</span></div>
                         <Progress value={val1 || 0} />
-                        <p className="text-xs text-center text-gray-500 mt-1">Độ rõ ràng: {result.mbti.clarity?.[key] || 'N/A'}</p>
+                        <p className="text-xs text-center text-gray-500 mt-1">Độ rõ ràng: {result.mbti?.clarity?.[key] || 'N/A'}</p>
                       </div>
                     );
                   })}
@@ -185,50 +196,78 @@ const NaviuResultPage: React.FC = () => {
               <div className="relative h-80"><Radar data={mbtiRadarData} options={radarOptions} /></div>
             </CardContent>
           </Card>
+        ) : (
+          <NoDataCard
+            title="Chưa có kết quả MBTI"
+            description="Hãy làm bài test MBTI để khám phá tính cách của bạn."
+            testLink="/profile/test/naviu-mbti/do-test"
+          />
         )}
 
         {/* Holland Details */}
-        <Card>
-          <CardHeader><CardTitle>Phân tích Sở thích Nghề nghiệp (Holland)</CardTitle></CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-            <div className="relative h-80"><Radar data={hollandRadarData} options={radarOptions} /></div>
-            <div className="space-y-3">
-              <h3 className="font-semibold">Top 3 nhóm sở thích của bạn:</h3>
-              {topHollandCodes.map(code => (
-                <div key={code}>
-                  <p className="font-bold text-blue-600">{code} - {hollandCodeData[code as keyof typeof hollandCodeData].title}</p>
-                  <p className="text-sm text-gray-600">{hollandCodeData[code as keyof typeof hollandCodeData].description}</p>
-                </div>
-              ))}
-              {topHollandCodes.length === 0 && <p className="text-gray-600">Chưa có dữ liệu Holland.</p>}
-            </div>
-          </CardContent>
-        </Card>
+        {hasHollandResult ? (
+          <Card>
+            <CardHeader><CardTitle>Phân tích Sở thích Nghề nghiệp (Holland)</CardTitle></CardHeader>
+            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              <div className="relative h-80"><Radar data={hollandRadarData} options={radarOptions} /></div>
+              <div className="space-y-3">
+                <h3 className="font-semibold">Top 3 nhóm sở thích của bạn:</h3>
+                {topHollandCodes.map(code => (
+                  <div key={code}>
+                    <p className="font-bold text-blue-600">{code} - {hollandCodeData[code as keyof typeof hollandCodeData].title}</p>
+                    <p className="text-sm text-gray-600">{hollandCodeData[code as keyof typeof hollandCodeData].description}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <NoDataCard
+            title="Chưa có kết quả Holland"
+            description="Hãy làm bài test Holland để xác định sở thích nghề nghiệp của bạn."
+            testLink="/profile/test/naviu/do-test" // Hoặc một link cụ thể cho Holland nếu có
+          />
+        )}
 
         {/* Competency & EQ Details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader><CardTitle>Năng lực Nhận thức</CardTitle></CardHeader>
-            <CardContent>
-              <ul className="space-y-2 list-disc list-inside">
-                {result.cognitive && Object.entries(result.cognitive).map(([key, value]) => (
-                  <li key={key}><strong>{getCognitiveTitle(key, competencyData)}:</strong> {value || 0}</li>
-                ))}
-                {!result.cognitive && <p className="text-gray-600">Chưa có dữ liệu năng lực nhận thức.</p>}
-              </ul>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader><CardTitle>Trí tuệ Cảm xúc (EQ)</CardTitle></CardHeader>
-            <CardContent>
-              <ul className="space-y-2 list-disc list-inside">
-                {result.eq?.scores && Object.entries(result.eq.scores).map(([key, value]) => (
-                  <li key={key}><strong>{getEqTitle(key, eqData)}:</strong> {value || 0} - <span className="font-medium">{result.eq?.levels?.[key] || 'N/A'}</span></li>
-                ))}
-                {!result.eq && <p className="text-gray-600">Chưa có dữ liệu trí tuệ cảm xúc.</p>}
-              </ul>
-            </CardContent>
-          </Card>
+          {hasCognitiveResult ? (
+            <Card>
+              <CardHeader><CardTitle>Năng lực Nhận thức</CardTitle></CardHeader>
+              <CardContent>
+                <ul className="space-y-2 list-disc list-inside">
+                  {result.cognitive && Object.entries(result.cognitive).map(([key, value]) => (
+                    <li key={key}><strong>{getCognitiveTitle(key, competencyData)}:</strong> {value || 0}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ) : (
+            <NoDataCard
+              title="Chưa có kết quả Năng lực Nhận thức"
+              description="Hoàn thành bài test NaviU toàn diện để đánh giá năng lực của bạn."
+              testLink="/profile/test/naviu/do-test"
+            />
+          )}
+
+          {hasEqResult ? (
+            <Card>
+              <CardHeader><CardTitle>Trí tuệ Cảm xúc (EQ)</CardTitle></CardHeader>
+              <CardContent>
+                <ul className="space-y-2 list-disc list-inside">
+                  {result.eq?.scores && Object.entries(result.eq.scores).map(([key, value]) => (
+                    <li key={key}><strong>{getEqTitle(key, eqData)}:</strong> {value || 0} - <span className="font-medium">{result.eq?.levels?.[key] || 'N/A'}</span></li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ) : (
+            <NoDataCard
+              title="Chưa có kết quả EQ"
+              description="Hoàn thành bài test NaviU toàn diện để đánh giá trí tuệ cảm xúc của bạn."
+              testLink="/profile/test/naviu/do-test"
+            />
+          )}
         </div>
         
         {/* Career Suggestions */}
