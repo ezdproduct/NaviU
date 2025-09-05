@@ -4,8 +4,14 @@ import { testHubData } from '@/data/testHubData';
 import TestCard from './TestCard';
 
 const getTestLink = (testTitle: string): string => {
-  if (testTitle.toLowerCase().includes('đgtc')) { // Đổi điều kiện kiểm tra
-    return '/profile/do-test/dgtc'; // Đổi đường dẫn
+  if (testTitle.toLowerCase().includes('đgtc')) {
+    return '/profile/test/dgtc/do-test';
+  }
+  if (testTitle.toLowerCase().includes('mbti (naviu)')) { // Thêm điều kiện cho bài test MBTI NaviU
+    return '/profile/test/naviu-mbti/do-test';
+  }
+  if (testTitle.toLowerCase().includes('toàn diện naviu')) {
+    return '/profile/test/naviu/do-test';
   }
   // Thêm các bài test khác ở đây
   return '#'; // Đường dẫn mặc định

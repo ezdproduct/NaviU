@@ -18,6 +18,14 @@ export const testHubData: { [key: string]: TestInfo[] } = {
       tagColorPalette: ["bg-blue-100 text-blue-800", "bg-indigo-100 text-indigo-800"],
     },
     {
+      title: "Trắc nghiệm MBTI (NaviU)", // Tên hiển thị mới cho MBTI NaviU
+      description: "Khám phá nhóm tính cách MBTI của bạn dựa trên hệ thống NaviU.",
+      duration: "10 phút",
+      tags: ["Tính cách", "NaviU"],
+      headerBgClass: "bg-green-50",
+      tagColorPalette: ["bg-green-100 text-green-800", "bg-teal-100 text-teal-800"],
+    },
+    {
       title: "Bài Test Toàn Diện NaviU", // Cập nhật tên hiển thị
       description: "Khám phá toàn diện về bản thân với bài test tổng hợp từ NaviU.",
       duration: "30 phút", // Cập nhật thời lượng nếu cần

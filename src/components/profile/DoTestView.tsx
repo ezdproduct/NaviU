@@ -12,6 +12,12 @@ const availableTests = [
     link: '/profile/test/dgtc/do-test', // Đổi đường dẫn
   },
   {
+    id: 'naviu-mbti', // ID mới cho bài test MBTI NaviU
+    title: 'Trắc nghiệm MBTI (NaviU)', // Tên hiển thị mới
+    description: 'Khám phá nhóm tính cách MBTI của bạn dựa trên hệ thống NaviU.',
+    link: '/profile/test/naviu-mbti/do-test', // Đường dẫn mới
+  },
+  {
     id: 'naviu', // ID mới cho bài test NaviU
     title: 'Bài Test Toàn Diện NaviU', // Tên hiển thị mới
     description: 'Bài test tổng hợp giúp bạn khám phá tiềm năng và định hướng sự nghiệp một cách toàn diện.',

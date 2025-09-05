@@ -32,6 +32,7 @@ import NaviuHistoryPage from "./pages/NaviuHistoryPage";
 import DGTCHistoryPage from "./pages/DGTCHistoryPage";
 import DGTCQuizRunner from "./components/profile/mbti/DGTCQuizRunner"; // Import runner
 import NaviuTestRunner from "./components/profile/naviu/NaviuTestRunner"; // Import runner
+import NaviuMBTITestRunner from "./components/profile/naviu/NaviuMBTITestRunner"; // Import NaviuMBTITestRunner
 
 const queryClient = new QueryClient();
 
@@ -71,6 +72,7 @@ export const routes: RouteObject[] = [
       { path: "do-test/:testId", element: <TestRunnerPage /> },
       { path: "test/dgtc/do-test", element: <DGTCQuizRunner /> },
       { path: "test/naviu/do-test", element: <NaviuTestRunner /> },
+      { path: "test/naviu-mbti/do-test", element: <NaviuMBTITestRunner /> }, {/* New route for NaviU MBTI */}
       { path: "naviu-result", element: <NaviuResultPage /> },
       { path: "dgtc-result", element: <DGTCResultPage /> }, // Cập nhật route
       { path: "history/naviu", element: <NaviuHistoryPage /> },
