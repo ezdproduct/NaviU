@@ -27,8 +27,8 @@ const ConfirmNavigationModal = ({ isOpen, onClose, onConfirm }: ConfirmNavigatio
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onClose}>Hủy</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>Xác nhận</AlertDialogAction>
+          <AlertDialogCancel onClick={onClose} className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-lg">Hủy</AlertDialogCancel>
+          <AlertDialogAction onClick={onConfirm} className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Xác nhận</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

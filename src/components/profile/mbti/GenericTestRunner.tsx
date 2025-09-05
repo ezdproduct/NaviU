@@ -84,10 +84,10 @@ const GenericTestRunner: React.FC<GenericTestRunnerProps> = ({
                     onClick={() => handleAnswer(currentQuestion.id, option.key)}
                     variant="outline"
                     className={cn(
-                      "h-auto text-wrap justify-center text-center p-4 text-base transition-all duration-200",
+                      "h-auto text-wrap justify-center text-center p-4 text-base transition-all duration-200 rounded-lg",
                       answers[currentQuestion.id] === option.key
                         ? "bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
-                        : "hover:bg-gray-100"
+                        : "border-blue-600 text-blue-600 hover:bg-blue-50"
                     )}
                   >
                     {option.text}
@@ -103,6 +103,7 @@ const GenericTestRunner: React.FC<GenericTestRunnerProps> = ({
             onClick={handlePrev}
             disabled={currentQuestionIndex === 0}
             variant="ghost"
+            className="text-blue-600 hover:bg-blue-50 rounded-lg"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Câu trước
@@ -112,6 +113,7 @@ const GenericTestRunner: React.FC<GenericTestRunnerProps> = ({
             <Button
               onClick={handleNext}
               disabled={!answers[currentQuestion?.id]}
+              className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg"
             >
               Câu tiếp theo
               <ArrowRight className="h-4 w-4 ml-2" />
@@ -120,7 +122,7 @@ const GenericTestRunner: React.FC<GenericTestRunnerProps> = ({
             <Button
               onClick={handleSubmit}
               disabled={isSubmitting || !allAnswered}
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-green-600 hover:bg-green-700 rounded-lg"
             >
               {isSubmitting ? "Đang nộp..." : "Hoàn thành & Xem kết quả"}
             </Button>

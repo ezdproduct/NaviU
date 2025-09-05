@@ -104,11 +104,11 @@ const DGTCHistoryPage: React.FC = () => {
           Lịch sử làm bài test ĐGTC
         </h1>
         <div className="flex gap-2">
-            <Button variant="outline" onClick={() => navigate('/profile/do-test')} className="flex items-center gap-2">
+            <Button variant="outline" onClick={() => navigate('/profile/do-test')} className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-lg flex items-center gap-2">
                 <ArrowLeft className="h-4 w-4" />
                 Quay lại
             </Button>
-            <Button onClick={() => navigate('/profile/do-test/dgtc')} className="flex items-center gap-2">
+            <Button onClick={() => navigate('/profile/do-test/dgtc')} className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg flex items-center gap-2">
                 <FileQuestion className="h-4 w-4" />
                 Làm bài test mới
             </Button>
@@ -117,7 +117,7 @@ const DGTCHistoryPage: React.FC = () => {
       <p className="text-gray-600 mb-8">Xem lại tất cả các bài test ĐGTC bạn đã hoàn thành và kết quả của chúng.</p>
 
       {loadingHistory && (
-        <Card className="p-6">
+        <Card className="p-6 rounded-xl">
           <div className="animate-pulse space-y-4">
             <div className="h-8 bg-gray-200 rounded w-1/3"></div>
             <div className="h-4 bg-gray-200 rounded w-full"></div>
@@ -128,16 +128,16 @@ const DGTCHistoryPage: React.FC = () => {
       )}
 
       {!loadingHistory && history.length === 0 && (
-        <Card className="p-6 text-center">
+        <Card className="p-6 text-center rounded-xl">
           <FileQuestion className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <CardTitle className="text-xl font-bold text-gray-800 mb-2">Chưa có bài test nào</CardTitle>
           <CardDescription>Bạn chưa hoàn thành bài test ĐGTC nào. Hãy bắt đầu làm một bài test mới!</CardDescription>
-          <Button onClick={() => navigate('/profile/do-test/dgtc')} className="mt-4">Bắt đầu làm bài</Button>
+          <Button onClick={() => navigate('/profile/do-test/dgtc')} className="mt-4 bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Bắt đầu làm bài</Button>
         </Card>
       )}
 
       {!loadingHistory && history.length > 0 && (
-        <Card className="overflow-hidden">
+        <Card className="overflow-hidden rounded-xl">
           <Table>
             <TableHeader>
               <TableRow>
@@ -154,7 +154,7 @@ const DGTCHistoryPage: React.FC = () => {
                     <Badge className={`bg-blue-600 text-white`}>{item.result}</Badge>
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button variant="outline" size="sm" onClick={() => { navigate('/profile/dgtc-result', { state: { resultData: item } }); }}>
+                    <Button variant="outline" size="sm" onClick={() => { navigate('/profile/dgtc-result', { state: { resultData: item } }); }} className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-lg">
                       Xem chi tiết
                     </Button>
                   </TableCell>

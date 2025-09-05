@@ -23,7 +23,7 @@ const WelcomeModal = ({ isOpen, onClose, username }: WelcomeModalProps) => {
           <p className="text-lg text-gray-700">Chúc bạn một ngày làm việc hiệu quả!</p>
         </div>
         <DialogFooter>
-          <Button onClick={onClose} className="w-full">Bắt đầu khám phá</Button>
+          <Button onClick={onClose} className="w-full bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Bắt đầu khám phá</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -59,7 +59,7 @@ const BasicTestView = ({ onFinishTest }: BasicTestViewProps) => {
       </div>
 
       <div className="mt-8 text-center">
-        <Button onClick={handleSubmit} className="bg-blue-600 hover:bg-blue-700">
+        <Button onClick={handleSubmit} className="bg-blue-600 hover:bg-blue-700 rounded-lg">
           Hoàn thành Trắc nghiệm Cơ bản
         </Button>
       </div>

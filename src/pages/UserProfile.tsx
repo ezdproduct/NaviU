@@ -266,21 +266,21 @@ const UserProfile = () => {
             <p><strong>Điểm trung bình:</strong> {profile.meta?.average_score?.toFixed(2) || 'N/A'}</p>
             <p><strong>Ngày đăng ký:</strong> {profile.meta?.registration_date ? new Date(profile.meta.registration_date).toLocaleDateString('vi-VN') : 'N/A'}</p>
           </div>
-        </div>
+        </div
       </CardContent>
 
       <CardFooter className="p-0 mt-6 flex space-x-2">
         {editing ? (
           <>
-            <Button onClick={handleSave} disabled={loading}>
+            <Button onClick={handleSave} disabled={loading} className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg">
               {loading ? "Đang lưu..." : "Lưu thay đổi"}
             </Button>
-            <Button variant="outline" onClick={handleCancel} disabled={loading}>
+            <Button variant="outline" onClick={handleCancel} disabled={loading} className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-lg">
               Hủy
             </Button>
           </>
         ) : (
-          <Button onClick={() => setEditing(true)} disabled={loading}>
+          <Button onClick={() => setEditing(true)} disabled={loading} className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg">
             Chỉnh sửa
           </Button>
         )}

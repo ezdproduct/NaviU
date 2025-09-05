@@ -55,8 +55,8 @@ const ExpertProfileModal = ({ expert, onClose, onBook }: ExpertProfileModalProps
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>Đóng</Button>
-          <Button onClick={() => onBook(expert)}>Đặt lịch tư vấn</Button>
+          <Button variant="outline" onClick={onClose} className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-lg">Đóng</Button>
+          <Button onClick={() => onBook(expert)} className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Đặt lịch tư vấn</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

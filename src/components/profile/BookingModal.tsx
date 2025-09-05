@@ -48,7 +48,10 @@ const BookingModal = ({ expert, onClose }: BookingModalProps) => {
                 <Button
                   key={time}
                   variant="outline"
-                  className={cn({ "bg-primary text-primary-foreground": selectedTime === time })}
+                  className={cn(
+                    "rounded-lg border-blue-600 text-blue-600 hover:bg-blue-50", // Default outline style
+                    { "bg-blue-600 text-white hover:bg-blue-700": selectedTime === time } // Selected style
+                  )}
                   onClick={() => setSelectedTime(time)}
                 >
                   {time}
@@ -58,8 +61,8 @@ const BookingModal = ({ expert, onClose }: BookingModalProps) => {
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>Hủy</Button>
-          <Button onClick={handleBooking} disabled={!date || !selectedTime}>
+          <Button variant="outline" onClick={onClose} className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-lg">Hủy</Button>
+          <Button onClick={handleBooking} disabled={!date || !selectedTime} className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg">
             Xác nhận đặt lịch
           </Button>
         </DialogFooter>

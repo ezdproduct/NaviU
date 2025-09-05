@@ -29,7 +29,7 @@ const TestCard = ({ test }: TestCardProps) => {
             </Badge>
           ))}
         </div>
-        <Button asChild className="mt-2 bg-blue-600 text-white hover:bg-blue-700">
+        <Button asChild className="mt-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg">
           <Link to={test.link || '#'}>
             Khám phá <ArrowRight className="ml-1 h-4 w-4" />
           </Link>

@@ -146,10 +146,10 @@ const NaviuResultPage: React.FC = () => {
   };
 
   const NoDataCard = ({ title, description, testLink }: { title: string; description: string; testLink: string }) => (
-    <Card className="bg-gray-50 border-dashed border-gray-300 text-center p-6 flex flex-col items-center justify-center">
+    <Card className="bg-gray-50 border-dashed border-gray-300 text-center p-6 flex flex-col items-center justify-center rounded-xl">
       <CardTitle className="text-xl font-bold text-gray-700 mb-2">{title}</CardTitle>
       <CardDescription className="text-gray-500 mb-4">{description}</CardDescription>
-      <Button variant="outline" onClick={() => navigate(testLink)}>Làm bài test</Button>
+      <Button variant="outline" onClick={() => navigate(testLink)} className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Làm bài test</Button>
     </Card>
   );
 
@@ -158,23 +158,28 @@ const NaviuResultPage: React.FC = () => {
       <div className="max-w-5xl mx-auto space-y-8">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-800">Báo cáo Toàn diện NaviU</h1>
-          <p className="text-xl text-gray-600 mt-2">
+          <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full text-white text-2xl font-bold mb-4 bg-blue-600`}>
+            {result.result?.major_group_code || 'N/A'}
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">
+            Báo cáo Toàn diện NaviU
+          </h1>
+          <p className="text-gray-600 text-base sm:text-lg">
             Kết quả cho nhóm ngành: <span className="font-semibold text-blue-600">{result.result?.major_group_name || 'Chưa xác định'}</span>
           </p>
         </div>
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card><CardHeader><CardTitle className="flex items-center gap-2"><BrainCircuit className="text-purple-500"/>MBTI</CardTitle></CardHeader><CardContent><p className="text-2xl font-bold">{result.mbti?.result || 'N/A'}</p></CardContent></Card>
-          <Card><CardHeader><CardTitle className="flex items-center gap-2"><Compass className="text-orange-500"/>Holland</CardTitle></CardHeader><CardContent><p className="text-2xl font-bold">{topHollandCodes.join('') || 'N/A'}</p></CardContent></Card>
-          <Card><CardHeader><CardTitle className="flex items-center gap-2"><Sparkles className="text-blue-500"/>Năng lực</CardTitle></CardHeader><CardContent><p className="text-xl font-bold">{getCognitiveSummary()}</p></CardContent></Card>
-          <Card><CardHeader><CardTitle className="flex items-center gap-2"><HeartHandshake className="text-green-500"/>EQ</CardTitle></CardHeader><CardContent><p className="text-xl font-bold">{getEqSummary()}</p></CardContent></Card>
+          <Card className="rounded-xl"><CardHeader><CardTitle className="flex items-center gap-2"><BrainCircuit className="text-purple-500"/>MBTI</CardTitle></CardHeader><CardContent><p className="text-2xl font-bold">{result.mbti?.result || 'N/A'}</p></CardContent></Card>
+          <Card className="rounded-xl"><CardHeader><CardTitle className="flex items-center gap-2"><Compass className="text-orange-500"/>Holland</CardTitle></CardHeader><CardContent><p className="text-2xl font-bold">{topHollandCodes.join('') || 'N/A'}</p></CardContent></Card>
+          <Card className="rounded-xl"><CardHeader><CardTitle className="flex items-center gap-2"><Sparkles className="text-blue-500"/>Năng lực</CardTitle></CardHeader><CardContent><p className="text-xl font-bold">{getCognitiveSummary()}</p></CardContent></Card>
+          <Card className="rounded-xl"><CardHeader><CardTitle className="flex items-center gap-2"><HeartHandshake className="text-green-500"/>EQ</CardTitle></CardHeader><CardContent><p className="text-xl font-bold">{getEqSummary()}</p></CardContent></Card>
         </div>
 
         {/* MBTI Details */}
         {hasMbtiResult ? (
-          <Card>
+          <Card className="rounded-xl">
             <CardHeader><CardTitle>Phân tích Tính cách (MBTI): {result.mbti?.result}</CardTitle></CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
               <div>
@@ -206,7 +211,7 @@ const NaviuResultPage: React.FC = () => {
 
         {/* Holland Details */}
         {hasHollandResult ? (
-          <Card>
+          <Card className="rounded-xl">
             <CardHeader><CardTitle>Phân tích Sở thích Nghề nghiệp (Holland)</CardTitle></CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
               <div className="relative h-80"><Radar data={hollandRadarData} options={radarOptions} /></div>
@@ -232,7 +237,7 @@ const NaviuResultPage: React.FC = () => {
         {/* Competency & EQ Details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {hasCognitiveResult ? (
-            <Card>
+            <Card className="rounded-xl">
               <CardHeader><CardTitle>Năng lực Nhận thức</CardTitle></CardHeader>
               <CardContent>
                 <ul className="space-y-2 list-disc list-inside">
@@ -251,7 +256,7 @@ const NaviuResultPage: React.FC = () => {
           )}
 
           {hasEqResult ? (
-            <Card>
+            <Card className="rounded-xl">
               <CardHeader><CardTitle>Trí tuệ Cảm xúc (EQ)</CardTitle></CardHeader>
               <CardContent>
                 <ul className="space-y-2 list-disc list-inside">
@@ -271,7 +276,7 @@ const NaviuResultPage: React.FC = () => {
         </div>
         
         {/* Career Suggestions */}
-        <Card className="bg-blue-50 border-blue-200">
+        <Card className="bg-blue-50 border-blue-200 rounded-xl">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-blue-800"><Briefcase/>Gợi ý Nghề nghiệp</CardTitle>
                 <CardDescription>Dựa trên kết quả phân tích, đây là một số ngành nghề phù hợp với bạn:</CardDescription>
@@ -289,8 +294,8 @@ const NaviuResultPage: React.FC = () => {
 
         {/* Actions */}
         <div className="text-center pt-4 space-x-4">
-          <Button onClick={handleRetake} size="lg">Làm lại Test</Button>
-          <Button onClick={() => navigate('/profile/history/naviu')} size="lg" variant="outline">Xem Lịch sử</Button>
+          <Button onClick={handleRetake} size="lg" className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Làm lại Test</Button>
+          <Button onClick={() => navigate('/profile/history/naviu')} size="lg" variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-lg">Xem Lịch sử</Button>
         </div>
       </div>
     </div>

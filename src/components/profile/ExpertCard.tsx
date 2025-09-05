@@ -36,8 +36,8 @@ const ExpertCard = ({ expert, onViewProfile, onBook }: ExpertCardProps) => {
         </div>
       </CardContent>
       <CardFooter className="grid grid-cols-2 gap-2">
-        <Button variant="outline" onClick={() => onViewProfile(expert)}>Xem hồ sơ</Button>
-        <Button onClick={() => onBook(expert)}>Đặt lịch</Button>
+        <Button variant="outline" onClick={() => onViewProfile(expert)} className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-lg">Xem hồ sơ</Button>
+        <Button onClick={() => onBook(expert)} className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Đặt lịch</Button>
       </CardFooter>
     </Card>
   );

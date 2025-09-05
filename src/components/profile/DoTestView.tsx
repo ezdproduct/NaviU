@@ -55,7 +55,7 @@ const DoTestView = () => {
               <Button 
                 asChild 
                 className={cn(
-                  test.isFeatured ? "bg-blue-800 text-white hover:bg-blue-700" : "bg-blue-600 text-white hover:bg-blue-700"
+                  test.isFeatured ? "bg-blue-800 text-white hover:bg-blue-700 rounded-lg" : "bg-blue-600 text-white hover:bg-blue-700 rounded-lg"
                 )}
               >
                 <Link to={test.link}>

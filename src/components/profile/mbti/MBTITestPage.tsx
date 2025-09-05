@@ -38,7 +38,7 @@ export default function MBTITestPage({ initialResultData }: MBTITestPageProps) {
             <Button onClick={handleStartTest} className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium">
               Bắt đầu làm bài
             </Button>
-            <Button variant="outline" onClick={() => navigate('/profile/history/dgtc')} className="px-8 py-3 rounded-lg font-medium">
+            <Button variant="outline" onClick={() => navigate('/profile/history/dgtc')} className="border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-3 rounded-lg font-medium">
               Xem lịch sử
             </Button>
           </div>
