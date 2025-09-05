@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea"; // Import Textarea
 import { getUserProfile, updateUserProfile } from "@/lib/auth/api";
 import { getToken } from "@/lib/auth/storage";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -12,10 +13,8 @@ import { Terminal } from "lucide-react";
 const UserProfile = () => {
   const [formData, setFormData] = useState({
     display_name: "",
-    first_name: "",
-    last_name: "",
-    phone: "",
-    birthday: "",
+    email: "",
+    description: ""
   });
   const [loading, setLoading] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
@@ -31,10 +30,8 @@ const UserProfile = () => {
         const profileData = response.data;
         setFormData({
           display_name: profileData.display_name || "",
-          first_name: profileData.first_name || "",
-          last_name: profileData.last_name || "",
-          phone: profileData.meta?.phone || "",
-          birthday: profileData.meta?.birthday || "",
+          email: profileData.email || "",
+          description: profileData.description || ""
         });
       } else {
         setMessage({ type: 'error', text: response.message || "Không thể tải thông tin người dùng." });
@@ -47,7 +44,7 @@ const UserProfile = () => {
     }
   }, [token]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -59,7 +56,12 @@ const UserProfile = () => {
     setLoading(true);
     setMessage(null);
 
-    const response = await updateUserProfile(formData);
+    const response = await updateUserProfile({
+      display_name: formData.display_name,
+      email: formData.email,
+      description: formData.description,
+    });
+    
     if (response.success) {
       setMessage({ type: 'success', text: response.message || "Cập nhật thành công!" });
     } else {
@@ -80,15 +82,9 @@ const UserProfile = () => {
           <Skeleton className="h-4 w-64 mt-2" />
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2"><Skeleton className="h-4 w-24" /><Skeleton className="h-10 w-full" /></div>
-            <div className="space-y-2"><Skeleton className="h-4 w-24" /><Skeleton className="h-10 w-full" /></div>
-          </div>
           <div className="space-y-2"><Skeleton className="h-4 w-24" /><Skeleton className="h-10 w-full" /></div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2"><Skeleton className="h-4 w-24" /><Skeleton className="h-10 w-full" /></div>
-            <div className="space-y-2"><Skeleton className="h-4 w-24" /><Skeleton className="h-10 w-full" /></div>
-          </div>
+          <div className="space-y-2"><Skeleton className="h-4 w-24" /><Skeleton className="h-10 w-full" /></div>
+          <div className="space-y-2"><Skeleton className="h-4 w-24" /><Skeleton className="h-20 w-full" /></div>
         </CardContent>
         <CardFooter>
           <Skeleton className="h-10 w-32" />
@@ -112,37 +108,17 @@ const UserProfile = () => {
               <AlertDescription>{message.text}</AlertDescription>
             </Alert>
           )}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="last_name">Họ</Label>
-              <Input id="last_name" name="last_name" value={formData.last_name} onChange={handleChange} maxLength={50} /> {/* Thêm maxLength */}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="first_name">Tên</Label>
-              <Input id="first_name" name="first_name" value={formData.first_name} onChange={handleChange} maxLength={50} /> {/* Thêm maxLength */}
-            </div>
-          </div>
           <div className="space-y-2">
             <Label htmlFor="display_name">Tên hiển thị</Label>
-            <Input id="display_name" name="display_name" value={formData.display_name} onChange={handleChange} maxLength={100} /> {/* Thêm maxLength */}
+            <Input id="display_name" name="display_name" value={formData.display_name} onChange={handleChange} maxLength={100} />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="phone">Số điện thoại</Label>
-              <Input
-                id="phone"
-                name="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={handleChange}
-                pattern="[0-9]{10,15}" // Ví dụ: 10-15 chữ số
-                title="Số điện thoại phải có từ 10 đến 15 chữ số."
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="birthday">Ngày sinh</Label>
-              <Input id="birthday" name="birthday" type="date" value={formData.birthday} onChange={handleChange} />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="description">Giới thiệu</Label>
+            <Textarea id="description" name="description" value={formData.description} onChange={handleChange} rows={4} maxLength={500} />
           </div>
         </CardContent>
         <CardFooter>
