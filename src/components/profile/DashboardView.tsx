@@ -368,7 +368,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
         
         <InterestsSection onCardClick={handleCardClick} hollandScores={naviuResult?.holland} />
 
-        <CareerSection />
+        <CareerSection naviuResult={naviuResult} isLoadingResult={isLoadingResult} /> {/* Pass props here */}
 
         {modalContent && (
           <DashboardDetailModal
