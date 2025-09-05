@@ -23,7 +23,9 @@ const NaviuIntro: React.FC<NaviuIntroProps> = ({ onStartTest, onViewHistory }) =
         <Button onClick={onStartTest} className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium">
           Bắt đầu làm bài
         </Button>
-        {/* Đã xóa nút "Xem lịch sử làm bài" */}
+        <Button variant="outline" onClick={onViewHistory} className="ml-4 px-8 py-3 rounded-lg font-medium">
+          Xem lịch sử làm bài
+        </Button>
       </CardContent>
     </Card>
   );
