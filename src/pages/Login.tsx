@@ -14,14 +14,25 @@ const Login = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { login, isAuthenticated, isLoadingAuth, naviuResult } = useAuth(); // Lấy isLoadingAuth và naviuResult
-  const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams(); // Giữ lại để tương thích ngược nếu cần
   const navigate = useNavigate();
   const location = useLocation();
-  const registrationSuccess = searchParams.get('registered') === 'true';
+
+  // Lấy trạng thái đăng ký từ location.state hoặc searchParams
+  const registrationSuccess = (location.state as { registered?: boolean })?.registered || searchParams.get('registered') === 'true';
 
   const from = location.state?.from?.pathname || '/profile';
 
   useEffect(() => {
+    // Tự động điền thông tin nếu có từ trang đăng ký
+    const state = location.state as { registered?: boolean; username?: string; password?: string } | undefined;
+    if (state?.registered) {
+      if (state.username) setUsername(state.username);
+      if (state.password) setPassword(state.password);
+      // Xóa trạng thái khỏi history để tránh tự động điền lại khi refresh
+      navigate(location.pathname, { replace: true, state: { from: state.from } }); // Giữ lại 'from' nếu có
+    }
+
     // Chỉ điều hướng nếu không còn trong trạng thái tải xác thực và đã xác thực
     if (!isLoadingAuth && isAuthenticated) {
       // Nếu không có naviuResult, hiển thị modal chào mừng NaviU
@@ -31,7 +42,7 @@ const Login = () => {
         navigate(from, { replace: true });
       }
     }
-  }, [isAuthenticated, navigate, from, isLoadingAuth, naviuResult, username]); // Thêm naviuResult và username vào dependencies
+  }, [isAuthenticated, navigate, from, isLoadingAuth, naviuResult, username, location.state, location.pathname]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -21,7 +21,8 @@ const Register = () => {
     setIsLoading(true);
     try {
       await register(username, email, password);
-      navigate('/login?registered=true');
+      // Truyền username và password qua state khi điều hướng
+      navigate('/login', { state: { registered: true, username: username, password: password }, replace: true });
     } catch (err) {
       if (err instanceof Error) {
         console.error("Registration error:", err.message); // Log the error message
