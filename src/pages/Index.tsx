@@ -121,47 +121,7 @@ const Index = () => {
             </div>
         </section>
 
-        {/* Features Section 1: Thấu Hiểu Bản Thân */}
-        <section className="py-16 md:py-24 bg-white">
-            <div className="container mx-auto px-6">
-                <div className="text-center max-w-3xl mx-auto mb-12">
-                    <h2 className="text-3xl md:text-4xl font-bold mb-4">Thấu Hiểu Bản Thân Sâu Sắc</h2>
-                    <p className="text-gray-600">Với các bài trắc nghiệm khoa học như Holland, MBTI, DISC và MI, hệ thống giúp bạn khám phá tính cách, sở thích, năng lực và giá trị cốt lõi của mình.</p>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {/* Feature Card */}
-                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                        <ScanLine className="w-10 h-10 text-blue-500 mb-4" />
-                        <h3 className="text-xl font-semibold mb-2">Trắc nghiệm Holland</h3>
-                        <p className="text-gray-600 text-sm">Khám phá nhóm ngành nghề phù hợp với sở thích và năng lực của bạn.</p>
-                    </div>
-                    {/* Feature Card */}
-                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                        <BrainCircuit className="w-10 h-10 text-blue-500 mb-4" />
-                        <h3 className="text-xl font-semibold mb-2">Trí thông minh (MRTI)</h3>
-                        <p className="text-gray-600 text-sm">Hiểu rõ 8 loại hình trí tuệ để phát huy tối đa tiềm năng.</p>
-                    </div>
-                    {/* Feature Card */}
-                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                        <Briefcase className="w-10 h-10 text-blue-500 mb-4" />
-                        <h3 className="text-xl font-semibold mb-2">Gợi ý ngành nghề</h3>
-                        <p className="text-gray-600 text-sm">Khám phá các ngành nghề phù hợp với đặc điểm và năng lực cá nhân.</p>
-                    </div>
-                     {/* Feature Card */}
-                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                        <BarChart3 className="w-10 h-10 text-blue-500 mb-4" />
-                        <h3 className="text-xl font-semibold mb-2">Phân tích thị trường</h3>
-                        <p className="text-gray-600 text-sm">Tìm hiểu xu hướng thị trường lao động để có lựa chọn tối ưu.</p>
-                    </div>
-                    {/* Feature Card */}
-                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                        <FileText className="w-10 h-10 text-blue-500 mb-4" />
-                        <h3 className="text-xl font-semibold mb-2">Báo cáo chi tiết</h3>
-                        <p className="text-gray-600 text-sm">Nhận báo cáo phân tích toàn diện về bản thân và định hướng.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+     
 
         {/* Journey Section */}
         <section className="py-16 md:py-24">
