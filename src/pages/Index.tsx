@@ -385,21 +385,16 @@ const Index = () => {
     </main>
 
     {/* Footer */}
-    <footer className="bg-gray-800 text-white">
-        <div className="container mx-auto px-6 py-8">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-                <Link to="/" className="text-3xl font-bold text-white mb-4 md:mb-0">NaviU</Link>
-                <div className="flex space-x-6">
-                    <Link to="#" className="hover:text-blue-400">Về chúng tôi</Link>
-                    <Link to="#" className="hover:text-blue-400">Liên hệ</Link>
-                    <Link to="#" className="hover:text-blue-400">Điều khoản</Link>
-                    <Link to="#" className="hover:text-blue-400">Bảo mật</Link>
-                </div>
-            </div>
-            <div className="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400 text-sm">
-                &copy; 2025 NaviU. All rights reserved.
-            </div>
-        </div>
+    <footer className="bg-gray-800 text-white py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <img src="/naviU.png" alt="NaviU Logo" className="h-8 mx-auto mb-4" />
+        <p className="text-sm text-gray-400">
+          &copy; {new Date().getFullYear()} NaviU. All rights reserved.
+        </p>
+        <p className="text-xs text-gray-500 mt-2">
+          Kiến tạo tương lai, bắt đầu từ thấu hiểu bản thân.
+        </p>
+      </div>
     </footer>
     </>
   );
