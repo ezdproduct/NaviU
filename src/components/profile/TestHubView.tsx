@@ -7,11 +7,8 @@ const getTestLink = (testTitle: string): string => {
   if (testTitle.toLowerCase().includes('đgtc')) {
     return '/profile/test/dgtc/do-test';
   }
-  if (testTitle.toLowerCase().includes('mbti (naviu)')) { // Thêm điều kiện cho bài test MBTI NaviU
+  if (testTitle.toLowerCase().includes('bài test toàn diện naviu')) { // Cập nhật điều kiện cho tiêu đề mới
     return '/profile/test/naviu-mbti/do-test';
-  }
-  if (testTitle.toLowerCase().includes('toàn diện naviu')) {
-    return '/profile/test/naviu/do-test';
   }
   // Thêm các bài test khác ở đây
   return '#'; // Đường dẫn mặc định
