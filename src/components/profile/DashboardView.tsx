@@ -272,26 +272,13 @@ const DashboardView = ({ username }: DashboardViewProps) => {
 
   return (
     <> {/* Bọc khối JSX có điều kiện trong React.Fragment */}
-      {!hasNaviuResult && (
-        <Card className="col-span-1 md:col-span-2 lg:col-span-4 p-8 text-center bg-gradient-to-r from-blue-600 to-blue-300 text-white rounded-2xl shadow-lg"> {/* Updated gradient */}
-          <CardTitle className="text-3xl font-bold mb-4">Chào mừng bạn đến với NaviU!</CardTitle>
-          <CardDescription className="text-lg text-white opacity-90 mb-6"> {/* Changed text color to white */}
-            Bạn chưa có báo cáo nào. Hãy làm bài test MBTI NaviU để khám phá tiềm năng của mình.
-          </CardDescription>
-          <Button 
-            onClick={() => navigate('/profile/test/naviu-mbti/do-test')}
-            className="bg-yellow-400 text-blue-800 hover:bg-yellow-500 text-base px-6 py-3 rounded-full shadow-md transition-all duration-300 ease-in-out transform hover:scale-105"
-          >
-            Làm bài test MBTI NaviU
-          </Button>
-        </Card>
-      )}
+      {/* Removed the conditional rendering of the "Chào mừng bạn đến với NaviU!" card */}
 
       <div className="flex flex-col gap-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div
             className={cn(
-              "group relative bg-gradient-to-r from-blue-600 to-blue-100 text-white rounded-2xl shadow-sm p-6 lg:col-span-2 cursor-pointer",
+              "group relative bg-gradient-to-r from-blue-600 to-blue-300 text-white rounded-2xl shadow-sm p-6 lg:col-span-2 cursor-pointer",
               !hasNaviuResult && "opacity-50 grayscale"
             )}
             onMouseEnter={() => setIsWelcomeHovered(true)}

@@ -13,7 +13,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { login, isAuthenticated, isLoadingAuth } = useAuth(); // Lấy isLoadingAuth
+  const { login, isAuthenticated, isLoadingAuth, naviuResult } = useAuth(); // Lấy isLoadingAuth và naviuResult
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -24,9 +24,14 @@ const Login = () => {
   useEffect(() => {
     // Chỉ điều hướng nếu không còn trong trạng thái tải xác thực và đã xác thực
     if (!isLoadingAuth && isAuthenticated) {
-      navigate(from, { replace: true });
+      // Nếu không có naviuResult, hiển thị modal chào mừng NaviU
+      if (!naviuResult) {
+        navigate(from, { state: { showNaviuWelcome: true, username: username }, replace: true });
+      } else {
+        navigate(from, { replace: true });
+      }
     }
-  }, [isAuthenticated, navigate, from, isLoadingAuth]); // Thêm isLoadingAuth vào dependencies
+  }, [isAuthenticated, navigate, from, isLoadingAuth, naviuResult, username]); // Thêm naviuResult và username vào dependencies
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +40,7 @@ const Login = () => {
     try {
       const credentials: LoginCredentials = { username, password };
       const loggedInUsername = await login(credentials);
-      navigate(from, { state: { showWelcome: true, username: loggedInUsername }, replace: true });
+      // Logic điều hướng đã được chuyển vào useEffect
     } catch (err: any) {
       setError(err.message || 'Tên đăng nhập hoặc mật khẩu không đúng.');
     } finally {
