@@ -27,7 +27,6 @@ import { valuesData } from '@/data/valuesData'; // Import valuesData
 import { getCognitiveTitle, getEqTitle } from '@/utils/dataMapping';
 import CareerSection from './CareerSection';
 import { cn } from '@/lib/utils'; // Import cn utility
-import { FileText, BrainCircuit, Compass, HeartHandshake } from 'lucide-react'; // Import new icons
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
@@ -63,9 +62,7 @@ const getPersonalityModalDetails = (personalityType: string | null) => {
   if (!personalityType || !personalityData[personalityType as keyof typeof personalityData]) {
     return {
       title: 'Loại tính cách',
-      description: 'Chưa có kết quả ĐGTC.',
-      noDataDescription: 'Bạn chưa hoàn thành bài test ĐGTC. Hãy làm bài test để khám phá tính cách của mình!',
-      testLink: '/profile/test/dgtc/do-test',
+      description: 'Chưa có kết quả ĐGTC hoặc không tìm thấy mô tả.',
       content: null,
     };
   }
@@ -82,8 +79,6 @@ const getHollandModalDetails = (hollandScores: { [key: string]: number } | undef
     return {
       title: 'Mã Holland',
       description: 'Chưa có kết quả Holland.',
-      noDataDescription: 'Bạn chưa hoàn thành bài test Holland. Hãy làm bài test để xác định sở thích nghề nghiệp của bạn!',
-      testLink: '/profile/test/naviu-mbti/do-test', // Assuming NaviU MBTI test includes Holland
       content: null,
     };
   }
@@ -113,8 +108,6 @@ const getCompetenciesModalDetails = (cognitiveScores: { [key: string]: number } 
     return {
       title: 'Năng lực Nổi trội',
       description: 'Chưa có dữ liệu năng lực nhận thức.',
-      noDataDescription: 'Bạn chưa hoàn thành bài test NaviU toàn diện. Hãy làm bài test để đánh giá năng lực nhận thức của bạn!',
-      testLink: '/profile/test/naviu-mbti/do-test',
       content: null,
     };
   }
@@ -138,8 +131,6 @@ const getActionCompassModalDetails = (mainValueKey: string | null) => {
     return {
       title: 'Kim Chỉ Nam Hành Động',
       description: 'Chưa có dữ liệu giá trị nghề nghiệp.',
-      noDataDescription: 'Bạn chưa hoàn thành bài test Giá trị Nghề nghiệp. Hãy làm bài test để khám phá các giá trị cốt lõi của bạn!',
-      testLink: '/profile/test/naviu-mbti/do-test', // Assuming NaviU MBTI test includes values
       content: null,
     };
   }
@@ -164,8 +155,6 @@ const getEqProfileModalDetails = (eqScores: { [key: string]: number } | undefine
     return {
       title: 'Hồ sơ Trí tuệ Cảm xúc',
       description: 'Chưa có dữ liệu trí tuệ cảm xúc.',
-      noDataDescription: 'Bạn chưa hoàn thành bài test Trí tuệ Cảm xúc (EQ). Hãy làm bài test để đánh giá EQ của bạn!',
-      testLink: '/profile/test/naviu-mbti/do-test', // Assuming NaviU MBTI test includes EQ
       content: null,
     };
   }
@@ -181,7 +170,6 @@ const getEqProfileModalDetails = (eqScores: { [key: string]: number } | undefine
         ))}
       </div>
     ),
-    content: null,
   };
 };
 
@@ -199,7 +187,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
   const [isEqHovered, setIsEqHovered] = useState(false);
   const [isActionCompassHovered, setIsActionCompassHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState<{ title: string; description: React.ReactNode; content?: React.ReactNode; testLink?: string; noDataDescription?: string } | null>(null);
+  const [modalContent, setModalContent] = useState<{ title: string; description: React.ReactNode; content?: React.ReactNode } | null>(null);
 
   const handleCardClick = (cardType: string) => {
     let details;
@@ -289,10 +277,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             onMouseLeave={() => setIsWelcomeHovered(false)}
             onClick={() => navigate('/profile/report')}
           >
-            <div className="flex items-center gap-3 mb-2">
-              <FileText className="h-6 w-6 text-white" />
-              <h3 className="text-lg font-semibold opacity-80">Chào mừng trở lại, {username}!</h3>
-            </div>
+            <h3 className="text-lg font-semibold opacity-80">Chào mừng trở lại, {username}!</h3>
             <p className="text-4xl font-bold mt-2">Hồ sơ Hướng nghiệp</p>
             <p className="opacity-80 mt-1">Đây là phân tích tổng quan về tiềm năng của bạn.</p>
             <HoverViewMore isVisible={isWelcomeHovered} className="text-white" />
@@ -305,10 +290,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             onMouseLeave={() => setIsPersonalityHovered(false)}
             onClick={() => handleCardClick('personality')}
           >
-            <div className="flex items-center gap-3 mb-2">
-              <BrainCircuit className="h-6 w-6 text-blue-600" />
-              <h3 className="text-gray-500">Loại tính cách</h3>
-            </div>
+            <h3 className="text-gray-500">Loại tính cách</h3>
             <p className="text-2xl font-bold text-gray-800 mt-2">{naviuResult?.mbti?.result || 'N/A'}</p>
             <p className="text-sm text-gray-700 mt-1">
             {hasMbtiResult ? personalityData[naviuResult!.mbti!.result as keyof typeof personalityData]?.title : 'Chưa có dữ liệu'}
@@ -323,10 +305,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             onMouseLeave={() => setIsHollandHovered(false)}
             onClick={() => handleCardClick('holland')}
           >
-            <div className="flex items-center gap-3 mb-2">
-              <Compass className="h-6 w-6 text-orange-500" />
-              <h3 className="text-gray-500">Mã Holland</h3>
-            </div>
+            <h3 className="text-gray-500">Mã Holland</h3>
             <p className="text-2xl font-bold text-gray-800 mt-2">
               {topHollandCodes.map(([code]) => code).join('') || 'N/A'}
             </p>
@@ -357,10 +336,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             onMouseLeave={() => setIsEqHovered(false)}
             onClick={() => handleCardClick('eq-profile')}
           >
-            <div className="flex items-center gap-3 mb-2">
-              <HeartHandshake className="h-6 w-6 text-green-600" />
-              <h3 className="font-semibold text-gray-800 flex-shrink-0">Hồ sơ Trí tuệ Cảm xúc</h3>
-            </div>
+            <h3 className="font-semibold text-gray-800 flex-shrink-0">Hồ sơ Trí tuệ Cảm xúc</h3>
             <div className="relative flex-1 mt-4">
               {hasEqResult ? (
                 <DynamicEqChart scores={naviuResult!.eq!.scores} />
@@ -383,8 +359,6 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             title={modalContent.title}
             description={modalContent.description}
             content={modalContent.content}
-            testLink={modalContent.testLink}
-            noDataDescription={modalContent.noDataDescription}
           />
         )}
       </div>
