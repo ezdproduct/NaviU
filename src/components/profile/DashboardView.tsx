@@ -291,7 +291,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             )}
             onMouseEnter={() => setIsWelcomeHovered(true)}
             onMouseLeave={() => setIsWelcomeHovered(false)}
-            onClick={() => handleCardClick('welcome')} {/* Luôn cho phép click */}
+            onClick={() => handleCardClick('welcome')} // Luôn cho phép click
           >
             <h3 className="text-lg font-semibold opacity-80">Chào mừng trở lại, {username}!</h3>
             <p className="text-4xl font-bold mt-2">Hồ sơ Hướng nghiệp</p>
@@ -305,12 +305,12 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             )}
             onMouseEnter={() => setIsPersonalityHovered(true)}
             onMouseLeave={() => setIsPersonalityHovered(false)}
-            onClick={() => handleCardClick('personality')} {/* Luôn cho phép click */}
+            onClick={() => handleCardClick('personality')} // Luôn cho phép click
           >
             <h3 className="text-gray-500">Loại tính cách</h3>
             <p className="text-2xl font-bold text-gray-800 mt-2">{naviuResult?.mbti?.result || 'N/A'}</p>
             <p className="text-sm text-gray-500 mt-1">
-              {hasMbtiResult ? personalityData[naviuResult!.mbti!.result as keyof typeof personalityData]?.title : 'Chưa có dữ liệu'}
+            {hasMbtiResult ? personalityData[naviuResult!.mbti!.result as keyof typeof personalityData]?.title : 'Chưa có dữ liệu'}
             </p>
             <HoverViewMore isVisible={isPersonalityHovered} /> {/* Luôn hiển thị khi hover */}
           </div>
@@ -321,7 +321,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             )}
             onMouseEnter={() => setIsHollandHovered(true)}
             onMouseLeave={() => setIsHollandHovered(false)}
-            onClick={() => handleCardClick('holland')} {/* Luôn cho phép click */}
+            onClick={() => handleCardClick('holland')} // Luôn cho phép click
           >
             <h3 className="text-gray-500">Mã Holland</h3>
             <p className="text-2xl font-bold text-gray-800 mt-2">
@@ -336,12 +336,12 @@ const DashboardView = ({ username }: DashboardViewProps) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 flex flex-col gap-6">
             <OutstandingCompetenciesCard 
-              onClick={() => handleCardClick('competencies')} {/* Luôn cho phép click */}
+              onClick={() => handleCardClick('competencies')} // Luôn cho phép click
               competencies={naviuResult?.cognitive} 
               isFaded={!hasCognitiveResult}
             />
             <ActionCompassCard 
-              onClick={() => handleCardClick('action-compass')} {/* Luôn cho phép click */}
+              onClick={() => handleCardClick('action-compass')} // Luôn cho phép click
               valueData={actionCompassValueData}
               isFaded={!hasValuesResult}
             />
@@ -353,7 +353,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             )}
             onMouseEnter={() => setIsEqHovered(true)}
             onMouseLeave={() => setIsEqHovered(false)}
-            onClick={() => handleCardClick('eq-profile')} {/* Luôn cho phép click */}
+            onClick={() => handleCardClick('eq-profile')} // Luôn cho phép click
           >
             <h3 className="font-semibold text-gray-800 flex-shrink-0">Hồ sơ Trí tuệ Cảm xúc</h3>
             <div className="relative flex-1 mt-4">

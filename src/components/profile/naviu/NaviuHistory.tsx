@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FileQuestion } from 'lucide-react';
-import { NaviuHistoryItem, NaviuResultData } from '../NaviUTestPage'; // Import interfaces
+import { NaviuHistoryItem, NaviuResultData } from '@/types'; // Cập nhật import
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 interface NaviuHistoryProps {
@@ -106,7 +106,7 @@ const NaviuHistory: React.FC<NaviuHistoryProps> = ({ history, loadingHistory, on
                       {h.mbti && <Badge variant="secondary">MBTI: {h.mbti}</Badge>}
                       {h.eq && <Badge variant="secondary">EQ: {h.eq}</Badge>}
                       {h.cog && <Badge variant="secondary">Cog: {h.cog}</Badge>}
-                      {h.holland && <Badge variant="secondary">Holland: {h.holland}</Badge>}
+                      {h.holland && <Badge variant="secondary">Holland: {renderHollandHistory(h.holland)}</Badge>}
                     </div>
                   </TableCell>
                   <TableCell className="text-right">

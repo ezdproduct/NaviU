@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { axiosInstance, WP_BASE_URL } from '@/lib/auth/api';
 import { showSuccess, showError } from '@/utils/toast';
 import GenericTestRunner from "../mbti/GenericTestRunner";
-import { NaviuResultData } from '../NaviUTestPage';
+import { NaviuResultData } from '@/types'; // Cập nhật import
 import { Card, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 

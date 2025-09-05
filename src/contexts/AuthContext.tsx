@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext, ReactNode, useEffect, useCa
 import { getToken, saveToken, clearToken } from '@/lib/auth/storage';
 import { login as apiLogin, getCurrentUserInfo, axiosInstance, WP_BASE_URL } from '@/lib/auth/api'; // Import axiosInstance
 import { User, LoginCredentials } from '@/types';
-import { NaviuResultData } from '@/components/profile/NaviUTestPage';
+import { NaviuResultData } from '@/types'; // Cập nhật import
 
 interface AuthContextType {
   isAuthenticated: boolean;
