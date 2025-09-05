@@ -74,7 +74,7 @@ export async function login(credentials: LoginCredentials): Promise<ApiResponse<
 
 export async function register(username: string, email: string, password: string) {
   try {
-    const res = await axiosInstance.post('/wp-json/custom/v1/register', { username, email, password });
+    const res = await axiosInstance.post('/wp-json/naviu/v1/register', { username, email, password }); // Updated endpoint
     return res.data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || "Đăng ký không thành công.");
