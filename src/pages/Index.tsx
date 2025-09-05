@@ -47,21 +47,21 @@ const Index = () => {
                         <p className="text-gray-600 mb-8 text-center lg:text-left">Giữa hàng ngàn lựa chọn ngành học và áp lực từ nhiều phía, không ít học sinh cảm thấy hoang mang, dẫn đến những quyết định sai lầm đáng tiếc cho tương lai.</p>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
                             {/* Stat Card 1 */}
-                            <div className="bg-white p-6 rounded-xl border border-gray-200 text-center hover:scale-105 transition-transform duration-300">
+                            <div className="bg-white p-6 rounded-xl border border-gray-200 text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                                 <p className="text-4xl font-extrabold text-blue-600 mb-2">90%</p>
-                                <h3 className="text-lg font-semibold mb-2">Học sinh bối rối</h3>
+                                <h3 className="text-xl font-semibold mb-2">Học sinh bối rối</h3>
                                 <p className="text-gray-600 text-sm">Cảm thấy không chắc chắn và thiếu thông tin khi đứng trước ngưỡng cửa chọn ngành.</p>
                             </div>
                             {/* Stat Card 2 */}
-                            <div className="bg-white p-6 rounded-xl border border-gray-200 text-center hover:scale-105 transition-transform duration-300">
+                            <div className="bg-white p-6 rounded-xl border border-gray-200 text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                                 <p className="text-4xl font-extrabold text-blue-600 mb-2">62.6%</p>
-                                <h3 className="text-lg font-semibold mb-2">Sinh viên chọn sai ngành</h3>
+                                <h3 className="text-xl font-semibold mb-2">Sinh viên chọn sai ngành</h3>
                                 <p className="text-gray-600 text-sm">Nhận ra lựa chọn của mình không phù hợp sau năm đầu tiên.</p>
                             </div>
                             {/* Stat Card 3 */}
-                            <div className="bg-white p-6 rounded-xl border border-gray-200 text-center hover:scale-105 transition-transform duration-300">
+                            <div className="bg-white p-6 rounded-xl border border-gray-200 text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                                 <p className="text-4xl font-extrabold text-blue-600 mb-2">Lãng Phí</p>
-                                <h3 className="text-lg font-semibold mb-2">Thời gian & Chi phí</h3>
+                                <h3 className="text-xl font-semibold mb-2">Thời gian & Chi phí</h3>
                                 <p className="text-gray-600 text-sm">Gây lãng phí 4-5 năm đại học, chi phí và cơ hội phát triển.</p>
                             </div>
                         </div>
@@ -79,40 +79,40 @@ const Index = () => {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {/* Feature Card */}
-                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                         <ScanLine className="w-10 h-10 text-blue-500 mb-4" />
                         <h3 className="text-xl font-semibold mb-2">Trắc nghiệm Holland</h3>
-                        <p className="text-gray-600">Khám phá nhóm ngành nghề phù hợp với sở thích và năng lực của bạn.</p>
+                        <p className="text-gray-600 text-sm">Khám phá nhóm ngành nghề phù hợp với sở thích và năng lực của bạn.</p>
                     </div>
                     {/* Feature Card */}
-                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                         <BrainCircuit className="w-10 h-10 text-blue-500 mb-4" />
                         <h3 className="text-xl font-semibold mb-2">Trí thông minh (MRTI)</h3>
-                        <p className="text-gray-600">Hiểu rõ 8 loại hình trí tuệ để phát huy tối đa tiềm năng.</p>
+                        <p className="text-gray-600 text-sm">Hiểu rõ 8 loại hình trí tuệ để phát huy tối đa tiềm năng.</p>
                     </div>
                     {/* Feature Card */}
-                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                         <Compass className="w-10 h-10 text-blue-500 mb-4" />
                         <h3 className="text-xl font-semibold mb-2">La bàn (Holland)</h3>
-                        <p className="text-gray-600">Xác định các giá trị quan trọng, định hướng cuộc sống và sự nghiệp.</p>
+                        <p className="text-gray-600 text-sm">Xác định các giá trị quan trọng, định hướng cuộc sống và sự nghiệp.</p>
                     </div>
                     {/* Feature Card */}
-                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                         <Briefcase className="w-10 h-10 text-blue-500 mb-4" />
                         <h3 className="text-xl font-semibold mb-2">Gợi ý ngành nghề</h3>
-                        <p className="text-gray-600">Khám phá các ngành nghề phù hợp với đặc điểm và năng lực cá nhân.</p>
+                        <p className="text-gray-600 text-sm">Khám phá các ngành nghề phù hợp với đặc điểm và năng lực cá nhân.</p>
                     </div>
                      {/* Feature Card */}
-                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                         <BarChart3 className="w-10 h-10 text-blue-500 mb-4" />
                         <h3 className="text-xl font-semibold mb-2">Phân tích thị trường</h3>
-                        <p className="text-gray-600">Tìm hiểu xu hướng thị trường lao động để có lựa chọn tối ưu.</p>
+                        <p className="text-gray-600 text-sm">Tìm hiểu xu hướng thị trường lao động để có lựa chọn tối ưu.</p>
                     </div>
                     {/* Feature Card */}
-                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                         <FileText className="w-10 h-10 text-blue-500 mb-4" />
                         <h3 className="text-xl font-semibold mb-2">Báo cáo chi tiết</h3>
-                        <p className="text-gray-600">Nhận báo cáo phân tích toàn diện về bản thân và định hướng.</p>
+                        <p className="text-gray-600 text-sm">Nhận báo cáo phân tích toàn diện về bản thân và định hướng.</p>
                     </div>
                 </div>
             </div>
@@ -123,42 +123,42 @@ const Index = () => {
             <div className="container mx-auto px-6">
                  <div className="grid lg:grid-cols-2 gap-16 items-center">
                     <div>
-                        <div className="text-center lg:text-left mb-12"> {/* Adjusted text alignment for responsiveness */}
+                        <div className="text-center lg:text-left mb-12">
                             <h2 className="text-3xl md:text-4xl font-bold mb-4">Hành Trình Của Bạn Cùng NaviU</h2>
                             <p className="text-gray-600">Chúng tôi đồng hành cùng bạn qua từng bước, từ khám phá bản thân đến xây dựng lộ trình sự nghiệp vững chắc.</p>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             {/* Step Card */}
-                            <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+                            <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                                 <div className="flex items-center justify-center w-16 h-16 mb-4 bg-blue-100 rounded-full">
                                     <Search className="w-8 h-8 text-blue-600" />
                                 </div>
                                 <h3 className="text-xl font-semibold mb-2">1. Khám phá bản thân</h3>
-                                <p className="text-gray-600">Thực hiện các bài trắc nghiệm khoa học.</p>
+                                <p className="text-gray-600 text-sm">Thực hiện các bài trắc nghiệm khoa học.</p>
                             </div>
                             {/* Step Card */}
-                            <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+                            <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                                 <div className="flex items-center justify-center w-16 h-16 mb-4 bg-blue-100 rounded-full">
                                      <FileCheck2 className="w-8 h-8 text-blue-600" />
                                 </div>
                                 <h3 className="text-xl font-semibold mb-2">2. Nhận báo cáo</h3>
-                                <p className="text-gray-600">Hệ thống phân tích và trả kết quả chi tiết.</p>
+                                <p className="text-gray-600 text-sm">Hệ thống phân tích và trả kết quả chi tiết.</p>
                             </div>
                             {/* Step Card */}
-                            <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+                            <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                                  <div className="flex items-center justify-center w-16 h-16 mb-4 bg-blue-100 rounded-full">
                                     <Map className="w-8 h-8 text-blue-600" />
                                 </div>
                                 <h3 className="text-xl font-semibold mb-2">3. Định hướng lộ trình</h3>
-                                <p className="text-gray-600">Xây dựng kế hoạch học tập và phát triển sự nghiệp.</p>
+                                <p className="text-gray-600 text-sm">Xây dựng kế hoạch học tập và phát triển sự nghiệp.</p>
                             </div>
                             {/* Step Card */}
-                            <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+                            <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                                 <div className="flex items-center justify-center w-16 h-16 mb-4 bg-blue-100 rounded-full">
                                     <MessageCircle className="w-8 h-8 text-blue-600" />
                                 </div>
                                 <h3 className="text-xl font-semibold mb-2">4. Kết nối chuyên gia</h3>
-                                <p className="text-gray-600">Trò chuyện 1-1 với các cố vấn hàng đầu.</p>
+                                <p className="text-gray-600 text-sm">Trò chuyện 1-1 với các cố vấn hàng đầu.</p>
                             </div>
                         </div>
                          <div className="text-center lg:text-left mt-12">
@@ -196,7 +196,7 @@ const Index = () => {
                                     </div>
                                     <div>
                                         <h4 className="font-semibold text-lg">Khi không có định hướng</h4>
-                                        <p className="text-gray-600 mt-1">Rủi ro chọn sai ngành, lãng phí <strong className="text-red-600">~4 năm học</strong> và chi phí lên tới <strong className="text-red-600">hàng trăm triệu đồng</strong>. Áp lực, hoang mang và phải bắt đầu lại từ đầu.</p>
+                                        <p className="text-gray-600 mt-1 text-sm">Rủi ro chọn sai ngành, lãng phí <strong className="text-red-600">~4 năm học</strong> và chi phí lên tới <strong className="text-red-600">hàng trăm triệu đồng</strong>. Áp lực, hoang mang và phải bắt đầu lại từ đầu.</p>
                                     </div>
                                 </div>
                             </div>
@@ -208,7 +208,7 @@ const Index = () => {
                                     </div>
                                     <div>
                                         <h4 className="font-semibold text-lg">Với lộ trình từ NaviU</h4>
-                                        <p className="text-gray-600 mt-1">Một khoản đầu tư nhỏ cho sự <strong className="text-blue-600">tự tin, chắc chắn</strong>. Tiết kiệm thời gian, tiền bạc và đi đúng con đường sự nghiệp mơ ước ngay từ bước đầu tiên.</p>
+                                        <p className="text-gray-600 mt-1 text-sm">Một khoản đầu tư nhỏ cho sự <strong className="text-blue-600">tự tin, chắc chắn</strong>. Tiết kiệm thời gian, tiền bạc và đi đúng con đường sự nghiệp mơ ước ngay từ bước đầu tiên.</p>
                                     </div>
                                 </div>
                             </div>
@@ -329,7 +329,7 @@ const Index = () => {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {/* Testimonial Card */}
-                    <div className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+                    <div className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                         <div className="flex items-center mb-4">
                             <img src="https://placehold.co/48x48/E2E8F0/4A5568?text=EJ" alt="Emily Johnson" className="w-12 h-12 rounded-full mr-4" />
                             <div>
@@ -343,10 +343,10 @@ const Index = () => {
                                 </div>
                             </div>
                         </div>
-                        <p className="text-gray-600">"NaviU đã giúp tôi thấu hiểu bản thân và định hướng được con đường sự nghiệp rõ ràng hơn. Giao diện thân thiện và dễ sử dụng."</p>
+                        <p className="text-gray-600 text-sm">"NaviU đã giúp tôi thấu hiểu bản thân và định hướng được con đường sự nghiệp rõ ràng hơn. Giao diện thân thiện và dễ sử dụng."</p>
                     </div>
                     {/* Testimonial Card */}
-                    <div className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+                    <div className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                         <div className="flex items-center mb-4">
                             <img src="https://placehold.co/48x48/E2E8F0/4A5568?text=EM" alt="Ethan Miller" className="w-12 h-12 rounded-full mr-4" />
                             <div>
@@ -360,10 +360,10 @@ const Index = () => {
                                 </div>
                             </div>
                         </div>
-                        <p className="text-gray-600">"Tôi đã sử dụng NaviU để được tư vấn 1-1 với chuyên gia. Các buổi tư vấn rất hữu ích và mang lại nhiều giá trị thực tiễn."</p>
+                        <p className="text-gray-600 text-sm">"Tôi đã sử dụng NaviU để được tư vấn 1-1 với chuyên gia. Các buổi tư vấn rất hữu ích và mang lại nhiều giá trị thực tiễn."</p>
                     </div>
                     {/* Testimonial Card */}
-                    <div className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+                    <div className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                         <div className="flex items-center mb-4">
                             <img src="https://placehold.co/48x48/E2E8F0/4A5568?text=OC" alt="Olivia Carter" className="w-12 h-12 rounded-full mr-4" />
                             <div>
@@ -377,7 +377,7 @@ const Index = () => {
                                 </div>
                             </div>
                         </div>
-                        <p className="text-gray-600">"Nhờ NaviU, tôi đã tự tin hơn với lựa chọn ngành học của mình. Báo cáo phân tích rất chi tiết và dễ hiểu."</p>
+                        <p className="text-gray-600 text-sm">"Nhờ NaviU, tôi đã tự tin hơn với lựa chọn ngành học của mình. Báo cáo phân tích rất chi tiết và dễ hiểu."</p>
                     </div>
                 </div>
             </div>
