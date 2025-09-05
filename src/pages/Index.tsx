@@ -18,12 +18,14 @@ import {
   MessageCircle,
   XCircle,
   CheckCircle2,
-  FileCheck2, // Import FileCheck2 icon
-  Map, // Import Map icon
-  ScanLine, // New icon
-  BrainCircuit, // New icon
-  BarChart3, // New icon
-  Star, // New icon
+  FileCheck2,
+  Map,
+  ScanLine,
+  BrainCircuit,
+  BarChart3,
+  Star,
+  Shapes, // Import Shapes icon
+  Gem, // Import Gem icon
 } from 'lucide-react';
 
 const Index = () => {
@@ -65,6 +67,54 @@ const Index = () => {
                                 <p className="text-gray-600 text-sm">Gây lãng phí 4-5 năm đại học, chi phí và cơ hội phát triển.</p>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {/* The Solution Section */}
+        <section className="py-20 bg-white fade-in-section">
+            <div className="container mx-auto px-6 text-center">
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">Một Bài Test Duy Nhất - Thấu Hiểu Toàn Diện</h2>
+                <p className="max-w-3xl mx-auto text-lg text-gray-600 mb-12">
+                    Hiểu đúng bản thân là bước đầu tiên để có lựa chọn đúng đắn. Thay vì làm nhiều bài test rời rạc, NaviU tích hợp các phương pháp luận khoa học (Holland, MBTI, Trí thông minh đa dạng) vào một bài đánh giá toàn diện duy nhất.
+                </p>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {/* Feature Card */}
+                    <div className="bg-gray-50 border border-gray-200/50 p-8 rounded-xl text-left hover:shadow-lg hover:-translate-y-2 transition-all">
+                        <Shapes className="w-12 h-12 text-blue-600 mb-4" />
+                        <h3 className="text-xl font-bold mb-2">Phân Tích Tính Cách & Sở Thích</h3>
+                        <p className="text-gray-500">Khám phá bạn là ai theo các mô hình Holland, MBTI để xác định nhóm ngành phù hợp.</p>
+                    </div>
+                    {/* Feature Card */}
+                    <div className="bg-gray-50 border border-gray-200/50 p-8 rounded-xl text-left hover:shadow-lg hover:-translate-y-2 transition-all">
+                        <BrainCircuit className="w-12 h-12 text-blue-600 mb-4" />
+                        <h3 className="text-xl font-bold mb-2">Đánh Giá Năng Lực & Trí Thông Minh</h3>
+                        <p className="text-gray-500">Hiểu rõ 8 loại hình trí tuệ để phát huy tối đa tiềm năng và thế mạnh cá nhân.</p>
+                    </div>
+                    {/* Feature Card */}
+                    <div className="bg-gray-50 border border-gray-200/50 p-8 rounded-xl text-left hover:shadow-lg hover:-translate-y-2 transition-all">
+                        <Gem className="w-12 h-12 text-blue-600 mb-4" />
+                        <h3 className="text-xl font-bold mb-2">Xác Định Giá Trị Cốt Lõi</h3>
+                        <p className="text-gray-500">Định hướng cuộc sống và sự nghiệp dựa trên những giá trị quan trọng nhất với bạn.</p>
+                    </div>
+                    {/* Feature Card */}
+                    <div className="bg-gray-50 border border-gray-200/50 p-8 rounded-xl text-left hover:shadow-lg hover:-translate-y-2 transition-all">
+                        <Briefcase className="w-12 h-12 text-blue-600 mb-4" />
+                        <h3 className="text-xl font-bold mb-2">Gợi Ý Ngành Nghề Phù Hợp</h3>
+                        <p className="text-gray-500">Nhận danh sách các ngành nghề phù hợp nhất với đặc điểm và năng lực cá nhân.</p>
+                    </div>
+                    {/* Feature Card */}
+                    <div className="bg-gray-50 border border-gray-200/50 p-8 rounded-xl text-left hover:shadow-lg hover:-translate-y-2 transition-all">
+                         <BarChart3 className="w-12 h-12 text-blue-600 mb-4" />
+                        <h3 className="text-xl font-bold mb-2">Phân Tích Xu Hướng Thị Trường</h3>
+                        <p className="text-gray-500">Tìm hiểu xu hướng thị trường lao động để có lựa chọn tối ưu và bền vững cho tương lai.</p>
+                    </div>
+                     {/* Feature Card */}
+                    <div className="bg-blue-600 text-white p-8 rounded-xl text-left hover:shadow-2xl hover:-translate-y-2 transition-all">
+                         <FileText className="w-12 h-12 mb-4" />
+                        <h3 className="text-xl font-bold mb-2">Báo Cáo Toàn Diện NaviU</h3>
+                        <p className="text-blue-100">Nhận bản báo cáo phân tích chi tiết, trực quan và dễ hiểu về bản thân và định hướng sự nghiệp.</p>
                     </div>
                 </div>
             </div>
