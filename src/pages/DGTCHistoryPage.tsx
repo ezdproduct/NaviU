@@ -100,7 +100,7 @@ const DGTCHistoryPage: React.FC = () => {
     <div className="p-4 sm:p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-3">
-          <History className="h-8 w-8 text-blue-600" />
+          <History className="h-8 w-8 text-blue-600 drop-shadow-md" />
           Lịch sử làm bài test ĐGTC
         </h1>
         <div className="flex gap-2">

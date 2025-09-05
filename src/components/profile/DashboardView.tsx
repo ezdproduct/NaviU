@@ -279,7 +279,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             onClick={() => navigate('/profile/report')}
           >
             <div className="flex items-center gap-3 mb-2">
-              <FileText className="h-6 w-6 text-white" />
+              <FileText className="h-6 w-6 text-white drop-shadow-md transition-all duration-200 group-hover:scale-110" />
               <h3 className="text-lg font-semibold opacity-80">Chào mừng trở lại, {username}!</h3>
             </div>
             <p className="text-4xl font-bold mt-2">Hồ sơ Hướng nghiệp</p>
@@ -295,7 +295,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             onClick={() => handleCardClick('personality')}
           >
             <div className="flex items-center gap-3 mb-2">
-              <UserSquare className="h-6 w-6 text-blue-600" />
+              <UserSquare className="h-6 w-6 text-blue-600 drop-shadow-md transition-all duration-200 group-hover:scale-110" />
               <h3 className="text-gray-500">Loại tính cách</h3>
             </div>
             <p className="text-2xl font-bold text-gray-800 mt-2">{naviuResult?.mbti?.result || 'N/A'}</p>
@@ -313,7 +313,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             onClick={() => handleCardClick('holland')}
           >
             <div className="flex items-center gap-3 mb-2">
-              <Compass className="h-6 w-6 text-blue-600" />
+              <Compass className="h-6 w-6 text-blue-600 drop-shadow-md transition-all duration-200 group-hover:scale-110" />
               <h3 className="text-gray-500">Mã Holland</h3>
             </div>
             <p className="text-2xl font-bold text-gray-800 mt-2">
@@ -349,7 +349,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             onClick={() => handleCardClick('eq-profile')}
           >
             <div className="flex items-center gap-3 mb-2">
-              <HeartHandshake className="h-6 w-6 text-blue-600" />
+              <HeartHandshake className="h-6 w-6 text-blue-600 drop-shadow-md transition-all duration-200 group-hover:scale-110" />
               <h3 className="font-semibold text-gray-800 flex-shrink-0">Hồ sơ Trí tuệ Cảm xúc</h3>
             </div>
             <div className="relative flex-1 mt-4">
