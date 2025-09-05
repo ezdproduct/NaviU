@@ -281,7 +281,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
           >
             <div className="flex items-center gap-3 mb-2">
               <FileText className="h-6 w-6 text-white" />
-              <h3 className="text-lg font-semibold opacity-80">Chào mừng trở lại, {username}!</h3>
+              <h3 className="text-lg font-semibold opacity-80">Chào mừng trở lại!</h3> {/* Removed username */}
             </div>
             <p className="text-4xl font-bold mt-2">Hồ sơ Hướng nghiệp</p>
             <p className="opacity-80 mt-1">Đây là phân tích tổng quan về tiềm năng của bạn.</p>
