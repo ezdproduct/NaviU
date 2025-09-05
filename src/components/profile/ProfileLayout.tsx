@@ -71,7 +71,7 @@ const ProfileLayout = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-gradient-to-br from-gray-900 to-gray-950 text-white"> {/* Đã thay đổi màu nền và thêm text-white */}
       {isMobile ? (
         <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
           <SheetContent side="left" className="p-0 w-64 bg-white border-r-0">
