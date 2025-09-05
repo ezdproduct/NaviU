@@ -89,8 +89,8 @@ export interface NaviuHistoryItem {
   title: string;
   submitted_at: string;
   mbti?: string; // These are summary strings for history view
-  eq?: string;
-  cog?: string;
-  holland?: string;
+  eq?: NaviuResultData['eq'] | string; // Allow object or string
+  cog?: NaviuResultData['cognitive'] | string; // Allow object or string
+  holland?: NaviuResultData['holland'] | string; // Allow object or string
   details?: NaviuResultData; // Full details for result page
 }

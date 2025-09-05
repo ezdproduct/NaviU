@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { History, FileQuestion, ArrowLeft } from 'lucide-react';
-import { NaviuHistoryItem, DGTCResultData } from '@/types'; // Import cả hai loại dữ liệu
+import { NaviuHistoryItem, DGTCResultData, NaviuResultData } from '@/types'; // Import cả ba loại dữ liệu
 
 interface TestHistoryTableProps {
   title: string;
@@ -18,6 +18,44 @@ interface TestHistoryTableProps {
   onGoBack: () => void;
   testType: 'naviu' | 'dgtc';
 }
+
+const renderHollandHistory = (hollandData: NaviuResultData['holland'] | string | undefined) => {
+  if (!hollandData) return 'N/A';
+  if (typeof hollandData === 'string') return hollandData;
+  if (typeof hollandData === 'object' && hollandData !== null) {
+    return Object.entries(hollandData)
+      .sort(([, a], [, b]) => (b as number) - (a as number))
+      .slice(0, 3)
+      .map(([code]) => code)
+      .join('');
+  }
+  return 'N/A';
+};
+
+const renderEqHistory = (eqData: NaviuResultData['eq'] | string | undefined) => {
+  if (!eqData) return 'N/A';
+  if (typeof eqData === 'string') return eqData;
+  if (typeof eqData === 'object' && eqData.levels) {
+    return Object.entries(eqData.levels)
+      .map(([key, value]) => `${key}: ${value}`)
+      .join(', ');
+  }
+  if (typeof eqData === 'object' && Object.keys(eqData).length > 0) {
+      return 'Có dữ liệu'; 
+  }
+  return 'N/A';
+};
+
+const renderCogHistory = (cogData: NaviuResultData['cognitive'] | string | undefined) => {
+  if (!cogData) return 'N/A';
+  if (typeof cogData === 'string') return cogData;
+  if (typeof cogData === 'object' && cogData !== null) {
+    return Object.entries(cogData)
+      .map(([key, value]) => `${key}: ${value}`)
+      .join(', ');
+  }
+  return 'N/A';
+};
 
 const TestHistoryTable: React.FC<TestHistoryTableProps> = ({
   title,
@@ -46,19 +84,6 @@ const TestHistoryTable: React.FC<TestHistoryTableProps> = ({
     } catch {
       return dateString;
     }
-  };
-
-  const renderHollandHistory = (hollandData: any) => {
-    if (!hollandData) return null;
-    if (typeof hollandData === 'string') return hollandData;
-    if (typeof hollandData === 'object' && hollandData !== null) {
-      return Object.entries(hollandData)
-        .sort(([, a], [, b]) => (b as number) - (a as number))
-        .slice(0, 3)
-        .map(([code]) => code)
-        .join('');
-    }
-    return 'N/A';
   };
 
   if (error) {
@@ -134,8 +159,8 @@ const TestHistoryTable: React.FC<TestHistoryTableProps> = ({
                     {testType === 'naviu' ? (
                       <div className="flex flex-wrap gap-1">
                         {(item as NaviuHistoryItem).mbti && <Badge variant="secondary">MBTI: {(item as NaviuHistoryItem).mbti}</Badge>}
-                        {(item as NaviuHistoryItem).eq && <Badge variant="secondary">EQ: {(item as NaviuHistoryItem).eq}</Badge>}
-                        {(item as NaviuHistoryItem).cog && <Badge variant="secondary">Cog: {(item as NaviuHistoryItem).cog}</Badge>}
+                        {(item as NaviuHistoryItem).eq && <Badge variant="secondary">EQ: {renderEqHistory((item as NaviuHistoryItem).eq)}</Badge>}
+                        {(item as NaviuHistoryItem).cog && <Badge variant="secondary">Cog: {renderCogHistory((item as NaviuHistoryItem).cog)}</Badge>}
                         {(item as NaviuHistoryItem).holland && <Badge variant="secondary">Holland: {renderHollandHistory((item as NaviuHistoryItem).holland)}</Badge>}
                         {!((item as NaviuHistoryItem).mbti || (item as NaviuHistoryItem).eq || (item as NaviuHistoryItem).cog || (item as NaviuHistoryItem).holland) && (
                           <Badge variant="outline">Không có chi tiết</Badge>
