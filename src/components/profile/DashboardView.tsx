@@ -155,8 +155,14 @@ const getEqProfileModalDetails = (eqScores: { [key: string]: number } | undefine
   if (!eqScores || Object.keys(eqScores).length === 0) {
     return {
       title: 'Hồ sơ Trí tuệ Cảm xúc',
-      description: 'Phân tích chi tiết về các khía cạnh của trí tuệ cảm xúc của bạn.',
-      content: (
+      description: 'Chưa có dữ liệu trí tuệ cảm xúc.',
+      content: null,
+    };
+  }
+  return {
+    title: 'Hồ sơ Trí tuệ Cảm xúc',
+    description: 'Phân tích chi tiết về các khía cạnh của trí tuệ cảm xúc của bạn.',
+    content: (
       <div className="space-y-3">
         {Object.entries(eqScores).map(([key, value]) => (
           <p key={key} className="text-sm text-gray-700">
@@ -272,7 +278,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             onMouseLeave={() => setIsWelcomeHovered(false)}
             onClick={() => navigate('/profile/report')}
           >
-            <div className="flex items-center gap-3 mb-2"> {/* Added flex container for icon and text */}
+            <div className="flex items-center gap-3 mb-2">
               <FileText className="h-6 w-6 text-white" />
               <h3 className="text-lg font-semibold opacity-80">Chào mừng trở lại, {username}!</h3>
             </div>
@@ -288,8 +294,8 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             onMouseLeave={() => setIsPersonalityHovered(false)}
             onClick={() => handleCardClick('personality')}
           >
-            <div className="flex items-center gap-3 mb-2"> {/* Added flex container for icon and text */}
-              <UserSquare className="h-6 w-6 text-blue-600" /> {/* Icon for Personality */}
+            <div className="flex items-center gap-3 mb-2">
+              <UserSquare className="h-6 w-6 text-blue-600" />
               <h3 className="text-gray-500">Loại tính cách</h3>
             </div>
             <p className="text-2xl font-bold text-gray-800 mt-2">{naviuResult?.mbti?.result || 'N/A'}</p>
@@ -306,8 +312,8 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             onMouseLeave={() => setIsHollandHovered(false)}
             onClick={() => handleCardClick('holland')}
           >
-            <div className="flex items-center gap-3 mb-2"> {/* Added flex container for icon and text */}
-              <Compass className="h-6 w-6 text-blue-600" /> {/* Icon for Holland */}
+            <div className="flex items-center gap-3 mb-2">
+              <Compass className="h-6 w-6 text-blue-600" />
               <h3 className="text-gray-500">Mã Holland</h3>
             </div>
             <p className="text-2xl font-bold text-gray-800 mt-2">
@@ -325,13 +331,13 @@ const DashboardView = ({ username }: DashboardViewProps) => {
               onClick={() => handleCardClick('competencies')}
               competencies={naviuResult?.cognitive} 
               isFaded={!hasCognitiveResult}
-              icon={Lightbulb} // Pass icon prop
+              icon={Lightbulb}
             />
             <ActionCompassCard 
               onClick={() => handleCardClick('action-compass')}
               valueData={actionCompassValueData}
               isFaded={!hasValuesResult}
-              icon={Target} // Pass icon prop
+              icon={Target}
             />
           </div>
           <div
@@ -342,8 +348,8 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             onMouseLeave={() => setIsEqHovered(false)}
             onClick={() => handleCardClick('eq-profile')}
           >
-            <div className="flex items-center gap-3 mb-2"> {/* Added flex container for icon and text */}
-              <HeartHandshake className="h-6 w-6 text-blue-600" /> {/* Icon for EQ */}
+            <div className="flex items-center gap-3 mb-2">
+              <HeartHandshake className="h-6 w-6 text-blue-600" />
               <h3 className="font-semibold text-gray-800 flex-shrink-0">Hồ sơ Trí tuệ Cảm xúc</h3>
             </div>
             <div className="relative flex-1 mt-4">
