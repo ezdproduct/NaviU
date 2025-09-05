@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import HollandChart from '@/components/charts/HollandChart';
 import { hollandCodeData } from '@/data/hollandCodeData';
-import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardTitle, CardDescription } from '@/components/ui/card'; // Import CardDescription
 import HoverViewMore from '@/components/HoverViewMore';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils'; // Import cn utility
+import { Compass } from 'lucide-react'; // Import Compass icon
 
 interface InterestsSectionProps {
   onCardClick: (cardType: string) => void;
@@ -90,10 +91,15 @@ const InterestsSection = ({ onCardClick, hollandScores }: InterestsSectionProps)
                             );
                         })
                     ) : (
-                        <Card className="p-4 text-center text-gray-500 bg-gray-100 border-gray-200 space-y-3">
-                            <CardTitle className="text-lg font-bold mb-2">Chưa có kết quả Holland</CardTitle>
-                            <p>Hãy làm Bài Test Toàn Diện NaviU để khám phá sở thích nghề nghiệp của bạn.</p>
-                            <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')} className="mt-4 bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Làm bài test ngay</Button>
+                        <Card className="p-6 text-center rounded-xl border-2 border-dashed border-orange-300 bg-orange-50">
+                            <Compass className="h-16 w-16 text-orange-400 mx-auto mb-4" />
+                            <CardTitle className="text-xl font-bold text-gray-800 mb-2">Chưa có kết quả Holland</CardTitle>
+                            <CardDescription className="text-gray-600">
+                                Hãy làm Bài Test Toàn Diện NaviU để khám phá sở thích nghề nghiệp của bạn.
+                            </CardDescription>
+                            <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')} className="mt-4 bg-blue-600 text-white hover:bg-blue-700 rounded-lg">
+                                Làm bài test ngay
+                            </Button>
                         </Card>
                     )}
                 </div>

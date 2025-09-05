@@ -202,6 +202,25 @@ const DashboardView = ({ username }: DashboardViewProps) => {
       case 'holland':
         details = getHollandModalDetails(naviuResult?.holland);
         break;
+      // Handle individual Holland code clicks
+      case 'holland-detail-R':
+      case 'holland-detail-I':
+      case 'holland-detail-A':
+      case 'holland-detail-S':
+      case 'holland-detail-E':
+      case 'holland-detail-C':
+        const code = cardType.split('-')[2]; // Extract 'R', 'I', 'A', etc.
+        if (code && hollandCodeData[code as keyof typeof hollandCodeData]) {
+          const hData = hollandCodeData[code as keyof typeof hollandCodeData];
+          details = {
+            title: `${code} - ${hData.name} (${hData.title})`,
+            description: hData.description,
+            content: null,
+          };
+        } else {
+          details = { title: 'Thông tin chi tiết', description: 'Không có thông tin chi tiết cho mục này.', content: null };
+        }
+        break;
       case 'competencies':
         details = getCompetenciesModalDetails(naviuResult?.cognitive);
         break;
