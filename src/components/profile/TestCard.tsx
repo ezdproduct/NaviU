@@ -21,7 +21,9 @@ const TestCard = ({ test }: TestCardProps) => {
       </div>
       <CardTitle className="text-xl font-bold text-gray-800 mb-2">{test.title}</CardTitle>
       <CardContent className="flex-grow p-0">
-        <p className="text-sm text-gray-600">{test.description}</p>
+        <p className="text-sm text-gray-600 overflow-hidden whitespace-nowrap text-ellipsis pr-10"> {/* Added truncation and right padding */}
+          {test.description}
+        </p>
       </CardContent>
       {/* Arrow button */}
       <Link to={test.link || '#'} className="absolute bottom-6 right-6">
