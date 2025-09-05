@@ -49,7 +49,8 @@ export const routes: RouteObject[] = [
     ],
   },
   {
-    element: <Layout />,
+    // This layout is no longer needed for login/register, as AuthLayout handles it
+    // element: <Layout />, 
     children: [
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
@@ -65,10 +66,9 @@ export const routes: RouteObject[] = [
     children: [
       { index: true, element: <DashboardViewWrapper /> },
       { path: "dashboard", element: <DashboardViewWrapper /> },
-      // { path: "report", element: <HistoryHubView /> }, // Removed as it's now part of do-test
       { path: "testhub", element: <TestHubView /> },
       { path: "connect", element: <ConnectView /> },
-      { path: "do-test", element: <TestAndHistoryView /> }, // Use the new combined view
+      { path: "do-test", element: <TestAndHistoryView /> },
       { path: "do-test/:testId", element: <TestRunnerPage /> },
       { path: "test/dgtc/do-test", element: <DGTCQuizRunner /> },
       { path: "test/naviu-mbti/do-test", element: <NaviuMBTITestRunner /> }, 
