@@ -276,7 +276,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div
             className={cn(
-              "group relative bg-blue-600 text-white rounded-2xl shadow-sm p-6 lg:col-span-2 cursor-pointer", // Changed to solid bg-blue-600
+              "group relative bg-blue-600 text-white rounded-2xl shadow-sm p-6 lg:col-span-2 cursor-pointer", // Corrected to bg-blue-600
               !hasNaviuResult && "opacity-50 grayscale"
             )}
             onMouseEnter={() => setIsWelcomeHovered(true)}
