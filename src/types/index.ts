@@ -36,6 +36,9 @@ export interface UserProfileData {
   meta: {
     phone: string;
     birthday: string;
+    total_tests_taken: number;
+    average_score: number;
+    registration_date: string;
   };
 }
 
