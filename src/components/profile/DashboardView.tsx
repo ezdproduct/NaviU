@@ -276,7 +276,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div
             className={cn(
-              "group relative bg-blue-600 text-white rounded-2xl shadow-sm p-6 lg:col-span-2 cursor-pointer", // Corrected to bg-blue-600
+              "group relative bg-blue-600 text-white rounded-2xl shadow-sm p-6 lg:col-span-2 cursor-pointer",
               !hasNaviuResult && "opacity-50 grayscale"
             )}
             onMouseEnter={() => setIsWelcomeHovered(true)}
@@ -290,37 +290,37 @@ const DashboardView = ({ username }: DashboardViewProps) => {
           </div>
           <div
             className={cn(
-              "group relative bg-white rounded-2xl shadow-sm p-6 cursor-pointer",
+              "group relative bg-indigo-600 text-white rounded-2xl shadow-sm p-6 cursor-pointer", // Changed to bg-indigo-600 and text-white
               !hasMbtiResult && "opacity-50 grayscale"
             )}
             onMouseEnter={() => setIsPersonalityHovered(true)}
             onMouseLeave={() => setIsPersonalityHovered(false)}
             onClick={() => handleCardClick('personality')} // Luôn cho phép click
           >
-            <h3 className="text-gray-500">Loại tính cách</h3>
-            <p className="text-2xl font-bold text-gray-800 mt-2">{naviuResult?.mbti?.result || 'N/A'}</p>
-            <p className="text-sm text-gray-500 mt-1">
+            <h3 className="text-white opacity-80">Loại tính cách</h3> {/* Changed text color */}
+            <p className="text-2xl font-bold text-white mt-2">{naviuResult?.mbti?.result || 'N/A'}</p> {/* Changed text color */}
+            <p className="text-sm text-white opacity-90 mt-1"> {/* Changed text color */}
             {hasMbtiResult ? personalityData[naviuResult!.mbti!.result as keyof typeof personalityData]?.title : 'Chưa có dữ liệu'}
             </p>
-            <HoverViewMore isVisible={isPersonalityHovered} /> {/* Luôn hiển thị khi hover */}
+            <HoverViewMore isVisible={isPersonalityHovered} className="text-white" /> {/* Ensure text is white */}
           </div>
           <div
             className={cn(
-              "group relative bg-white rounded-2xl shadow-sm p-6 cursor-pointer",
+              "group relative bg-orange-500 text-white rounded-2xl shadow-sm p-6 cursor-pointer", // Changed to bg-orange-500 and text-white
               !hasHollandResult && "opacity-50 grayscale"
             )}
             onMouseEnter={() => setIsHollandHovered(true)}
             onMouseLeave={() => setIsHollandHovered(false)}
             onClick={() => handleCardClick('holland')} // Luôn cho phép click
           >
-            <h3 className="text-gray-500">Mã Holland</h3>
-            <p className="text-2xl font-bold text-gray-800 mt-2">
+            <h3 className="text-white opacity-80">Mã Holland</h3> {/* Changed text color */}
+            <p className="text-2xl font-bold text-white mt-2"> {/* Changed text color */}
               {topHollandCodes.map(([code]) => code).join('') || 'N/A'}
             </p>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-white opacity-90 mt-1"> {/* Changed text color */}
               {hasHollandResult ? topHollandCodes.map(([code]) => hollandCodeData[code as keyof typeof hollandCodeData].name).join(' - ') : 'Chưa có dữ liệu'}
             </p>
-            <HoverViewMore isVisible={isHollandHovered} /> {/* Luôn hiển thị khi hover */}
+            <HoverViewMore isVisible={isHollandHovered} className="text-white" /> {/* Ensure text is white */}
           </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -338,22 +338,22 @@ const DashboardView = ({ username }: DashboardViewProps) => {
           </div>
           <div
             className={cn(
-              "group relative bg-white rounded-2xl shadow-sm p-6 flex flex-col min-h-[400px] cursor-pointer",
+              "group relative bg-purple-500 text-white rounded-2xl shadow-sm p-6 flex flex-col min-h-[400px] cursor-pointer", // Changed to bg-purple-500 and text-white
               !hasEqResult && "opacity-50 grayscale"
             )}
             onMouseEnter={() => setIsEqHovered(true)}
             onMouseLeave={() => setIsEqHovered(false)}
             onClick={() => handleCardClick('eq-profile')} // Luôn cho phép click
           >
-            <h3 className="font-semibold text-gray-800 flex-shrink-0">Hồ sơ Trí tuệ Cảm xúc</h3>
+            <h3 className="font-semibold text-white flex-shrink-0">Hồ sơ Trí tuệ Cảm xúc</h3> {/* Changed text color */}
             <div className="relative flex-1 mt-4">
               {hasEqResult ? (
                 <DynamicEqChart scores={naviuResult!.eq!.scores} />
               ) : (
-                <div className="flex items-center justify-center h-full text-gray-500">Chưa có dữ liệu EQ.</div>
+                <div className="flex items-center justify-center h-full text-white opacity-80">Chưa có dữ liệu EQ.</div> {/* Changed text color */}
               )}
             </div>
-            <HoverViewMore isVisible={isEqHovered} /> {/* Luôn hiển thị khi hover */}
+            <HoverViewMore isVisible={isEqHovered} className="text-white" /> {/* Ensure text is white */}
           </div>
         </div>
         

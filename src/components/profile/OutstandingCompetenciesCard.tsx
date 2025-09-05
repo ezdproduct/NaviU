@@ -22,7 +22,7 @@ const OutstandingCompetenciesCard = ({ onClick, competencies, isFaded = false }:
   return (
     <Card
       className={cn(
-        "group relative flex flex-col h-full rounded-2xl cursor-pointer",
+        "group relative flex flex-col h-full rounded-2xl cursor-pointer bg-teal-600 text-white", // Changed to bg-teal-600 and text-white
         isFaded && "opacity-50 grayscale" // Removed pointer-events-none
       )}
       onMouseEnter={() => setIsHovered(true)}
@@ -30,21 +30,21 @@ const OutstandingCompetenciesCard = ({ onClick, competencies, isFaded = false }:
       onClick={onClick}
     >
       <CardHeader>
-        <CardTitle className="text-lg font-bold text-blue-600">NĂNG LỰC NỔI TRỘI</CardTitle>
+        <CardTitle className="text-lg font-bold text-white">NĂNG LỰC NỔI TRỘI</CardTitle> {/* Changed text color */}
       </CardHeader>
       <CardContent className="flex-grow space-y-4">
         {topCompetencies.length > 0 ? (
           topCompetencies.map(([key, value]) => (
             <div key={key}>
-              <p className="text-gray-700 mb-2">{getCognitiveTitle(key, competencyData)}</p>
+              <p className="text-white opacity-90 mb-2">{getCognitiveTitle(key, competencyData)}</p> {/* Changed text color */}
               <CustomProgress value={value} className="h-2" indicatorClassName="bg-blue-500" />
             </div>
           ))
         ) : (
-          <p className="text-gray-500 text-center">Chưa có dữ liệu năng lực nhận thức.</p>
+          <p className="text-white opacity-80 text-center">Chưa có dữ liệu năng lực nhận thức.</p> {/* Changed text color */}
         )}
       </CardContent>
-      <HoverViewMore isVisible={isHovered} /> {/* Chỉ hiển thị khi hover, không phụ thuộc vào isFaded */}
+      <HoverViewMore isVisible={isHovered} className="text-white" /> {/* Ensure text is white */}
     </Card>
   );
 };
