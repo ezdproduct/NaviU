@@ -333,8 +333,6 @@ const Index = () => {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {/* Testimonial Card */}
-                    {/* Removed the first testimonial card */}
-                    {/* Testimonial Card */}
                     <div className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                         <div className="flex items-center mb-4">
                             <img src="https://placehold.co/48x48/E2E8F0/4A5568?text=EM" alt="Ethan Miller" className="w-12 h-12 rounded-full mr-4" />
@@ -372,19 +370,6 @@ const Index = () => {
             </div>
         </section>
     </main>
-
-    {/* Footer */}
-    <footer className="bg-gray-800 text-white py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <img src="/naviU.png" alt="NaviU Logo" className="h-8 mx-auto mb-4" />
-        <p className="text-sm text-gray-400">
-          &copy; {new Date().getFullYear()} NaviU. All rights reserved.
-        </p>
-        <p className="text-xs text-gray-500 mt-2">
-          Kiến tạo tương lai, bắt đầu từ thấu hiểu bản thân.
-        </p>
-      </div>
-    </footer>
     </>
   );
 };
