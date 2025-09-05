@@ -103,7 +103,7 @@ const SidebarContent = ({ activeView, setActiveView, onToggle, isSidebarOpen }: 
           <h4 className="font-semibold text-blue-800">Tư vấn 1-1</h4>
           <p className="text-sm mt-2 text-blue-700">Nâng cấp để nhận tư vấn chuyên sâu từ chuyên gia.</p>
           <button className="mt-4 bg-blue-600 text-white font-semibold w-full py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
-            Nâng cấp
+            Liên Hệ
           </button>
         </div>
 
