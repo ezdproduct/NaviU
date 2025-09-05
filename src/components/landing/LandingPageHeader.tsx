@@ -24,14 +24,11 @@ const LandingPageHeader = () => {
               <Button onClick={logout} variant="ghost" className="text-blue-600 hover:bg-blue-600 hover:text-white">Đăng xuất</Button> {/* Updated hover styles */}
             </>
           ) : (
-            <>
-              <Link to="/login">
-                <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white">Đăng nhập</Button> {/* Updated hover styles */}
-              </Link>
-              <Link to="/register">
-                <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white">Đăng ký</Button> {/* Updated hover styles */}
-              </Link>
-            </>
+            <Link to="/register">
+              <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-6 py-3 rounded-lg">
+                Khám Phá Ngay
+              </Button>
+            </Link>
           )}
         </nav>
       </div>
