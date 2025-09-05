@@ -145,7 +145,7 @@ const NaviuMBTITestRunner = () => {
 
   return (
     <GenericTestRunner
-      title="Trắc nghiệm MBTI (NaviU)"
+      title="Bài Test Toàn Diện NaviU"
       questions={mbtiQuestions}
       onSubmit={handleSubmit}
       isSubmitting={loading}

@@ -49,7 +49,7 @@ const OutstandingCompetenciesCard = ({ onClick, competencies, isFaded = false, i
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-gray-500 text-center space-y-3">
             <p>Chưa có dữ liệu năng lực nhận thức.</p>
-            <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')} size="sm" className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Làm bài test MBTI NaviU</Button>
+            <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')} size="sm" className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Làm Bài Test Toàn Diện NaviU</Button>
           </div>
         )}
       </CardContent>

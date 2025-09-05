@@ -63,7 +63,7 @@ const InterestsSection = ({ onCardClick, hollandScores }: InterestsSectionProps)
                     ) : (
                         <div className="text-center text-gray-500 space-y-3">
                             <p className="mb-4">Chưa có dữ liệu Holland. Hãy làm bài test để xem biểu đồ của bạn!</p>
-                            <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')} className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Làm bài test MBTI NaviU</Button>
+                            <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')} className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Làm Bài Test Toàn Diện NaviU</Button>
                         </div>
                     )}
                 </div>
@@ -92,7 +92,7 @@ const InterestsSection = ({ onCardClick, hollandScores }: InterestsSectionProps)
                     ) : (
                         <Card className="p-4 text-center text-gray-500 bg-gray-100 border-gray-200 space-y-3">
                             <CardTitle className="text-lg font-bold mb-2">Chưa có kết quả Holland</CardTitle>
-                            <p>Hãy làm bài test MBTI NaviU để khám phá sở thích nghề nghiệp của bạn.</p>
+                            <p>Hãy làm Bài Test Toàn Diện NaviU để khám phá sở thích nghề nghiệp của bạn.</p>
                             <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')} className="mt-4 bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Làm bài test ngay</Button>
                         </Card>
                     )}

@@ -38,10 +38,10 @@ const CareerSection = ({ naviuResult, isLoadingResult }: CareerSectionProps) => 
           <FileQuestion className="h-16 w-16 text-blue-400 mx-auto mb-4" />
           <CardTitle className="text-xl font-bold text-gray-800 mb-2">Chưa có dữ liệu sự nghiệp</CardTitle>
           <CardDescription className="text-gray-600">
-            Hãy hoàn thành bài test NaviU toàn diện để khám phá la bàn sự nghiệp của bạn!
+            Hãy hoàn thành Bài Test Toàn Diện NaviU để khám phá la bàn sự nghiệp của bạn!
           </CardDescription>
           <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')} className="mt-4 bg-blue-600 text-white hover:bg-blue-700 rounded-lg">
-            Làm bài test MBTI NaviU
+            Làm Bài Test Toàn Diện NaviU
           </Button>
         </Card>
       </div>

@@ -27,7 +27,7 @@ const TestRunnerPage = () => {
         </div>
       );
     case 'naviu-mbti': // Giữ nguyên cho bài test MBTI NaviU
-      return <UnavailableTestCard title="Trắc nghiệm MBTI (NaviU)" />;
+      return <UnavailableTestCard title="Bài Test Toàn Diện NaviU" />;
     case 'holland':
       return <UnavailableTestCard title="Bài test Holland" />;
     case 'eq':

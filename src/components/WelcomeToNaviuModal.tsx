@@ -17,7 +17,7 @@ const WelcomeToNaviuModal = ({ isOpen, onClose, username }: WelcomeToNaviuModalP
           <DialogHeader className="space-y-4">
             <DialogTitle className="text-3xl font-bold">Chào mừng bạn đến với NaviU!</DialogTitle>
             <DialogDescription className="text-lg text-blue-700"> {/* Adjusted description text color for contrast */}
-              Bạn chưa có báo cáo nào. Hãy làm bài test MBTI NaviU để khám phá tiềm năng của mình.
+              Bạn chưa có báo cáo nào. Hãy làm Bài Test Toàn Diện NaviU để khám phá tiềm năng của mình.
             </DialogDescription>
           </DialogHeader>
           <div className="mt-8">
@@ -25,7 +25,7 @@ const WelcomeToNaviuModal = ({ isOpen, onClose, username }: WelcomeToNaviuModalP
               className="bg-blue-600 text-white hover:bg-blue-700 text-base px-6 py-3 rounded-full shadow-md transition-all duration-300 ease-in-out transform hover:scale-105"
               onClick={onClose} // Close modal when button is clicked
             >
-              <Link to="/profile/test/naviu-mbti/do-test">Làm bài test MBTI NaviU</Link>
+              <Link to="/profile/test/naviu-mbti/do-test">Làm Bài Test Toàn Diện NaviU</Link>
             </Button>
           </div>
         </div>
