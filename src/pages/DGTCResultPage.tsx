@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { showError } from '@/utils/toast';
+import { showError, showSuccess } from '@/utils/toast'; // Import showSuccess
 import { DGTCResultData } from '@/types'; // Import DGTCResultData
 import { Radar } from 'react-chartjs-2';
 import {
@@ -17,6 +17,9 @@ import {
 } from 'chart.js';
 import { personalityData } from '@/data/personalityData';
 import { Progress } from '@/components/ui/progress'; // Import Progress
+import { Download } from 'lucide-react'; // Import Download icon
+import html2canvas from 'html22canvas'; // Import html2canvas
+import jsPDF from 'jspdf'; // Import jspdf
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
@@ -25,6 +28,7 @@ const DGTCResultPage: React.FC = () => {
   const navigate = useNavigate();
   const [result, setResult] = useState<DGTCResultData | null>(null);
   const [dgtcDescription, setDgtcDescription] = useState<string | null>(null);
+  const resultRef = useRef<HTMLDivElement>(null); // Ref for the content to be exported
 
   useEffect(() => {
     if (location.state && location.state.resultData) {
@@ -43,6 +47,34 @@ const DGTCResultPage: React.FC = () => {
 
   const handleRetake = () => {
     navigate('/profile/do-test/dgtc', { replace: true }); // Quay về trang làm bài test ĐGTC
+  };
+
+  const handleExportPdf = async () => {
+    if (resultRef.current) {
+      showSuccess("Đang tạo PDF báo cáo...");
+      const canvas = await html2canvas(resultRef.current, { scale: 2 }); // Tăng scale để chất lượng tốt hơn
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 297; // A4 height in mm
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      pdf.save(`BaoCaoDGTC_${result?.result || 'KetQua'}.pdf`);
+      showSuccess("Đã tải xuống PDF báo cáo thành công!");
+    } else {
+      showError("Không thể tạo PDF. Vui lòng thử lại.");
+    }
   };
 
   if (!result) {
@@ -128,7 +160,7 @@ const DGTCResultPage: React.FC = () => {
 
   return (
     <div className="min-h-[calc(100vh-6rem)] bg-gradient-to-br from-green-50 to-blue-100 p-4 sm:p-6">
-      <div className="max-w-4xl mx-auto">
+      <div ref={resultRef} className="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-lg"> {/* Added ref and styling for PDF export */}
         <div className="text-center mb-8">
           <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full text-white text-2xl font-bold mb-4 ${getTypeColor(result.result)}`}>
             {result.result}
@@ -183,15 +215,18 @@ const DGTCResultPage: React.FC = () => {
             </div>
           </Card>
         </div>
+      </div> {/* End of resultRef div */}
 
-        <div className="text-center">
-          <Button
-            onClick={handleRetake}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
-          >
-            Làm lại test
-          </Button>
-        </div>
+      <div className="text-center pt-8 space-x-4">
+        <Button
+          onClick={handleRetake}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+        >
+          Làm lại test
+        </Button>
+        <Button onClick={handleExportPdf} size="lg" className="bg-green-600 text-white hover:bg-green-700 rounded-lg">
+          <Download className="mr-2 h-5 w-5" /> Tải PDF
+        </Button>
       </div>
     </div>
   );

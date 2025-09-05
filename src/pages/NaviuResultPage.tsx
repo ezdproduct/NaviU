@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { showError } from '@/utils/toast';
+import { showError, showSuccess } from '@/utils/toast'; // Import showSuccess
 import { NaviuResultData } from '@/types'; // Cập nhật import
 import { personalityData } from '@/data/personalityData';
 import { hollandCodeData } from '@/data/hollandCodeData';
@@ -12,8 +12,10 @@ import { competencyData } from '@/data/competencyData';
 import { eqData } from '@/data/eqData';
 import { Radar } from 'react-chartjs-2';
 import { Chart as ChartJS, RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend } from 'chart.js';
-import { BrainCircuit, Compass, HeartHandshake, Sparkles, Briefcase } from 'lucide-react';
+import { BrainCircuit, Compass, HeartHandshake, Sparkles, Briefcase, Download } from 'lucide-react'; // Import Download icon
 import { getCognitiveTitle, getEqTitle } from '@/utils/dataMapping';
+import html2canvas from 'html2canvas'; // Import html2canvas
+import jsPDF from 'jspdf'; // Import jspdf
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
@@ -21,6 +23,7 @@ const NaviuResultPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [result, setResult] = useState<NaviuResultData | null>(null);
+  const resultRef = useRef<HTMLDivElement>(null); // Ref for the content to be exported
 
   useEffect(() => {
     if (location.state && location.state.resultData) {
@@ -35,6 +38,34 @@ const NaviuResultPage: React.FC = () => {
 
   const handleRetake = () => {
     navigate('/profile/test/naviu-mbti/do-test', { replace: true }); // Trỏ đến bài test MBTI NaviU
+  };
+
+  const handleExportPdf = async () => {
+    if (resultRef.current) {
+      showSuccess("Đang tạo PDF báo cáo...");
+      const canvas = await html2canvas(resultRef.current, { scale: 2 }); // Tăng scale để chất lượng tốt hơn
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 297; // A4 height in mm
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      pdf.save(`BaoCaoNaviU_${result?.result?.major_group_code || 'KetQua'}.pdf`);
+      showSuccess("Đã tải xuống PDF báo cáo thành công!");
+    } else {
+      showError("Không thể tạo PDF. Vui lòng thử lại.");
+    }
   };
 
   const getTopHollandCodes = (hollandScores: any) => {
@@ -155,7 +186,7 @@ const NaviuResultPage: React.FC = () => {
 
   return (
     <div className="min-h-[calc(100vh-6rem)] bg-gray-50 p-4 sm:p-8">
-      <div className="max-w-5xl mx-auto space-y-8">
+      <div ref={resultRef} className="max-w-5xl mx-auto space-y-8 bg-white p-6 rounded-xl shadow-lg"> {/* Added ref and styling for PDF export */}
         {/* Header */}
         <div className="text-center">
           <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full text-white text-2xl font-bold mb-4 bg-blue-600`}>
@@ -291,12 +322,15 @@ const NaviuResultPage: React.FC = () => {
                 </ul>
             </CardContent>
         </Card>
+      </div> {/* End of resultRef div */}
 
-        {/* Actions */}
-        <div className="text-center pt-4 space-x-4">
-          <Button onClick={handleRetake} size="lg" className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Làm lại Test</Button>
-          <Button onClick={() => navigate('/profile/history/naviu')} size="lg" variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-lg">Xem Lịch sử</Button>
-        </div>
+      {/* Actions */}
+      <div className="text-center pt-8 space-x-4">
+        <Button onClick={handleRetake} size="lg" className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Làm lại Test</Button>
+        <Button onClick={() => navigate('/profile/history/naviu')} size="lg" variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-lg">Xem Lịch sử</Button>
+        <Button onClick={handleExportPdf} size="lg" className="bg-green-600 text-white hover:bg-green-700 rounded-lg">
+          <Download className="mr-2 h-5 w-5" /> Tải PDF
+        </Button>
       </div>
     </div>
   );
