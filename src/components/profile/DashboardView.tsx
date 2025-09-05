@@ -295,7 +295,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             )}
             onMouseEnter={() => setIsWelcomeHovered(true)}
             onMouseLeave={() => setIsWelcomeHovered(false)}
-            onClick={() => navigate('/profile/report')}
+            onClick={() => handleCardClick('welcome')} {/* Changed to open modal */}
           >
             <div className="flex items-center gap-3 mb-2">
               <FileText className="h-6 w-6 text-white" />
