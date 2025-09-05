@@ -170,6 +170,7 @@ const getEqProfileModalDetails = (eqScores: { [key: string]: number } | undefine
         ))}
       </div>
     ),
+    content: null,
   };
 };
 
@@ -277,7 +278,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
           <div
             className={cn(
               "group relative bg-blue-600 text-white rounded-2xl shadow-sm p-6 lg:col-span-2 cursor-pointer",
-              !hasNaviuResult && "opacity-50 grayscale"
+              // !hasNaviuResult && "opacity-50 grayscale" // Removed opacity-50 grayscale
             )}
             onMouseEnter={() => setIsWelcomeHovered(true)}
             onMouseLeave={() => setIsWelcomeHovered(false)}
@@ -291,7 +292,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
           <div
             className={cn(
               "group relative bg-indigo-600 text-white rounded-2xl shadow-sm p-6 cursor-pointer", // Changed to bg-indigo-600 and text-white
-              !hasMbtiResult && "opacity-50 grayscale"
+              // !hasMbtiResult && "opacity-50 grayscale" // Removed opacity-50 grayscale
             )}
             onMouseEnter={() => setIsPersonalityHovered(true)}
             onMouseLeave={() => setIsPersonalityHovered(false)}
@@ -307,7 +308,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
           <div
             className={cn(
               "group relative bg-orange-500 text-white rounded-2xl shadow-sm p-6 cursor-pointer", // Changed to bg-orange-500 and text-white
-              !hasHollandResult && "opacity-50 grayscale"
+              // !hasHollandResult && "opacity-50 grayscale" // Removed opacity-50 grayscale
             )}
             onMouseEnter={() => setIsHollandHovered(true)}
             onMouseLeave={() => setIsHollandHovered(false)}
@@ -339,7 +340,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
           <div
             className={cn(
               "group relative bg-purple-500 text-white rounded-2xl shadow-sm p-6 flex flex-col min-h-[400px] cursor-pointer", // Changed to bg-purple-500 and text-white
-              !hasEqResult && "opacity-50 grayscale"
+              // !hasEqResult && "opacity-50 grayscale" // Removed opacity-50 grayscale
             )}
             onMouseEnter={() => setIsEqHovered(true)}
             onMouseLeave={() => setIsEqHovered(false)}

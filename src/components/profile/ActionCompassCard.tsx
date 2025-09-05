@@ -16,26 +16,26 @@ const ActionCompassCard = ({ onClick, valueData, isFaded = false }: ActionCompas
     <Card
       className={cn(
         "group relative flex flex-col h-full rounded-2xl cursor-pointer bg-green-600 text-white", // Changed to bg-green-600 and text-white
-        isFaded && "opacity-50 grayscale" // Apply faded style if isFaded is true
+        // isFaded && "opacity-50 grayscale" // Removed opacity-50 grayscale
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
     >
       <CardHeader>
-        <CardTitle className="text-lg font-bold text-white">KIM CHỈ NAM HÀNH ĐỘNG</CardTitle> {/* Changed text color */}
+        <CardTitle className="text-lg font-bold text-white">KIM CHỈ NAM HÀNH ĐỘNG</CardTitle>
       </CardHeader>
       <CardContent className="flex-grow">
         {valueData ? (
           <>
-            <h3 className="text-2xl font-bold text-white mb-2">{valueData.name}</h3> {/* Changed text color */}
-            <p className="text-white opacity-90 leading-relaxed">{valueData.description}</p> {/* Changed text color */}
+            <h3 className="text-2xl font-bold text-white mb-2">{valueData.name}</h3>
+            <p className="text-white opacity-90 leading-relaxed">{valueData.description}</p>
           </>
         ) : (
           <p className="text-white opacity-80 text-center">Chưa có dữ liệu giá trị nghề nghiệp.</p> 
         )}
       </CardContent>
-      <HoverViewMore isVisible={isHovered} className="text-white" /> {/* Ensure text is white */}
+      <HoverViewMore isVisible={isHovered} className="text-white" />
     </Card>
   );
 };
