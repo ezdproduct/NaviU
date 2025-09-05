@@ -79,20 +79,16 @@ const GenericTestRunner: React.FC<GenericTestRunnerProps> = ({
                 key={option.key}
                 onClick={() => handleAnswer(currentQuestion.id, option.key)}
                 className={cn(
-                  "flex items-center justify-between w-full p-4 rounded-lg border transition-all duration-200",
+                  "flex items-center w-full p-4 rounded-lg border transition-all duration-200", // Removed justify-between
+                  "gap-4", // Added gap for spacing
                   answers[currentQuestion.id] === option.key
-                    ? "bg-indigo-600 text-white border-indigo-600" // Selected state
+                    ? "bg-indigo-600 text-white border-indigo-600 border-l-4 pl-3" // Selected state, apply border-l-4 here
                     : "bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-200" // Unselected state
                 )}
               >
+                {/* Radio button first */}
                 <div className={cn(
-                  "flex items-center gap-4",
-                  answers[currentQuestion.id] === option.key && "border-l-4 border-white pl-2 -ml-2" // Purple bar on left
-                )}>
-                  <span className="text-base font-medium">{option.text}</span>
-                </div>
-                <div className={cn(
-                  "w-5 h-5 rounded-full border-2 flex items-center justify-center",
+                  "w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0", // Added flex-shrink-0
                   answers[currentQuestion.id] === option.key
                     ? "border-white bg-white" // Selected radio outer
                     : "border-gray-400" // Unselected radio outer
@@ -100,6 +96,10 @@ const GenericTestRunner: React.FC<GenericTestRunnerProps> = ({
                   {answers[currentQuestion.id] === option.key && (
                     <div className="w-2.5 h-2.5 rounded-full bg-indigo-600" /> // Selected radio inner dot
                   )}
+                </div>
+                {/* Text second */}
+                <div className="flex items-center flex-grow"> {/* Removed gap-4 and border-l-4 from here */}
+                  <span className="text-base font-medium text-left">{option.text}</span> {/* Added text-left */}
                 </div>
               </button>
             ))}
