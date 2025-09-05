@@ -27,10 +27,9 @@ interface SidebarContentProps {
 
 const navItems = [
   { id: 'dashboard', name: 'Hồ Sơ Của Bạn', icon: Squares2X2Icon },
-  { id: 'report', name: 'Lịch sử & Báo cáo', icon: DocumentTextIcon },
+  // { id: 'report', name: 'Lịch sử & Báo cáo', icon: DocumentTextIcon }, // Removed
   { id: 'testhub', name: 'TEST HUB', icon: ClipboardDocumentListIcon },
-  { id: 'do-test', name: 'Làm Bài Test', icon: PencilSquareIcon },
-  // { id: 'history', name: 'Lịch sử Test', icon: ClockIcon }, // Đã loại bỏ mục lịch sử test
+  { id: 'do-test', name: 'Làm Bài Test', icon: PencilSquareIcon }, // This now leads to the combined view
   { id: 'connect', name: 'Kết nối chuyên gia', icon: UsersIcon },
   { id: 'settings', name: 'Cài đặt Tài khoản', icon: Cog6ToothIcon },
 ];

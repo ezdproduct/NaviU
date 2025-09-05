@@ -31,8 +31,8 @@ import DGTCResultPage from "./pages/DGTCResultPage";
 import NaviuHistoryPage from "./pages/NaviuHistoryPage";
 import DGTCHistoryPage from "./pages/DGTCHistoryPage";
 import DGTCQuizRunner from "./components/profile/mbti/DGTCQuizRunner";
-// import NaviuTestRunner from "./components/profile/naviu/NaviuTestRunner"; // Đã xóa
 import NaviuMBTITestRunner from "./components/profile/naviu/NaviuMBTITestRunner";
+import TestAndHistoryView from "./components/profile/TestAndHistoryView"; // Import new component
 
 const queryClient = new QueryClient();
 
@@ -65,14 +65,12 @@ export const routes: RouteObject[] = [
     children: [
       { index: true, element: <DashboardViewWrapper /> },
       { path: "dashboard", element: <DashboardViewWrapper /> },
-      { path: "report", element: <HistoryHubView /> },
+      // { path: "report", element: <HistoryHubView /> }, // Removed as it's now part of do-test
       { path: "testhub", element: <TestHubView /> },
       { path: "connect", element: <ConnectView /> },
-      { path: "do-test", element: <DoTestView /> },
+      { path: "do-test", element: <TestAndHistoryView /> }, // Use the new combined view
       { path: "do-test/:testId", element: <TestRunnerPage /> },
       { path: "test/dgtc/do-test", element: <DGTCQuizRunner /> },
-      // { path: "test/naviu/do-test", element: <NaviuTestRunner /> }, // Đã xóa
-      // New route for NaviU MBTI
       { path: "test/naviu-mbti/do-test", element: <NaviuMBTITestRunner /> }, 
       { path: "naviu-result", element: <NaviuResultPage /> },
       { path: "dgtc-result", element: <DGTCResultPage /> },
