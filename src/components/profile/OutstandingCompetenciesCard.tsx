@@ -9,10 +9,11 @@ import { cn } from '@/lib/utils'; // Import cn utility
 interface OutstandingCompetenciesCardProps {
   onClick: () => void;
   competencies?: { [key: string]: number };
-  isFaded?: boolean; // Thêm prop isFaded
+  isFaded?: boolean;
+  icon?: React.ElementType; // Add icon prop
 }
 
-const OutstandingCompetenciesCard = ({ onClick, competencies, isFaded = false }: OutstandingCompetenciesCardProps) => {
+const OutstandingCompetenciesCard = ({ onClick, competencies, isFaded = false, icon: Icon }: OutstandingCompetenciesCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const topCompetencies = Object.entries(competencies || {})
@@ -23,14 +24,16 @@ const OutstandingCompetenciesCard = ({ onClick, competencies, isFaded = false }:
     <Card
       className={cn(
         "group relative flex flex-col h-full rounded-2xl cursor-pointer bg-white text-gray-800 shadow-sm border border-gray-200",
-        // isFaded && "opacity-50 grayscale" // Removed opacity-50 grayscale
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
     >
       <CardHeader>
-        <CardTitle className="text-lg font-bold text-gray-800">NĂNG LỰC NỔI TRỘI</CardTitle>
+        <div className="flex items-center gap-3 mb-2"> {/* Added flex container for icon and text */}
+          {Icon && <Icon className="h-6 w-6 text-blue-600" />} {/* Render icon if provided */}
+          <CardTitle className="text-lg font-bold text-gray-800">NĂNG LỰC NỔI TRỘI</CardTitle>
+        </div>
       </CardHeader>
       <CardContent className="flex-grow space-y-4">
         {topCompetencies.length > 0 ? (
