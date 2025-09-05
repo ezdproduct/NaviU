@@ -266,7 +266,7 @@ const UserProfile = () => {
             <p><strong>Điểm trung bình:</strong> {profile.meta?.average_score?.toFixed(2) || 'N/A'}</p>
             <p><strong>Ngày đăng ký:</strong> {profile.meta?.registration_date ? new Date(profile.meta.registration_date).toLocaleDateString('vi-VN') : 'N/A'}</p>
           </div>
-        </div
+        </div>
       </CardContent>
 
       <CardFooter className="p-0 mt-6 flex space-x-2">
