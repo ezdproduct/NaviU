@@ -84,9 +84,4 @@
   html, body {
     @apply bg-background text-foreground;
   }
-
-  /* Custom gradient for profile pages */
-  .bg-profile-gradient {
-    background: linear-gradient(to bottom right, hsl(221 77% 48%), hsl(244 47% 20%)); /* Approximates blue-700 to indigo-900 */
-  }
 }

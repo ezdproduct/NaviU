@@ -40,7 +40,7 @@ const DoTestView = () => {
             key={test.id} 
             className={cn(
               "flex flex-col",
-              test.isFeatured ? "bg-profile-gradient text-white" : "bg-white text-gray-800" // Changed bg-blue-600 to bg-profile-gradient
+              test.isFeatured ? "bg-blue-600 text-white" : "bg-white text-gray-800"
             )}
           >
             <CardHeader>
@@ -55,7 +55,7 @@ const DoTestView = () => {
               <Button 
                 asChild 
                 className={cn(
-                  test.isFeatured ? "bg-blue-900 text-white hover:bg-blue-800 rounded-lg" : "bg-blue-600 text-white hover:bg-blue-700 rounded-lg" // Changed bg-blue-800 to bg-blue-900
+                  test.isFeatured ? "bg-blue-800 text-white hover:bg-blue-700 rounded-lg" : "bg-blue-600 text-white hover:bg-blue-700 rounded-lg"
                 )}
               >
                 <Link to={test.link}>

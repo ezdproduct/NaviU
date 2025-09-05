@@ -272,11 +272,11 @@ const DashboardView = ({ username }: DashboardViewProps) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div
             className={cn(
-              "group relative bg-profile-gradient text-white rounded-2xl shadow-sm p-6 lg:col-span-2 cursor-pointer", // Changed bg-blue-600 to bg-profile-gradient
+              "group relative bg-blue-600 text-white rounded-2xl shadow-sm p-6 lg:col-span-2 cursor-pointer",
             )}
             onMouseEnter={() => setIsWelcomeHovered(true)}
             onMouseLeave={() => setIsWelcomeHovered(false)}
-            onClick={() => navigate('/profile/naviu-result')} {/* Changed to naviu-result page */}
+            onClick={() => navigate('/profile/report')}
           >
             <div className="flex items-center gap-3 mb-2">
               <FileText className="h-6 w-6 text-white" />

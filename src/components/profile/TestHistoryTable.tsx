@@ -133,11 +133,11 @@ const TestHistoryTable: React.FC<TestHistoryTableProps> = ({
       )}
 
       {!loadingHistory && history.length === 0 && (
-        <Card className="p-6 text-center rounded-xl border-2 border-dashed border-blue-600 bg-profile-gradient text-white"> {/* Changed bg-blue-50 border-blue-300 to bg-profile-gradient border-blue-600 and added text-white */}
-          <FileQuestion className="h-16 w-16 text-blue-200 mx-auto mb-4" /> {/* Changed text-blue-400 to text-blue-200 */}
-          <CardTitle className="text-xl font-bold text-white mb-2">Chưa có bài test nào</CardTitle> {/* Changed text-gray-800 to text-white */}
-          <CardDescription className="text-blue-100">Bạn chưa hoàn thành bài test nào. Hãy bắt đầu làm một bài test mới!</CardDescription> {/* Changed text-gray-600 to text-blue-100 */}
-          <Button onClick={onStartNewTest} className="mt-4 bg-blue-800 text-white hover:bg-blue-700 rounded-lg">Bắt đầu làm bài</Button> {/* Adjusted button color */}
+        <Card className="p-6 text-center rounded-xl border-2 border-dashed border-blue-300 bg-blue-50">
+          <FileQuestion className="h-16 w-16 text-blue-400 mx-auto mb-4" />
+          <CardTitle className="text-xl font-bold text-gray-800 mb-2">Chưa có bài test nào</CardTitle>
+          <CardDescription className="text-gray-600">Bạn chưa hoàn thành bài test nào. Hãy bắt đầu làm một bài test mới!</CardDescription>
+          <Button onClick={onStartNewTest} className="mt-4 bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Bắt đầu làm bài</Button>
         </Card>
       )}
 
@@ -145,33 +145,33 @@ const TestHistoryTable: React.FC<TestHistoryTableProps> = ({
         <Card className="overflow-hidden rounded-xl">
           <Table>
             <TableHeader>
-              <TableRow className="bg-blue-900 text-white"> {/* Changed bg-gray-50 to bg-blue-900 and added text-white */}
-                <TableHead className="w-[180px] text-blue-100">Ngày hoàn thành</TableHead> {/* Adjusted text color */}
-                <TableHead className="text-blue-100">Kết quả</TableHead> {/* Adjusted text color */}
-                <TableHead className="text-right text-blue-100">Hành động</TableHead> {/* Adjusted text color */}
+              <TableRow>
+                <TableHead className="w-[180px]">Ngày hoàn thành</TableHead>
+                <TableHead>Kết quả</TableHead>
+                <TableHead className="text-right">Hành động</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody className="bg-blue-800 text-white"> {/* Changed bg-white to bg-blue-800 and added text-white */}
+            <TableBody>
               {history.map((item: NaviuHistoryItem | DGTCResultData) => (
-                <TableRow key={item.id} className="border-blue-700 hover:bg-blue-700"> {/* Adjusted border and hover color */}
-                  <TableCell className="font-medium text-white">{formatDate(item.submitted_at)}</TableCell> {/* Adjusted text color */}
+                <TableRow key={item.id}>
+                  <TableCell className="font-medium">{formatDate(item.submitted_at)}</TableCell>
                   <TableCell>
                     {testType === 'naviu' ? (
                       <div className="flex flex-wrap gap-1">
-                        {(item as NaviuHistoryItem).mbti && <Badge variant="secondary" className="bg-blue-500 text-white">MBTI: {(item as NaviuHistoryItem).mbti}</Badge>} {/* Adjusted badge color */}
-                        {(item as NaviuHistoryItem).eq && <Badge variant="secondary" className="bg-blue-500 text-white">EQ: {renderEqHistory((item as NaviuHistoryItem).eq)}</Badge>} {/* Adjusted badge color */}
-                        {(item as NaviuHistoryItem).cog && <Badge variant="secondary" className="bg-blue-500 text-white">Cog: {renderCogHistory((item as NaviuHistoryItem).cog)}</Badge>} {/* Adjusted badge color */}
-                        {(item as NaviuHistoryItem).holland && <Badge variant="secondary" className="bg-blue-500 text-white">Holland: {renderHollandHistory((item as NaviuHistoryItem).holland)}</Badge>} {/* Adjusted badge color */}
+                        {(item as NaviuHistoryItem).mbti && <Badge variant="secondary">MBTI: {(item as NaviuHistoryItem).mbti}</Badge>}
+                        {(item as NaviuHistoryItem).eq && <Badge variant="secondary">EQ: {renderEqHistory((item as NaviuHistoryItem).eq)}</Badge>}
+                        {(item as NaviuHistoryItem).cog && <Badge variant="secondary">Cog: {renderCogHistory((item as NaviuHistoryItem).cog)}</Badge>}
+                        {(item as NaviuHistoryItem).holland && <Badge variant="secondary">Holland: {renderHollandHistory((item as NaviuHistoryItem).holland)}</Badge>}
                         {!((item as NaviuHistoryItem).mbti || (item as NaviuHistoryItem).eq || (item as NaviuHistoryItem).cog || (item as NaviuHistoryItem).holland) && (
-                          <Badge variant="outline" className="text-blue-100 border-blue-300">Không có chi tiết</Badge> {/* Adjusted badge color */}
+                          <Badge variant="outline">Không có chi tiết</Badge>
                         )}
                       </div>
                     ) : (
-                      <Badge className={`bg-blue-500 text-white`}>{(item as DGTCResultData).result}</Badge> {/* Adjusted badge color */}
+                      <Badge className={`bg-blue-600 text-white`}>{(item as DGTCResultData).result}</Badge>
                     )}
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button variant="outline" size="sm" onClick={() => onViewDetails(item)} className="border-blue-300 text-blue-300 hover:bg-blue-700 hover:text-white rounded-lg"> {/* Adjusted button color */}
+                    <Button variant="outline" size="sm" onClick={() => onViewDetails(item)} className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-lg">
                       Xem chi tiết
                     </Button>
                   </TableCell>

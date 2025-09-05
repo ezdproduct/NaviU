@@ -223,9 +223,9 @@ const NaviuResultPage: React.FC = () => {
       r: {
         beginAtZero: true,
         max: 10, // Assuming scores are 0-10
-        angleLines: { color: 'rgba(255, 255, 255, 0.2)' }, // Adjusted for dark background
-        grid: { color: 'rgba(255, 255, 255, 0.2)' }, // Adjusted for dark background
-        pointLabels: { font: { size: 12 }, color: '#fff' }, // Adjusted for dark background
+        angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+        grid: { color: 'rgba(0, 0, 0, 0.1)' },
+        pointLabels: { font: { size: 12 }, color: '#333' },
         ticks: { display: false, maxTicksLimit: 5 }
       }
     },
@@ -259,25 +259,25 @@ const NaviuResultPage: React.FC = () => {
   };
 
   const NoDataCard = ({ title, description, testLink }: { title: string; description: string; testLink: string }) => (
-    <Card className="bg-blue-800 border-blue-700 text-center p-6 flex flex-col items-center justify-center rounded-xl text-white"> {/* Changed bg-gray-50 border-dashed border-gray-300 to bg-blue-800 border-blue-700 */}
-      <CardTitle className="text-xl font-bold text-white mb-2">{title}</CardTitle> {/* Changed text-gray-700 to text-white */}
-      <CardDescription className="text-blue-100 mb-4">{description}</CardDescription> {/* Changed text-gray-500 to text-blue-100 */}
-      <Button variant="outline" onClick={() => navigate(testLink)} className="bg-blue-900 text-white hover:bg-blue-700 rounded-lg border-blue-600">Làm bài test</Button> {/* Adjusted button style */}
+    <Card className="bg-gray-50 border-dashed border-gray-300 text-center p-6 flex flex-col items-center justify-center rounded-xl">
+      <CardTitle className="text-xl font-bold text-gray-700 mb-2">{title}</CardTitle>
+      <CardDescription className="text-gray-500 mb-4">{description}</CardDescription>
+      <Button variant="outline" onClick={() => navigate(testLink)} className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Làm bài test</Button>
     </Card>
   );
 
   return (
-    <div className="min-h-[calc(100vh-6rem)] bg-profile-gradient p-4 sm:p-8 text-white"> {/* Changed bg-gray-50 to bg-profile-gradient and added text-white */}
-      <div ref={resultRef} className="max-w-5xl mx-auto space-y-8 bg-white p-6 rounded-xl shadow-lg"> {/* Keep inner content white for readability */}
+    <div className="min-h-[calc(100vh-6rem)] bg-gray-50 p-4 sm:p-8">
+      <div ref={resultRef} className="max-w-5xl mx-auto space-y-8 bg-white p-6 rounded-xl shadow-lg">
         {/* Header */}
         <div className="text-center">
-          <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full text-white text-2xl font-bold mb-4 bg-profile-gradient`}> {/* Changed bg-blue-600 to bg-profile-gradient */}
+          <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full text-white text-2xl font-bold mb-4 bg-blue-600`}>
             {result.result?.major_group_code || 'N/A'}
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2"> {/* Keep text-gray-800 for contrast on white card */}
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">
             Báo cáo Toàn diện NaviU
           </h1>
-          <p className="text-gray-600 text-base sm:text-lg"> {/* Keep text-gray-600 for contrast on white card */}
+          <p className="text-gray-600 text-base sm:text-lg">
             Kết quả cho nhóm ngành: <span className="font-semibold text-blue-600">{result.result?.major_group_name || 'Chưa xác định'}</span>
           </p>
         </div>
@@ -389,13 +389,13 @@ const NaviuResultPage: React.FC = () => {
         </div>
         
         {/* Career Suggestions */}
-        <Card className="bg-profile-gradient border-blue-700 rounded-xl text-white"> {/* Changed bg-blue-50 border-blue-200 to bg-profile-gradient */}
+        <Card className="bg-blue-50 border-blue-200 rounded-xl">
             <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white"><Briefcase/>Gợi ý Nghề nghiệp</CardTitle> {/* Changed text-blue-800 to text-white */}
-                <CardDescription className="text-blue-100">Dựa trên kết quả phân tích, đây là một số ngành nghề phù hợp với bạn:</CardDescription> {/* Changed text-gray-600 to text-blue-100 */}
+                <CardTitle className="flex items-center gap-2 text-blue-800"><Briefcase/>Gợi ý Nghề nghiệp</CardTitle>
+                <CardDescription>Dựa trên kết quả phân tích, đây là một số ngành nghề phù hợp với bạn:</CardDescription>
             </CardHeader>
             <CardContent>
-                <ul className="list-disc list-inside font-medium text-white space-y-1"> {/* Changed text-gray-800 to text-white */}
+                <ul className="list-disc list-inside font-medium text-gray-800 space-y-1">
                     <li>Chuyên viên Tư vấn Tâm lý</li>
                     <li>Nhà thiết kế UI/UX</li>
                     <li>Content Creator / Nhà báo</li>
@@ -408,9 +408,9 @@ const NaviuResultPage: React.FC = () => {
 
       {/* Actions */}
       <div className="text-center pt-8 space-x-4">
-        <Button onClick={handleRetake} size="lg" className="bg-blue-800 text-white hover:bg-blue-700 rounded-lg">Làm lại Test</Button> {/* Adjusted button color */}
-        <Button onClick={() => navigate('/profile/history/naviu')} size="lg" variant="outline" className="border-blue-300 text-blue-300 hover:bg-blue-700 hover:text-white rounded-lg">Xem Lịch sử</Button> {/* Adjusted button color */}
-        <Button onClick={handleExportPdf} size="lg" className="bg-green-500 text-white hover:bg-green-600 rounded-lg"> {/* Adjusted button color */}
+        <Button onClick={handleRetake} size="lg" className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Làm lại Test</Button>
+        <Button onClick={() => navigate('/profile/history/naviu')} size="lg" variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-lg">Xem Lịch sử</Button>
+        <Button onClick={handleExportPdf} size="lg" className="bg-green-600 text-white hover:bg-green-700 rounded-lg">
           <Download className="mr-2 h-5 w-5" /> Tải PDF
         </Button>
       </div>
