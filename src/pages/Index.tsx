@@ -121,7 +121,7 @@ const Index = () => {
         {/* Journey Section */}
         <section className="py-16 md:py-24">
             <div className="container mx-auto px-6">
-                 <div className="grid lg:grid-cols-2 gap-16 items-center">
+                 <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                     <div>
                         <div className="text-center lg:text-left mb-12">
                             <h2 className="text-3xl md:text-4xl font-bold mb-4">Hành Trình Của Bạn Cùng NaviU</h2>
@@ -162,7 +162,7 @@ const Index = () => {
                             </div>
                         </div>
                          <div className="text-center lg:text-left mt-12">
-                            <Button asChild className="bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors shadow-lg transform hover:scale-105">
+                            <Button asChild className="bg-blue-600 text-white font-semibold px-8 py-6 rounded-full hover:bg-blue-700 transition-colors shadow-lg transform hover:scale-105">
                                 <Link to="/register">Bắt đầu ngay</Link>
                             </Button>
                         </div>
@@ -180,7 +180,7 @@ const Index = () => {
         {/* Roadmap & Savings Section */}
         <section className="py-16 md:py-24 bg-blue-50/50">
             <div className="container mx-auto px-6">
-                <div className="grid lg:grid-cols-2 gap-16 items-center">
+                <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                     <div className="order-2 lg:order-1">
                         <div className="text-center lg:text-left mb-8">
                             <span className="text-blue-600 font-semibold tracking-wider">LỘ TRÌNH VỮNG CHẮC</span>
@@ -316,7 +316,7 @@ const Index = () => {
               Tham gia NaviU ngay hôm nay để bắt đầu hành trình khám phá bản thân và định hướng sự nghiệp.
             </p>
             <Link to="/register">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-6 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
+              <Button size="lg" className="bg-blue-600 text-white hover:bg-blue-700 text-lg px-8 py-6 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
                 Định hướng sự nghiệp ngay
               </Button>
             </Link>
