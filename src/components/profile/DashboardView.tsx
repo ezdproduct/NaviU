@@ -148,7 +148,7 @@ const getActionCompassModalDetails = (mainValueKey: string | null) => {
         </ul>
       </div>
     ),
-  };
+    };
 };
 
 const getEqProfileModalDetails = (eqScores: { [key: string]: number } | undefined, eqLevels: { [key: string]: string } | undefined) => {
@@ -276,7 +276,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             )}
             onMouseEnter={() => setIsWelcomeHovered(true)}
             onMouseLeave={() => setIsWelcomeHovered(false)}
-            onClick={() => navigate('/profile/naviu-result')} {/* Changed to naviu-result page */}
+            onClick={() => navigate('/profile/naviu-result')} // Corrected comment placement
           >
             <div className="flex items-center gap-3 mb-2">
               <FileText className="h-6 w-6 text-white" />

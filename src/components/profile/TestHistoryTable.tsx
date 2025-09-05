@@ -158,16 +158,16 @@ const TestHistoryTable: React.FC<TestHistoryTableProps> = ({
                   <TableCell>
                     {testType === 'naviu' ? (
                       <div className="flex flex-wrap gap-1">
-                        {(item as NaviuHistoryItem).mbti && <Badge variant="secondary" className="bg-blue-500 text-white">MBTI: {(item as NaviuHistoryItem).mbti}</Badge>} {/* Adjusted badge color */}
-                        {(item as NaviuHistoryItem).eq && <Badge variant="secondary" className="bg-blue-500 text-white">EQ: {renderEqHistory((item as NaviuHistoryItem).eq)}</Badge>} {/* Adjusted badge color */}
-                        {(item as NaviuHistoryItem).cog && <Badge variant="secondary" className="bg-blue-500 text-white">Cog: {renderCogHistory((item as NaviuHistoryItem).cog)}</Badge>} {/* Adjusted badge color */}
-                        {(item as NaviuHistoryItem).holland && <Badge variant="secondary" className="bg-blue-500 text-white">Holland: {renderHollandHistory((item as NaviuHistoryItem).holland)}</Badge>} {/* Adjusted badge color */}
+                        {(item as NaviuHistoryItem).mbti && <Badge variant="secondary" className="bg-blue-500 text-white">MBTI: {(item as NaviuHistoryItem).mbti}</Badge>}
+                        {(item as NaviuHistoryItem).eq && <Badge variant="secondary" className="bg-blue-500 text-white">EQ: {renderEqHistory((item as NaviuHistoryItem).eq)}</Badge>}
+                        {(item as NaviuHistoryItem).cog && <Badge variant="secondary" className="bg-blue-500 text-white">Cog: {renderCogHistory((item as NaviuHistoryItem).cog)}</Badge>}
+                        {(item as NaviuHistoryItem).holland && <Badge variant="secondary" className="bg-blue-500 text-white">Holland: {renderHollandHistory((item as NaviuHistoryItem).holland)}</Badge>}
                         {!((item as NaviuHistoryItem).mbti || (item as NaviuHistoryItem).eq || (item as NaviuHistoryItem).cog || (item as NaviuHistoryItem).holland) && (
-                          <Badge variant="outline" className="text-blue-100 border-blue-300">Không có chi tiết</Badge> {/* Adjusted badge color */}
+                          <Badge variant="outline" className="text-blue-100 border-blue-300">Không có chi tiết</Badge> 
                         )}
                       </div>
                     ) : (
-                      <Badge className={`bg-blue-500 text-white`}>{(item as DGTCResultData).result}</Badge> {/* Adjusted badge color */}
+                      <Badge className={`bg-blue-500 text-white`}>{(item as DGTCResultData).result}</Badge> 
                     )}
                   </TableCell>
                   <TableCell className="text-right">
