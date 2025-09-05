@@ -54,12 +54,8 @@ const DynamicEqChart = ({ scores }: { scores: { [key: string]: number } | undefi
 // Helper functions to generate modal content
 const getWelcomeModalDetails = (username: string) => ({
   title: 'Hồ sơ Hướng nghiệp của bạn',
-  description: `Chào mừng trở lại, ${username}! Đây là phân tích tổng quan về tiềm năng của bạn.`,
-  content: (
-    <p className="text-sm text-gray-700">
-      Báo cáo này cung cấp cái nhìn sâu sắc về tính cách, sở thích, năng lực và giá trị nghề nghiệp của bạn, giúp bạn định hướng con đường sự nghiệp phù hợp nhất.
-    </p>
-  ),
+  description: `Chào mừng trở lại, ${username}! Đây là phân tích tổng quan về tính cách, sở thích, năng lực và giá trị nghề nghiệp của bạn, giúp bạn định hướng con đường sự nghiệp phù hợp nhất.`, // Cập nhật mô tả
+  content: null, // Đã chuyển nội dung vào description chính
 });
 
 const getPersonalityModalDetails = (personalityType: string | null) => {
