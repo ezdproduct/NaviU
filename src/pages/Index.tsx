@@ -309,10 +309,10 @@ const Index = () => {
 
 
         {/* CTA Section */}
-        <section className="py-16 md:py-24 bg-blue-600 text-white text-center"> {/* Changed background to solid blue */}
+        <section className="py-16 md:py-24 bg-blue-600 text-white text-center">
           <div className="max-w-3xl mx-auto px-4">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Sẵn sàng kiến tạo tương lai của bạn?</h2> {/* Adjusted text size for consistency */}
-            <p className="text-lg mb-8 opacity-90"> {/* Adjusted text size and margin for consistency */}
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Sẵn sàng kiến tạo tương lai của bạn?</h2>
+            <p className="text-lg mb-8 opacity-90">
               Tham gia NaviU ngay hôm nay để bắt đầu hành trình khám phá bản thân và định hướng sự nghiệp.
             </p>
             <Link to="/register">
@@ -333,22 +333,7 @@ const Index = () => {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {/* Testimonial Card */}
-                    <div className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                        <div className="flex items-center mb-4">
-                            <img src="https://placehold.co/48x48/E2E8F0/4A5568?text=EJ" alt="Emily Johnson" className="w-12 h-12 rounded-full mr-4" />
-                            <div>
-                                <h4 className="font-semibold">Emily Johnson</h4>
-                                <div className="flex text-amber-400">
-                                    <Star className="w-4 h-4 fill-current" />
-                                    <Star className="w-4 h-4 fill-current" />
-                                    <Star className="w-4 h-4 fill-current" />
-                                    <Star className="w-4 h-4 fill-current" />
-                                    <Star className="w-4 h-4 fill-current" />
-                                </div>
-                            </div>
-                        </div>
-                        <p className="text-gray-600 text-sm">"NaviU đã giúp tôi thấu hiểu bản thân và định hướng được con đường sự nghiệp rõ ràng hơn. Giao diện thân thiện và dễ sử dụng."</p>
-                    </div>
+                    {/* Removed the first testimonial card */}
                     {/* Testimonial Card */}
                     <div className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                         <div className="flex items-center mb-4">
