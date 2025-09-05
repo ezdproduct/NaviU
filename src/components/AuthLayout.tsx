@@ -21,10 +21,6 @@ const AuthLayout = ({ children, title, description, showSocialLogins = true, isL
         <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-blue-700 to-indigo-900 p-12 flex-col justify-between text-white">
           <div>
             <h1 className="text-4xl font-bold mb-4">Chào mừng bạn!</h1>
-            {/* Removed the line below */}
-            {/* <p className="text-lg opacity-90">
-              Tăng tốc công việc của bạn với ứng dụng web của chúng tôi.
-            </p> */}
           </div>
           <div className="flex flex-wrap gap-4 text-sm opacity-70">
             {/* Placeholder for social icons or other branding */}
@@ -43,25 +39,7 @@ const AuthLayout = ({ children, title, description, showSocialLogins = true, isL
 
           {children}
 
-          {showSocialLogins && (
-            <>
-              <div className="relative flex justify-center text-xs uppercase mt-8 mb-6">
-                <span className="bg-white px-2 text-gray-500">Hoặc</span>
-                <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-gray-200" />
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button className="flex-1 flex items-center justify-center gap-2 py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
-                  <FcGoogle className="h-5 w-5" />
-                  <span>{isLogin ? 'Đăng nhập với Google' : 'Đăng ký với Google'}</span>
-                </button>
-                <button className="flex-1 flex items-center justify-center gap-2 py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
-                  <FaApple className="h-5 w-5" />
-                  <span>{isLogin ? 'Đăng nhập với Apple' : 'Đăng ký với Apple'}</span>
-                </button>
-              </div>
-            </>
-          )}
+          {/* Removed social login buttons */}
         </div>
       </div>
     </div>
