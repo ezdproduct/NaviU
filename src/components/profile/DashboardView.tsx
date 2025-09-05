@@ -70,7 +70,7 @@ const getPersonalityModalDetails = (personalityType: string | null) => {
       content: null,
     };
   }
-  const pData = personalityData[personalityType as keyof typeof personalityType];
+  const pData = personalityData[personalityType as keyof typeof personalityData];
   return {
     title: `Loại tính cách: ${pData.title} (${personalityType})`,
     description: pData.description,
@@ -273,9 +273,9 @@ const DashboardView = ({ username }: DashboardViewProps) => {
   return (
     <> {/* Bọc khối JSX có điều kiện trong React.Fragment */}
       {!hasNaviuResult && (
-        <Card className="col-span-1 md:col-span-2 lg:col-span-4 p-8 text-center bg-gradient-to-r from-blue-600 to-blue-100 text-white rounded-2xl shadow-lg">
+        <Card className="col-span-1 md:col-span-2 lg:col-span-4 p-8 text-center bg-gradient-to-r from-blue-600 to-blue-300 text-white rounded-2xl shadow-lg"> {/* Updated gradient */}
           <CardTitle className="text-3xl font-bold mb-4">Chào mừng bạn đến với NaviU!</CardTitle>
-          <CardDescription className="text-lg text-blue-800 opacity-90 mb-6">
+          <CardDescription className="text-lg text-white opacity-90 mb-6"> {/* Changed text color to white */}
             Bạn chưa có báo cáo nào. Hãy làm bài test MBTI NaviU để khám phá tiềm năng của mình.
           </CardDescription>
           <Button 
