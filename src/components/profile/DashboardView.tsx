@@ -62,7 +62,9 @@ const getPersonalityModalDetails = (personalityType: string | null) => {
   if (!personalityType || !personalityData[personalityType as keyof typeof personalityData]) {
     return {
       title: 'Loại tính cách',
-      description: 'Chưa có kết quả ĐGTC hoặc không tìm thấy mô tả.',
+      description: 'Chưa có kết quả ĐGTC.',
+      noDataDescription: 'Bạn chưa hoàn thành bài test ĐGTC. Hãy làm bài test để khám phá tính cách của mình!',
+      testLink: '/profile/test/dgtc/do-test',
       content: null,
     };
   }
@@ -79,6 +81,8 @@ const getHollandModalDetails = (hollandScores: { [key: string]: number } | undef
     return {
       title: 'Mã Holland',
       description: 'Chưa có kết quả Holland.',
+      noDataDescription: 'Bạn chưa hoàn thành bài test Holland. Hãy làm bài test để xác định sở thích nghề nghiệp của bạn!',
+      testLink: '/profile/test/naviu-mbti/do-test', // Assuming NaviU MBTI test includes Holland
       content: null,
     };
   }
@@ -108,6 +112,8 @@ const getCompetenciesModalDetails = (cognitiveScores: { [key: string]: number } 
     return {
       title: 'Năng lực Nổi trội',
       description: 'Chưa có dữ liệu năng lực nhận thức.',
+      noDataDescription: 'Bạn chưa hoàn thành bài test NaviU toàn diện. Hãy làm bài test để đánh giá năng lực nhận thức của bạn!',
+      testLink: '/profile/test/naviu-mbti/do-test',
       content: null,
     };
   }
@@ -131,6 +137,8 @@ const getActionCompassModalDetails = (mainValueKey: string | null) => {
     return {
       title: 'Kim Chỉ Nam Hành Động',
       description: 'Chưa có dữ liệu giá trị nghề nghiệp.',
+      noDataDescription: 'Bạn chưa hoàn thành bài test Giá trị Nghề nghiệp. Hãy làm bài test để khám phá các giá trị cốt lõi của bạn!',
+      testLink: '/profile/test/naviu-mbti/do-test', // Assuming NaviU MBTI test includes values
       content: null,
     };
   }
@@ -155,6 +163,8 @@ const getEqProfileModalDetails = (eqScores: { [key: string]: number } | undefine
     return {
       title: 'Hồ sơ Trí tuệ Cảm xúc',
       description: 'Chưa có dữ liệu trí tuệ cảm xúc.',
+      noDataDescription: 'Bạn chưa hoàn thành bài test Trí tuệ Cảm xúc (EQ). Hãy làm bài test để đánh giá EQ của bạn!',
+      testLink: '/profile/test/naviu-mbti/do-test', // Assuming NaviU MBTI test includes EQ
       content: null,
     };
   }
@@ -187,7 +197,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
   const [isEqHovered, setIsEqHovered] = useState(false);
   const [isActionCompassHovered, setIsActionCompassHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState<{ title: string; description: React.ReactNode; content?: React.ReactNode } | null>(null);
+  const [modalContent, setModalContent] = useState<{ title: string; description: React.ReactNode; content?: React.ReactNode; testLink?: string; noDataDescription?: string } | null>(null);
 
   const handleCardClick = (cardType: string) => {
     let details;
@@ -359,6 +369,8 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             title={modalContent.title}
             description={modalContent.description}
             content={modalContent.content}
+            testLink={modalContent.testLink} // Pass new prop
+            noDataDescription={modalContent.noDataDescription} // Pass new prop
           />
         )}
       </div>
