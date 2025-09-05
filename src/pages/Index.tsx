@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import HeroSection from '@/components/landing/HeroSection';
+import TestimonialSection from '@/components/landing/TestimonialSection'; // Import TestimonialSection
 import {
   Brain,
   Compass,
@@ -188,8 +189,8 @@ const Index = () => {
                             </div>
                             {/* Step Card */}
                             <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                                <div className="flex items-center justify-center w-16 h-16 mb-4 bg-blue-100 rounded-full">
-                                     <FileCheck2 className="w-8 h-8 text-blue-600" />
+                                 <div className="flex items-center justify-center w-16 h-16 mb-4 bg-blue-100 rounded-full">
+                                    <FileCheck2 className="w-8 h-8 text-blue-600" />
                                 </div>
                                 <h3 className="text-xl font-semibold mb-2">2. Nhận báo cáo</h3>
                                 <p className="text-gray-600 text-sm">Hệ thống phân tích và trả kết quả chi tiết.</p>
@@ -375,50 +376,7 @@ const Index = () => {
 
 
         {/* Testimonials Section */}
-        <section className="py-16 md:py-24 bg-white">
-            <div className="container mx-auto px-6">
-                <div className="text-center max-w-3xl mx-auto mb-12">
-                    <h2 className="text-3xl md:text-4xl font-bold mb-4">Những gì người dùng nói về NaviU</h2>
-                    <p className="text-gray-600">Chúng tôi luôn mong muốn lắng nghe chia sẻ của người dùng để không ngừng cải tiến và mang lại giá trị tốt nhất.</p>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {/* Testimonial Card */}
-                    <div className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                        <div className="flex items-center mb-4">
-                            <img src="https://placehold.co/48x48/E2E8F0/4A5568?text=EM" alt="Ethan Miller" className="w-12 h-12 rounded-full mr-4" />
-                            <div>
-                                <h4 className="font-semibold">Ethan Miller</h4>
-                                <div className="flex text-amber-400">
-                                    <Star className="w-4 h-4 fill-current" />
-                                    <Star className="w-4 h-4 fill-current" />
-                                    <Star className="w-4 h-4 fill-current" />
-                                    <Star className="w-4 h-4 fill-current" />
-                                    <Star className="w-4 h-4 fill-current" />
-                                </div>
-                            </div>
-                        </div>
-                        <p className="text-gray-600 text-sm">"Tôi đã sử dụng NaviU để được tư vấn 1-1 với chuyên gia. Các buổi tư vấn rất hữu ích và mang lại nhiều giá trị thực tiễn."</p>
-                    </div>
-                    {/* Testimonial Card */}
-                    <div className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                        <div className="flex items-center mb-4">
-                            <img src="https://placehold.co/48x48/E2E8F0/4A5568?text=OC" alt="Olivia Carter" className="w-12 h-12 rounded-full mr-4" />
-                            <div>
-                                <h4 className="font-semibold">Olivia Carter</h4>
-                                <div className="flex text-amber-400">
-                                    <Star className="w-4 h-4 fill-current" />
-                                    <Star className="w-4 h-4 fill-current" />
-                                    <Star className="w-4 h-4 fill-current" />
-                                    <Star className="w-4 h-4 fill-current" />
-                                    <Star className="w-4 h-4 fill-current" />
-                                </div>
-                            </div>
-                        </div>
-                        <p className="text-gray-600 text-sm">"Nhờ NaviU, tôi đã tự tin hơn với lựa chọn ngành học của mình. Báo cáo phân tích rất chi tiết và dễ hiểu."</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <TestimonialSection /> {/* Sử dụng component TestimonialSection */}
     </main>
     </>
   );
