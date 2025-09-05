@@ -22,7 +22,7 @@ const WelcomeToNaviuModal = ({ isOpen, onClose, username }: WelcomeToNaviuModalP
           </DialogHeader>
           <div className="mt-8">
             <Button asChild
-              className="bg-yellow-400 text-blue-800 hover:bg-yellow-500 text-base px-6 py-3 rounded-full shadow-md transition-all duration-300 ease-in-out transform hover:scale-105"
+              className="bg-blue-600 text-white hover:bg-blue-700 text-base px-6 py-3 rounded-full shadow-md transition-all duration-300 ease-in-out transform hover:scale-105"
               onClick={onClose} // Close modal when button is clicked
             >
               <Link to="/profile/test/naviu-mbti/do-test">Làm bài test MBTI NaviU</Link>
