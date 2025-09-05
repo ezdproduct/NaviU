@@ -136,10 +136,10 @@ const NaviuHistoryPage: React.FC = () => {
       )}
 
       {!loadingHistory && history.length === 0 && (
-        <Card className="p-6 text-center rounded-xl">
-          <FileQuestion className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+        <Card className="p-6 text-center rounded-xl border-2 border-dashed border-blue-300 bg-blue-50">
+          <FileQuestion className="h-16 w-16 text-blue-400 mx-auto mb-4" />
           <CardTitle className="text-xl font-bold text-gray-800 mb-2">Chưa có bài test nào</CardTitle>
-          <CardDescription>Bạn chưa hoàn thành bài test NaviU nào. Hãy bắt đầu làm một bài test mới!</CardDescription>
+          <CardDescription className="text-gray-600">Bạn chưa hoàn thành bài test NaviU nào. Hãy bắt đầu làm một bài test mới!</CardDescription>
           <Button onClick={() => navigate('/profile/test/naviu-mbti/do-test')} className="mt-4 bg-blue-600 text-white hover:bg-blue-700 rounded-lg">Bắt đầu làm bài</Button>
         </Card>
       )}
