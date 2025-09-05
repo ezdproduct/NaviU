@@ -193,6 +193,8 @@ const DashboardView = ({ username }: DashboardViewProps) => {
     let details;
     switch (cardType) {
       case 'welcome':
+        // This case is now handled by direct navigation for the main welcome card
+        // but kept for other potential uses or if logic changes.
         details = getWelcomeModalDetails(username);
         break;
       case 'personality':
@@ -274,12 +276,12 @@ const DashboardView = ({ username }: DashboardViewProps) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div
             className={cn(
-              "group relative bg-gradient-to-r from-blue-600 to-blue-300 text-white rounded-2xl shadow-sm p-6 lg:col-span-2 cursor-pointer",
+              "group relative bg-gray-300 text-white rounded-2xl shadow-sm p-6 lg:col-span-2 cursor-pointer", // Changed to solid bg-gray-300
               !hasNaviuResult && "opacity-50 grayscale"
             )}
             onMouseEnter={() => setIsWelcomeHovered(true)}
             onMouseLeave={() => setIsWelcomeHovered(false)}
-            onClick={() => handleCardClick('welcome')} // Luôn cho phép click
+            onClick={() => navigate('/profile/report')} // Changed to navigate to /profile/report
           >
             <h3 className="text-lg font-semibold opacity-80">Chào mừng trở lại, {username}!</h3>
             <p className="text-4xl font-bold mt-2">Hồ sơ Hướng nghiệp</p>
