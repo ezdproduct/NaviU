@@ -309,14 +309,18 @@ const Index = () => {
 
 
         {/* CTA Section */}
-        <section className="py-16 md:py-24">
-            <div className="container mx-auto px-6 text-center">
-                 <h2 className="text-3xl md:text-4xl font-bold mb-4">Sẵn sàng kiến tạo tương lai của bạn?</h2>
-                 <p className="text-gray-600 max-w-2xl mx-auto mb-8">Tham gia NaviU ngay hôm nay để bắt đầu hành trình khám phá bản thân và định hướng sự nghiệp.</p>
-                 <Button asChild className="bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors shadow-lg transform hover:scale-105">
-                    <Link to="/register">Định hướng sự nghiệp ngay</Link>
-                </Button>
-            </div>
+        <section className="py-16 md:py-24 bg-blue-600 text-white text-center"> {/* Changed background to solid blue */}
+          <div className="max-w-3xl mx-auto px-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Sẵn sàng kiến tạo tương lai của bạn?</h2> {/* Adjusted text size for consistency */}
+            <p className="text-lg mb-8 opacity-90"> {/* Adjusted text size and margin for consistency */}
+              Tham gia NaviU ngay hôm nay để bắt đầu hành trình khám phá bản thân và định hướng sự nghiệp.
+            </p>
+            <Link to="/register">
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-6 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
+                Định hướng sự nghiệp ngay
+              </Button>
+            </Link>
+          </div>
         </section>
 
 
