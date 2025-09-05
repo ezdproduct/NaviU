@@ -29,10 +29,11 @@ const GenericTestRunner: React.FC<GenericTestRunnerProps> = ({
 
   const handleAnswer = (qid: string, choice: string) => {
     setAnswers({ ...answers, [qid]: choice });
+    // Tự động chuyển câu hỏi sau khi chọn, nếu không phải câu cuối cùng
     if (currentQuestionIndex < questions.length - 1) {
       setTimeout(() => {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
-      }, 300);
+      }, 300); // Thêm độ trễ nhỏ để người dùng kịp nhìn thấy lựa chọn
     }
   };
 
@@ -63,68 +64,76 @@ const GenericTestRunner: React.FC<GenericTestRunnerProps> = ({
   return (
     <div className="min-h-[calc(100vh-6rem)] bg-gray-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-2xl rounded-2xl shadow-lg">
-        <CardHeader className="p-6">
-          <CardTitle className="text-2xl font-bold text-center">{title}</CardTitle>
-          <CardDescription className="text-center">
-            Câu {currentQuestionIndex + 1}/{questions.length}
-          </CardDescription>
+        <CardHeader className="p-6 pb-0">
+          <p className="text-sm text-gray-500 mb-2">Question {currentQuestionIndex + 1}</p>
+          <CardTitle className="text-xl font-bold text-gray-800 text-left mb-6 min-h-[60px]">
+            {currentQuestion.text}
+          </CardTitle>
           <Progress value={progress} className="w-full mt-4 h-2" />
         </CardHeader>
 
-        <CardContent className="p-6 md:p-8">
-          {currentQuestion && (
-            <div>
-              <p className="text-lg font-semibold text-gray-800 mb-6 text-center min-h-[60px]">
-                {currentQuestion.text}
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {(currentQuestion.options || []).map((option) => (
-                  <Button
-                    key={option.key}
-                    onClick={() => handleAnswer(currentQuestion.id, option.key)}
-                    variant="outline"
-                    className={cn(
-                      "h-auto text-wrap justify-center text-center p-4 text-base transition-all duration-200 rounded-lg",
-                      answers[currentQuestion.id] === option.key
-                        ? "bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
-                        : "border-blue-600 text-blue-600 hover:bg-blue-50"
-                    )}
-                  >
-                    {option.text}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          )}
+        <CardContent className="p-6 md:p-8 pt-0">
+          <div className="grid grid-cols-1 gap-4">
+            {(currentQuestion.options || []).map((option) => (
+              <button
+                key={option.key}
+                onClick={() => handleAnswer(currentQuestion.id, option.key)}
+                className={cn(
+                  "flex items-center justify-between w-full p-4 rounded-lg border transition-all duration-200",
+                  answers[currentQuestion.id] === option.key
+                    ? "bg-indigo-600 text-white border-indigo-600" // Selected state
+                    : "bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-200" // Unselected state
+                )}
+              >
+                <div className={cn(
+                  "flex items-center gap-4",
+                  answers[currentQuestion.id] === option.key && "border-l-4 border-white pl-2 -ml-2" // Purple bar on left
+                )}>
+                  <span className="text-base font-medium">{option.text}</span>
+                </div>
+                <div className={cn(
+                  "w-5 h-5 rounded-full border-2 flex items-center justify-center",
+                  answers[currentQuestion.id] === option.key
+                    ? "border-white bg-white" // Selected radio outer
+                    : "border-gray-400" // Unselected radio outer
+                )}>
+                  {answers[currentQuestion.id] === option.key && (
+                    <div className="w-2.5 h-2.5 rounded-full bg-indigo-600" /> // Selected radio inner dot
+                  )}
+                </div>
+              </button>
+            ))}
+          </div>
         </CardContent>
 
         <CardFooter className="p-6 flex justify-between items-center bg-gray-50 rounded-b-2xl">
           <Button
             onClick={handlePrev}
             disabled={currentQuestionIndex === 0}
-            variant="ghost"
-            className="text-blue-600 hover:bg-blue-50 rounded-lg"
+            variant="outline"
+            className="text-gray-600 hover:bg-gray-100 border-gray-300 rounded-lg"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Câu trước
+            Previous
           </Button>
 
           {currentQuestionIndex < questions.length - 1 ? (
             <Button
               onClick={handleNext}
               disabled={!answers[currentQuestion?.id]}
-              className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg"
+              variant="outline"
+              className="text-gray-600 hover:bg-gray-100 border-gray-300 rounded-lg"
             >
-              Câu tiếp theo
+              Next
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           ) : (
             <Button
               onClick={handleSubmit}
               disabled={isSubmitting || !allAnswered}
-              className="bg-green-600 hover:bg-green-700 rounded-lg"
+              className="bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg"
             >
-              {isSubmitting ? "Đang nộp..." : "Hoàn thành & Xem kết quả"}
+              {isSubmitting ? "Submitting..." : "Finish"}
             </Button>
           )}
         </CardFooter>
