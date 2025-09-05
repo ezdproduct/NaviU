@@ -171,7 +171,7 @@ const getEqProfileModalDetails = (eqScores: { [key: string]: number } | undefine
         ))}
       </div>
     ),
-    content: null,
+    // Removed the duplicate 'content: null' here
   };
 };
 
