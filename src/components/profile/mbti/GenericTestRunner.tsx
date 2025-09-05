@@ -63,7 +63,7 @@ const GenericTestRunner: React.FC<GenericTestRunnerProps> = ({
 
   return (
     <div className="min-h-[calc(100vh-6rem)] bg-gray-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-2xl rounded-2xl shadow-lg">
+      <Card className="w-full max-w-4xl rounded-2xl shadow-lg"> {/* Đã thay đổi max-w-2xl thành max-w-4xl */}
         <CardHeader className="p-6 pb-0">
           <p className="text-sm text-gray-500 mb-2">Question {currentQuestionIndex + 1}</p>
           <CardTitle className="text-xl font-bold text-gray-800 text-left mb-6 min-h-[60px]">
