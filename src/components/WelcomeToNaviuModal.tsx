@@ -13,7 +13,7 @@ const WelcomeToNaviuModal = ({ isOpen, onClose, username }: WelcomeToNaviuModalP
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden rounded-2xl">
-        <div className="bg-gradient-to-r from-blue-600 to-blue-300 text-white p-8 text-center">
+        <div className="bg-blue-600 text-white p-8 text-center"> {/* Changed from gradient to solid bg-blue-600 */}
           <DialogHeader className="space-y-4">
             <DialogTitle className="text-3xl font-bold">Chào mừng bạn đến với NaviU!</DialogTitle>
             <DialogDescription className="text-lg opacity-90">
