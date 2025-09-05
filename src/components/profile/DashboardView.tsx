@@ -171,6 +171,7 @@ const getEqProfileModalDetails = (eqScores: { [key: string]: number } | undefine
         ))}
       </div>
     ),
+    content: null,
   };
 };
 
@@ -295,7 +296,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             )}
             onMouseEnter={() => setIsWelcomeHovered(true)}
             onMouseLeave={() => setIsWelcomeHovered(false)}
-            onClick={() => handleCardClick('welcome')} {/* Changed to open modal */}
+            onClick={() => handleCardClick('welcome')} 
           >
             <div className="flex items-center gap-3 mb-2">
               <FileText className="h-6 w-6 text-white" />
