@@ -350,7 +350,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
               {hasEqResult ? (
                 <DynamicEqChart scores={naviuResult!.eq!.scores} />
               ) : (
-                <div className="flex items-center justify-center h-full text-white opacity-80">Chưa có dữ liệu EQ.</div> {/* Changed text color */}
+                <div className="flex items-center justify-center h-full text-white opacity-80">Chưa có dữ liệu EQ.</div> 
               )}
             </div>
             <HoverViewMore isVisible={isEqHovered} className="text-white" /> {/* Ensure text is white */}

@@ -41,7 +41,7 @@ const OutstandingCompetenciesCard = ({ onClick, competencies, isFaded = false }:
             </div>
           ))
         ) : (
-          <p className="text-white opacity-80 text-center">Chưa có dữ liệu năng lực nhận thức.</p> {/* Changed text color */}
+          <p className="text-white opacity-80 text-center">Chưa có dữ liệu năng lực nhận thức.</p> 
         )}
       </CardContent>
       <HoverViewMore isVisible={isHovered} className="text-white" /> {/* Ensure text is white */}

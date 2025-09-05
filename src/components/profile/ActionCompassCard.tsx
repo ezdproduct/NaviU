@@ -32,7 +32,7 @@ const ActionCompassCard = ({ onClick, valueData, isFaded = false }: ActionCompas
             <p className="text-white opacity-90 leading-relaxed">{valueData.description}</p> {/* Changed text color */}
           </>
         ) : (
-          <p className="text-white opacity-80 text-center">Chưa có dữ liệu giá trị nghề nghiệp.</p> {/* Changed text color */}
+          <p className="text-white opacity-80 text-center">Chưa có dữ liệu giá trị nghề nghiệp.</p> 
         )}
       </CardContent>
       <HoverViewMore isVisible={isHovered} className="text-white" /> {/* Ensure text is white */}
