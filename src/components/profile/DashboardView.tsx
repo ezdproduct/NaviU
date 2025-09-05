@@ -130,8 +130,15 @@ const getCompetenciesModalDetails = (cognitiveScores: { [key: string]: number } 
   };
 };
 
-const getActionCompassModalDetails = (mainValue: keyof typeof valuesData) => {
-  const vData = valuesData[mainValue];
+const getActionCompassModalDetails = (mainValueKey: string | null) => {
+  if (!mainValueKey || !valuesData[mainValueKey as keyof typeof valuesData]) {
+    return {
+      title: 'Kim Chỉ Nam Hành Động',
+      description: 'Chưa có dữ liệu giá trị nghề nghiệp.',
+      content: null,
+    };
+  }
+  const vData = valuesData[mainValueKey as keyof typeof valuesData];
   return {
     title: `Kim Chỉ Nam Hành Động: ${vData.name}`,
     description: vData.description,
@@ -179,6 +186,7 @@ const DashboardView = () => {
   const [isPersonalityHovered, setIsPersonalityHovered] = useState(false);
   const [isHollandHovered, setIsHollandHovered] = useState(false);
   const [isEqHovered, setIsEqHovered] = useState(false);
+  const [isActionCompassHovered, setIsActionCompassHovered] = useState(false); // New state for ActionCompassCard
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState<{ title: string; description: React.ReactNode; content?: React.ReactNode } | null>(null);
 
@@ -198,8 +206,13 @@ const DashboardView = () => {
         details = getCompetenciesModalDetails(naviuResult?.cognitive);
         break;
       case 'action-compass':
-        // Assuming a default or derived main value for now
-        details = getActionCompassModalDetails('can_bang'); 
+        // Get the top value key from naviuResult.values if available
+        const topValueKey = naviuResult?.values && Object.keys(naviuResult.values).length > 0
+          ? Object.entries(naviuResult.values)
+              .sort(([, a], [, b]) => (b as number) - (a as number))
+              .map(([key]) => key)[0]
+          : null;
+        details = getActionCompassModalDetails(topValueKey); 
         break;
       case 'eq-profile':
         details = getEqProfileModalDetails(naviuResult?.eq?.scores, naviuResult?.eq?.levels);
@@ -238,12 +251,21 @@ const DashboardView = () => {
   const hasHollandResult = !!naviuResult?.holland && Object.keys(naviuResult.holland).length > 0;
   const hasCognitiveResult = !!naviuResult?.cognitive && Object.keys(naviuResult.cognitive).length > 0;
   const hasEqResult = !!naviuResult?.eq?.scores && Object.keys(naviuResult.eq.scores).length > 0;
+  const hasValuesResult = !!naviuResult?.values && Object.keys(naviuResult.values).length > 0;
 
   const topHollandCodes = hasHollandResult
     ? Object.entries(naviuResult!.holland!)
         .sort(([, a], [, b]) => (b as number) - (a as number))
         .slice(0, 3)
     : [];
+
+  const topValueKey = hasValuesResult
+    ? Object.entries(naviuResult!.values!)
+        .sort(([, a], [, b]) => (b as number) - (a as number))
+        .map(([key]) => key)[0] as keyof typeof valuesData
+    : null;
+
+  const actionCompassValueData = topValueKey ? valuesData[topValueKey] : undefined;
 
   return (
     <div className="flex flex-col gap-6">
@@ -261,41 +283,41 @@ const DashboardView = () => {
         <div
           className={cn(
             "group relative bg-blue-600 text-white rounded-2xl shadow-sm p-6 lg:col-span-2 cursor-pointer",
-            !hasNaviuResult && "opacity-50 grayscale" // Removed pointer-events-none
+            !hasNaviuResult && "opacity-50 grayscale"
           )}
           onMouseEnter={() => setIsWelcomeHovered(true)}
           onMouseLeave={() => setIsWelcomeHovered(false)}
-          onClick={() => handleCardClick('welcome')}
+          onClick={() => hasNaviuResult && handleCardClick('welcome')}
         >
           <h3 className="text-lg font-semibold opacity-80">Chào mừng trở lại, {username}!</h3>
           <p className="text-4xl font-bold mt-2">Hồ sơ Hướng nghiệp</p>
           <p className="opacity-80 mt-1">Đây là phân tích tổng quan về tiềm năng của bạn.</p>
-          <HoverViewMore isVisible={isWelcomeHovered && hasNaviuResult} className="text-white" /> {/* Only show hover if data exists */}
+          <HoverViewMore isVisible={isWelcomeHovered && hasNaviuResult} className="text-white" />
         </div>
         <div
           className={cn(
             "group relative bg-white rounded-2xl shadow-sm p-6 cursor-pointer",
-            !hasMbtiResult && "opacity-50 grayscale" // Removed pointer-events-none
+            !hasMbtiResult && "opacity-50 grayscale"
           )}
           onMouseEnter={() => setIsPersonalityHovered(true)}
           onMouseLeave={() => setIsPersonalityHovered(false)}
-          onClick={() => handleCardClick('personality')}
+          onClick={() => hasMbtiResult && handleCardClick('personality')}
         >
           <h3 className="text-gray-500">Loại tính cách</h3>
           <p className="text-2xl font-bold text-gray-800 mt-2">{naviuResult?.mbti?.result || 'N/A'}</p>
           <p className="text-sm text-gray-500 mt-1">
             {hasMbtiResult ? personalityData[naviuResult!.mbti!.result as keyof typeof personalityData]?.title : 'Chưa có dữ liệu'}
           </p>
-          <HoverViewMore isVisible={isPersonalityHovered && hasMbtiResult} /> {/* Only show hover if data exists */}
+          <HoverViewMore isVisible={isPersonalityHovered && hasMbtiResult} />
         </div>
         <div
           className={cn(
             "group relative bg-white rounded-2xl shadow-sm p-6 cursor-pointer",
-            !hasHollandResult && "opacity-50 grayscale" // Removed pointer-events-none
+            !hasHollandResult && "opacity-50 grayscale"
           )}
           onMouseEnter={() => setIsHollandHovered(true)}
           onMouseLeave={() => setIsHollandHovered(false)}
-          onClick={() => handleCardClick('holland')}
+          onClick={() => hasHollandResult && handleCardClick('holland')}
         >
           <h3 className="text-gray-500">Mã Holland</h3>
           <p className="text-2xl font-bold text-gray-800 mt-2">
@@ -304,26 +326,30 @@ const DashboardView = () => {
           <p className="text-sm text-gray-500 mt-1">
             {hasHollandResult ? topHollandCodes.map(([code]) => hollandCodeData[code as keyof typeof hollandCodeData].name).join(' - ') : 'Chưa có dữ liệu'}
           </p>
-          <HoverViewMore isVisible={isHollandHovered && hasHollandResult} /> {/* Only show hover if data exists */}
+          <HoverViewMore isVisible={isHollandHovered && hasHollandResult} />
         </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 flex flex-col gap-6">
           <OutstandingCompetenciesCard 
-            onClick={() => handleCardClick('competencies')} 
+            onClick={() => hasCognitiveResult && handleCardClick('competencies')} 
             competencies={naviuResult?.cognitive} 
-            isFaded={!hasCognitiveResult} // Truyền prop isFaded
+            isFaded={!hasCognitiveResult}
           />
-          <ActionCompassCard onClick={() => handleCardClick('action-compass')} />
+          <ActionCompassCard 
+            onClick={() => hasValuesResult && handleCardClick('action-compass')} 
+            valueData={actionCompassValueData}
+            isFaded={!hasValuesResult}
+          />
         </div>
         <div
           className={cn(
             "group relative bg-white rounded-2xl shadow-sm p-6 flex flex-col min-h-[400px] cursor-pointer",
-            !hasEqResult && "opacity-50 grayscale" // Removed pointer-events-none
+            !hasEqResult && "opacity-50 grayscale"
           )}
           onMouseEnter={() => setIsEqHovered(true)}
           onMouseLeave={() => setIsEqHovered(false)}
-          onClick={() => handleCardClick('eq-profile')}
+          onClick={() => hasEqResult && handleCardClick('eq-profile')}
         >
           <h3 className="font-semibold text-gray-800 flex-shrink-0">Hồ sơ Trí tuệ Cảm xúc</h3>
           <div className="relative flex-1 mt-4">
@@ -333,7 +359,7 @@ const DashboardView = () => {
               <div className="flex items-center justify-center h-full text-gray-500">Chưa có dữ liệu EQ.</div>
             )}
           </div>
-          <HoverViewMore isVisible={isEqHovered && hasEqResult} /> {/* Only show hover if data exists */}
+          <HoverViewMore isVisible={isEqHovered && hasEqResult} />
         </div>
       </div>
       
