@@ -13,7 +13,7 @@ const HeroSection = () => {
           Khám phá Tiềm năng Sự nghiệp của bạn cùng NaviU
         </h1>
         <p className="text-lg md:text-xl mb-10 opacity-90 animate-fade-in-up delay-200">
-          Hệ thống định hướng toàn diện giúp bạn thấu hiểu bản thân, chọn ngành, chọn trường và kết nối chuyên gia.
+          Hệ thống định hướng toàn diện giúp bạn thấu hiểu bản thân,<br /> chọn ngành, chọn trường và kết nối chuyên gia.
         </p>
         <Link to="/register">
           <Button size="lg" className="bg-blue-600 text-white hover:bg-blue-700 text-lg px-8 py-6 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 animate-fade-in-up delay-400">
