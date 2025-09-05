@@ -1,5 +1,5 @@
 import React from 'react';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+// Removed Carousel imports as we are switching to a grid layout
 import TestimonialCard from './TestimonialCard';
 import { testimonialData } from '@/data/testimonialData';
 
@@ -15,20 +15,14 @@ const TestimonialSection = () => {
             </p>
         </div>
 
-        {/* Vùng chứa slider */}
-        <Carousel opts={{ align: "start" }} className="w-full">
-          <CarouselContent className="-ml-4">
+        {/* Vùng chứa grid cho lời chứng thực */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {testimonialData.map((testimonial, index) => (
-              <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
-                <div className="p-1 h-full">
-                  <TestimonialCard testimonial={testimonial} />
-                </div>
-              </CarouselItem>
+              <div key={index} className="h-full">
+                <TestimonialCard testimonial={testimonial} />
+              </div>
             ))}
-          </CarouselContent>
-          <CarouselPrevious className="hidden sm:flex" />
-          <CarouselNext className="hidden sm:flex" />
-        </Carousel>
+        </div>
       </div>
     </section>
   );
