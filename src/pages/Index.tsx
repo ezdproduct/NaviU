@@ -71,6 +71,44 @@ const Index = () => {
           ctaLink="/register"
         />
 
+        {/* Problem Statement Section */}
+        <section className="py-16 md:py-24">
+            <div className="container mx-auto px-6">
+                <div className="grid lg:grid-cols-5 gap-16 items-center">
+                    <div className="lg:col-span-2">
+                        <img src="https://images.unsplash.com/photo-1531545514256-b1400bc00f31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" 
+                             alt="Nhóm học sinh đang bối rối trước nhiều lựa chọn" 
+                             className="rounded-xl shadow-2xl w-full h-auto object-cover aspect-[4/3]"
+                        />
+                    </div>
+                    <div className="lg:col-span-3">
+                        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800">Bạn Có Đang Mắc Kẹt Giữa Vô Vàn Lựa Chọn?</h2>
+                        <p className="text-gray-600 mb-8">Giữa hàng ngàn lựa chọn ngành học và áp lực từ nhiều phía, không ít học sinh cảm thấy hoang mang, dẫn đến những quyết định sai lầm đáng tiếc cho tương lai.</p>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                            {/* Stat Card 1 */}
+                            <div className="bg-white p-6 rounded-xl border border-gray-200">
+                                <p className="text-4xl font-extrabold text-blue-600 mb-2">90%</p>
+                                <h3 className="text-lg font-semibold mb-2">Học sinh bối rối</h3>
+                                <p className="text-gray-600 text-sm">Cảm thấy không chắc chắn và thiếu thông tin khi đứng trước ngưỡng cửa chọn ngành.</p>
+                            </div>
+                            {/* Stat Card 2 */}
+                            <div className="bg-white p-6 rounded-xl border border-gray-200">
+                                <p className="text-4xl font-extrabold text-blue-600 mb-2">62.6%</p>
+                                <h3 className="text-lg font-semibold mb-2">Sinh viên chọn sai ngành</h3>
+                                <p className="text-gray-600 text-sm">Nhận ra lựa chọn của mình không phù hợp sau năm đầu tiên.</p>
+                            </div>
+                            {/* Stat Card 3 */}
+                            <div className="bg-white p-6 rounded-xl border border-gray-200">
+                                <p className="text-4xl font-extrabold text-blue-600 mb-2">Lãng Phí</p>
+                                <h3 className="text-lg font-semibold mb-2">Thời gian & Chi phí</h3>
+                                <p className="text-gray-600 text-sm">Gây lãng phí 4-5 năm đại học, chi phí và cơ hội phát triển.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         {/* Roadmap & Savings Section */}
         <section className="py-16 md:py-24 bg-blue-50/50">
             <div className="container mx-auto px-6">
