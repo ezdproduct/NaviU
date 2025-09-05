@@ -5,13 +5,14 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils'; // Import cn utility
+import { IconType } from 'react-icons'; // Import IconType
 
 interface TestCardProps {
   test: TestInfo & { link?: string };
 }
 
 const TestCard = ({ test }: TestCardProps) => {
-  const IconComponent = test.icon; // Lấy component icon từ prop
+  const IconComponent: IconType = test.icon; // Lấy component icon từ prop, đảm bảo kiểu IconType
 
   return (
     <Card className="relative h-full flex flex-col rounded-xl shadow-md border border-gray-200 bg-white p-6">
