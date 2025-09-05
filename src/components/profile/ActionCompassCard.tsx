@@ -28,13 +28,13 @@ const ActionCompassCard = ({ onClick, valueData, isFaded = false }: ActionCompas
         {valueData ? (
           <>
             <h3 className="text-2xl font-bold text-gray-800 mb-2">{valueData.name}</h3>
-            <p className="text-gray-700 leading-relaxed">{valueData.description}</p> {/* Adjusted text color */}
+            <p className="text-gray-700 leading-relaxed">{valueData.description}</p>
           </>
         ) : (
-          <p className="text-gray-500 text-center">Chưa có dữ liệu giá trị nghề nghiệp.</p> {/* Adjusted text color */}
+          <p className="text-gray-500 text-center">Chưa có dữ liệu giá trị nghề nghiệp.</p> 
         )}
       </CardContent>
-      <HoverViewMore isVisible={isHovered} className="text-gray-800" /> {/* Adjusted text color */}
+      <HoverViewMore isVisible={isHovered} className="text-gray-800" />
     </Card>
   );
 };

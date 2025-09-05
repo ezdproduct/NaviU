@@ -54,8 +54,8 @@ const DynamicEqChart = ({ scores }: { scores: { [key: string]: number } | undefi
 // Helper functions to generate modal content
 const getWelcomeModalDetails = (username: string) => ({
   title: 'Hồ sơ Hướng nghiệp của bạn',
-  description: `Chào mừng trở lại, ${username}! Đây là phân tích tổng quan về tính cách, sở thích, năng lực và giá trị nghề nghiệp của bạn, giúp bạn định hướng con đường sự nghiệp phù hợp nhất.`, // Cập nhật mô tả
-  content: null, // Đã chuyển nội dung vào description chính
+  description: `Chào mừng trở lại, ${username}! Đây là phân tích tổng quan về tính cách, sở thích, năng lực và giá trị nghề nghiệp của bạn, giúp bạn định hướng con đường sự nghiệp phù hợp nhất.`,
+  content: null,
 });
 
 const getPersonalityModalDetails = (personalityType: string | null) => {
@@ -170,7 +170,6 @@ const getEqProfileModalDetails = (eqScores: { [key: string]: number } | undefine
         ))}
       </div>
     ),
-    content: null,
   };
 };
 
@@ -186,7 +185,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
   const [isPersonalityHovered, setIsPersonalityHovered] = useState(false);
   const [isHollandHovered, setIsHollandHovered] = useState(false);
   const [isEqHovered, setIsEqHovered] = useState(false);
-  const [isActionCompassHovered, setIsActionCompassHovered] = useState(false); // New state for ActionCompassCard
+  const [isActionCompassHovered, setIsActionCompassHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState<{ title: string; description: React.ReactNode; content?: React.ReactNode } | null>(null);
 
@@ -285,35 +284,35 @@ const DashboardView = ({ username }: DashboardViewProps) => {
           </div>
           <div
             className={cn(
-              "group relative bg-white text-gray-800 rounded-2xl shadow-sm p-6 cursor-pointer border border-gray-200", // Changed to bg-white, text-gray-800, added border
+              "group relative bg-white text-gray-800 rounded-2xl shadow-sm p-6 cursor-pointer border border-gray-200",
             )}
             onMouseEnter={() => setIsPersonalityHovered(true)}
             onMouseLeave={() => setIsPersonalityHovered(false)}
             onClick={() => handleCardClick('personality')}
           >
-            <h3 className="text-gray-500">Loại tính cách</h3> {/* Adjusted text color */}
+            <h3 className="text-gray-500">Loại tính cách</h3>
             <p className="text-2xl font-bold text-gray-800 mt-2">{naviuResult?.mbti?.result || 'N/A'}</p>
-            <p className="text-sm text-gray-700 mt-1"> {/* Adjusted text color */}
+            <p className="text-sm text-gray-700 mt-1">
             {hasMbtiResult ? personalityData[naviuResult!.mbti!.result as keyof typeof personalityData]?.title : 'Chưa có dữ liệu'}
             </p>
-            <HoverViewMore isVisible={isPersonalityHovered} className="text-gray-800" /> {/* Adjusted text color */}
+            <HoverViewMore isVisible={isPersonalityHovered} className="text-gray-800" />
           </div>
           <div
             className={cn(
-              "group relative bg-white text-gray-800 rounded-2xl shadow-sm p-6 cursor-pointer border border-gray-200", // Changed to bg-white, text-gray-800, added border
+              "group relative bg-white text-gray-800 rounded-2xl shadow-sm p-6 cursor-pointer border border-gray-200",
             )}
             onMouseEnter={() => setIsHollandHovered(true)}
             onMouseLeave={() => setIsHollandHovered(false)}
             onClick={() => handleCardClick('holland')}
           >
-            <h3 className="text-gray-500">Mã Holland</h3> {/* Adjusted text color */}
+            <h3 className="text-gray-500">Mã Holland</h3>
             <p className="text-2xl font-bold text-gray-800 mt-2">
               {topHollandCodes.map(([code]) => code).join('') || 'N/A'}
             </p>
-            <p className="text-sm text-gray-700 mt-1"> {/* Adjusted text color */}
+            <p className="text-sm text-gray-700 mt-1">
               {hasHollandResult ? topHollandCodes.map(([code]) => hollandCodeData[code as keyof typeof hollandCodeData].name).join(' - ') : 'Chưa có dữ liệu'}
             </p>
-            <HoverViewMore isVisible={isHollandHovered} className="text-gray-800" /> {/* Adjusted text color */}
+            <HoverViewMore isVisible={isHollandHovered} className="text-gray-800" />
           </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -331,7 +330,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
           </div>
           <div
             className={cn(
-              "group relative bg-white text-gray-800 rounded-2xl shadow-sm p-6 flex flex-col min-h-[400px] cursor-pointer border border-gray-200", // Changed to bg-white, text-gray-800, added border
+              "group relative bg-white text-gray-800 rounded-2xl shadow-sm p-6 flex flex-col min-h-[400px] cursor-pointer border border-gray-200",
             )}
             onMouseEnter={() => setIsEqHovered(true)}
             onMouseLeave={() => setIsEqHovered(false)}
@@ -345,7 +344,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
                 <div className="flex items-center justify-center h-full text-gray-500">Chưa có dữ liệu EQ.</div> 
               )}
             </div>
-            <HoverViewMore isVisible={isEqHovered} className="text-gray-800" /> {/* Adjusted text color */}
+            <HoverViewMore isVisible={isEqHovered} className="text-gray-800" />
           </div>
         </div>
         
