@@ -1,3 +1,5 @@
+"use client"
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc'; // Import Google icon from react-icons
@@ -19,9 +21,10 @@ const AuthLayout = ({ children, title, description, showSocialLogins = true, isL
         <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-blue-700 to-indigo-900 p-12 flex-col justify-between text-white">
           <div>
             <h1 className="text-4xl font-bold mb-4">Chào mừng bạn!</h1>
-            <p className="text-lg opacity-90">
+            {/* Removed the line below */}
+            {/* <p className="text-lg opacity-90">
               Tăng tốc công việc của bạn với ứng dụng web của chúng tôi.
-            </p>
+            </p> */}
           </div>
           <div className="flex flex-wrap gap-4 text-sm opacity-70">
             {/* Placeholder for social icons or other branding */}
