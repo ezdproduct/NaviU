@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Google, Apple } from 'lucide-react'; // Placeholder icons for social login
+import { FcGoogle } from 'react-icons/fc'; // Import Google icon from react-icons
+import { FaApple } from 'react-icons/fa'; // Import Apple icon from react-icons
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -48,11 +49,11 @@ const AuthLayout = ({ children, title, description, showSocialLogins = true, isL
 
               <div className="flex flex-col sm:flex-row gap-4">
                 <button className="flex-1 flex items-center justify-center gap-2 py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
-                  <Google className="h-5 w-5" />
+                  <FcGoogle className="h-5 w-5" />
                   <span>{isLogin ? 'Đăng nhập với Google' : 'Đăng ký với Google'}</span>
                 </button>
                 <button className="flex-1 flex items-center justify-center gap-2 py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
-                  <Apple className="h-5 w-5" />
+                  <FaApple className="h-5 w-5" />
                   <span>{isLogin ? 'Đăng nhập với Apple' : 'Đăng ký với Apple'}</span>
                 </button>
               </div>

@@ -3,11 +3,18 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '../contexts/AuthContext';
-import { Link, useSearchParams, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate, useLocation, Location } from 'react-router-dom'; // Import Location type
 import PasswordInput from '@/components/PasswordInput';
 import { LoginCredentials } from '@/types';
 import AuthLayout from '@/components/AuthLayout'; // Import AuthLayout
 import { Checkbox } from '@/components/ui/checkbox'; // Import Checkbox
+
+interface LoginLocationState {
+  registered?: boolean;
+  username?: string;
+  password?: string;
+  from?: Location; // Add 'from' property
+}
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -19,11 +26,11 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const registrationSuccess = (location.state as { registered?: boolean })?.registered || searchParams.get('registered') === 'true';
-  const from = location.state?.from?.pathname || '/profile';
+  const registrationSuccess = (location.state as LoginLocationState)?.registered || searchParams.get('registered') === 'true';
+  const from = (location.state as LoginLocationState)?.from?.pathname || '/profile';
 
   useEffect(() => {
-    const state = location.state as { registered?: boolean; username?: string; password?: string } | undefined;
+    const state = location.state as LoginLocationState | undefined;
     if (state?.registered) {
       if (state.username) setUsername(state.username);
       if (state.password) setPassword(state.password);
