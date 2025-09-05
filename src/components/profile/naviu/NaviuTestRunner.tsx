@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { authenticatedFetch, WP_BASE_URL } from '@/lib/auth/api';
+import { axiosInstance, WP_BASE_URL } from '@/lib/auth/api'; // Import axiosInstance
 import { showSuccess, showError } from '@/utils/toast';
 import GenericTestRunner from "../mbti/GenericTestRunner";
 import { NaviuResultData } from '../NaviUTestPage';
@@ -43,12 +43,11 @@ const NaviuTestRunner = () => {
     setLoadingQuestions(true);
     setError(null);
     try {
-      const response = await authenticatedFetch(`${API_BASE}/questions`);
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || `Lỗi HTTP! Trạng thái: ${response.status}`);
+      const response = await axiosInstance.get(`${API_BASE}/questions`); // Sử dụng axiosInstance
+      if (response.status !== 200) {
+        throw new Error(`Lỗi HTTP! Trạng thái: ${response.status}`);
       }
-      const data: QuestionGroup = await response.json();
+      const data: QuestionGroup = response.data;
       
       const transformedQuestions: TransformedQuestion[] = [];
       (Object.keys(data) as Array<keyof QuestionGroup>).forEach(groupName => {
@@ -108,26 +107,23 @@ const NaviuTestRunner = () => {
     console.log("🚀 [DEBUG] Dữ liệu gửi đi:", JSON.stringify(payload, null, 2));
 
     try {
-      const response = await authenticatedFetch(`${API_BASE}/submit`, {
-        method: "POST",
-        body: JSON.stringify(payload),
-      });
+      const response = await axiosInstance.post(`${API_BASE}/submit`, payload); // Sử dụng axiosInstance
 
       console.log("✅ [DEBUG] Phản hồi từ server:", response);
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         try {
-            const errorData = await response.json();
+            const errorData = response.data;
             console.error("❌ [DEBUG] Lỗi từ API (JSON):", errorData);
             throw new Error(errorData.message || `Lỗi ${response.status}: ${response.statusText}`);
         } catch (e) {
-            const errorText = await response.text();
+            const errorText = JSON.stringify(response.data); // Axios response.data is already parsed
             console.error("❌ [DEBUG] Lỗi từ API (Không phải JSON):", errorText);
             throw new Error(`Lỗi ${response.status}: ${response.statusText}`);
         }
       }
 
-      const data: NaviuResultData = await response.json();
+      const data: NaviuResultData = response.data;
       console.log("🎉 [DEBUG] Dữ liệu kết quả (JSON):", data);
 
       setNaviuResult(data); // Update global state

@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect, useCallback } from 'react';
 import { getToken, saveToken, clearToken } from '@/lib/auth/storage';
-import { login as apiLogin, getCurrentUserInfo, authenticatedFetch, WP_BASE_URL } from '@/lib/auth/api';
+import { login as apiLogin, getCurrentUserInfo, axiosInstance, WP_BASE_URL } from '@/lib/auth/api'; // Import axiosInstance
 import { User, LoginCredentials } from '@/types';
 import { NaviuResultData } from '@/components/profile/NaviUTestPage';
 
@@ -34,9 +34,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
     setIsLoadingResult(true);
     try {
-      const response = await authenticatedFetch(`${WP_BASE_URL}/wp-json/naviu/v1/latest-result`);
-      if (response.ok) {
-        const data = await response.json();
+      const response = await axiosInstance.get(`${WP_BASE_URL}/wp-json/naviu/v1/latest-result`); // Sử dụng axiosInstance
+      if (response.status === 200) {
+        const data = response.data;
         if (data && Object.keys(data).length > 0) {
           setNaviuResult(data);
         } else {

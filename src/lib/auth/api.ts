@@ -5,7 +5,7 @@ import { User, LoginCredentials, ApiResponse, UserProfileData, UpdateProfilePayl
 export const WP_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://naviu-backend.ezd.vn";
 
 // Create an Axios instance with default headers and base URL
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({ // Export axiosInstance
   baseURL: WP_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
