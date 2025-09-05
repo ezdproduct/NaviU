@@ -29,7 +29,7 @@ const availableTests = [
 const DoTestView = () => {
   return (
     <div className="p-4 sm:p-6">
-      <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">Cổng Bài Test</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">Bài Test Của Bạn</h1> {/* Changed title here */}
       <p className="text-gray-600 mb-8">Chọn một bài test dưới đây để bắt đầu hành trình khám phá bản thân.</p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {availableTests.map((test) => (
