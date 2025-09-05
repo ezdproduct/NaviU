@@ -124,8 +124,8 @@ export const testHubData: { [key: string]: TestInfo[] } = {
       duration: "20 phút",
       tags: ["Y Dược", "Sức khỏe"],
       icon: MdMedicalServices, // Sử dụng MdMedicalServices
-      iconBgColor: "bg-pink-100",
-      iconColor: "text-pink-600",
+      iconBgColor: "bg-blue-100", // Đã thay đổi từ bg-pink-100
+      iconColor: "text-blue-600", // Đã thay đổi từ text-pink-600
       resultLink: "#", // No specific result page yet
       testType: "mock-medical",
     },
