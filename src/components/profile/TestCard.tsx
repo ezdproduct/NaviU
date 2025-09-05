@@ -1,40 +1,34 @@
 import React from 'react';
 import { TestInfo } from '@/data/testHubData';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom'; // Import Link
+import { Link } from 'react-router-dom';
+import { cn } from '@/lib/utils'; // Import cn utility
 
 interface TestCardProps {
-  test: TestInfo & { link?: string }; // Thêm link vào interface
+  test: TestInfo & { link?: string };
 }
 
 const TestCard = ({ test }: TestCardProps) => {
+  const IconComponent = test.icon; // Lấy component icon từ prop
+
   return (
-    <Card className="h-full flex flex-col overflow-hidden">
-      <CardHeader className={`p-0 ${test.headerBgClass} rounded-t-lg`}>
-        <div className="p-6 pb-2">
-          <CardTitle className="text-lg font-bold">{test.title}</CardTitle>
-        </div>
-      </CardHeader>
-      <CardContent className="flex-grow px-6 py-4">
+    <Card className="relative h-full flex flex-col rounded-xl shadow-md border border-gray-200 bg-white p-6">
+      {/* Icon container */}
+      <div className={cn("w-12 h-12 rounded-lg flex items-center justify-center mb-4", test.iconBgColor)}>
+        <IconComponent className={cn("w-6 h-6", test.iconColor)} />
+      </div>
+      <CardTitle className="text-xl font-bold text-gray-800 mb-2">{test.title}</CardTitle>
+      <CardContent className="flex-grow p-0">
         <p className="text-sm text-gray-600">{test.description}</p>
       </CardContent>
-      <CardFooter className="flex flex-col items-start gap-4 px-6 pt-0 pb-6">
-        <div className="flex flex-wrap gap-2">
-          {test.tags.map((tag, index) => (
-            <Badge key={tag} className={test.tagColorPalette[index % test.tagColorPalette.length]}>
-              {tag}
-            </Badge>
-          ))}
-        </div>
-        <Button asChild className="mt-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg">
-          <Link to={test.link || '#'}>
-            Khám phá <ArrowRight className="ml-1 h-4 w-4" />
-          </Link>
+      {/* Arrow button */}
+      <Link to={test.link || '#'} className="absolute bottom-6 right-6">
+        <Button variant="ghost" size="icon" className="text-blue-600 hover:bg-blue-50 rounded-full">
+          <ArrowRight className="h-5 w-5" />
         </Button>
-      </CardFooter>
+      </Link>
     </Card>
   );
 };
