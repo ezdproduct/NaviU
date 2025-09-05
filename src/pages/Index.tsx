@@ -3,10 +3,8 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import HeroSection from '@/components/landing/HeroSection';
 import FeatureSection from '@/components/landing/FeatureSection';
-import TestimonialSection from '@/components/landing/TestimonialSection'; // Import the new TestimonialSection
-// Removed Footer import
-// Removed LandingPageHeader import
-import CareerPreviewSection from '@/components/landing/CareerPreviewSection'; // Import the new CareerPreviewSection
+import TestimonialSection from '@/components/landing/TestimonialSection';
+import CareerPreviewSection from '@/components/landing/CareerPreviewSection';
 import {
   Brain,
   Compass,
@@ -17,18 +15,17 @@ import {
   GraduationCap,
   Briefcase,
   MessageSquare,
-  Search, // New icon
-  ClipboardList, // New icon
-  Target, // New icon
-  MessageCircle, // New icon
-  XCircle, // New icon for Roadmap & Savings
-  CheckCircle2, // New icon for Roadmap & Savings
-} from 'lucide-react'; // Import icons from lucide-react
+  Search,
+  ClipboardList,
+  Target,
+  MessageCircle,
+  XCircle,
+  CheckCircle2,
+} from 'lucide-react';
 
 const Index = () => {
   return (
-    <> {/* Removed the div wrapper as LandingLayout provides it */}
-      {/* Removed LandingPageHeader */}
+    <>
       <HeroSection />
 
       <main className="flex-1">
@@ -89,7 +86,7 @@ const Index = () => {
                             <div className="bg-white p-6 rounded-xl border-l-4 border-red-500 shadow-sm transition-all duration-300 hover:shadow-md">
                                 <div className="flex items-start space-x-4">
                                      <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-red-100 text-red-600 rounded-full">
-                                        <XCircle className="w-6 h-6" /> {/* Changed to Lucide icon */}
+                                        <XCircle className="w-6 h-6" />
                                     </div>
                                     <div>
                                         <h4 className="font-semibold text-lg">Khi không có định hướng</h4>
@@ -101,7 +98,7 @@ const Index = () => {
                              <div className="bg-white p-6 rounded-xl border-l-4 border-blue-500 shadow-sm transition-all duration-300 hover:shadow-md">
                                 <div className="flex items-start space-x-4">
                                     <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-blue-100 text-blue-600 rounded-full">
-                                        <CheckCircle2 className="w-6 h-6" /> {/* Changed to Lucide icon */}
+                                        <CheckCircle2 className="w-6 h-6" />
                                     </div>
                                     <div>
                                         <h4 className="font-semibold text-lg">Với lộ trình từ NaviU</h4>
@@ -157,8 +154,7 @@ const Index = () => {
         </section>
       </main>
 
-      <TestimonialSection /> {/* Render the new TestimonialSection here */}
-      {/* Removed Footer */}
+      <TestimonialSection />
     </>
   );
 };
