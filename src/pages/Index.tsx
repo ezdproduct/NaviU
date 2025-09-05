@@ -79,38 +79,38 @@ const Index = () => {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {/* Feature Card */}
-                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
-                        <ScanLine className="w-10 h-10 text-blue-500 mb-4 drop-shadow-md transition-all duration-200 group-hover:scale-110" />
+                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                        <ScanLine className="w-10 h-10 text-blue-500 mb-4" />
                         <h3 className="text-xl font-semibold mb-2">Trắc nghiệm Holland</h3>
                         <p className="text-gray-600 text-sm">Khám phá nhóm ngành nghề phù hợp với sở thích và năng lực của bạn.</p>
                     </div>
                     {/* Feature Card */}
-                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
-                        <BrainCircuit className="w-10 h-10 text-blue-500 mb-4 drop-shadow-md transition-all duration-200 group-hover:scale-110" />
+                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                        <BrainCircuit className="w-10 h-10 text-blue-500 mb-4" />
                         <h3 className="text-xl font-semibold mb-2">Trí thông minh (MRTI)</h3>
                         <p className="text-gray-600 text-sm">Hiểu rõ 8 loại hình trí tuệ để phát huy tối đa tiềm năng.</p>
                     </div>
                     {/* Feature Card */}
-                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
-                        <Compass className="w-10 h-10 text-blue-500 mb-4 drop-shadow-md transition-all duration-200 group-hover:scale-110" />
+                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                        <Compass className="w-10 h-10 text-blue-500 mb-4" />
                         <h3 className="text-xl font-semibold mb-2">La bàn (Holland)</h3>
                         <p className="text-gray-600 text-sm">Xác định các giá trị quan trọng, định hướng cuộc sống và sự nghiệp.</p>
                     </div>
                     {/* Feature Card */}
-                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
-                        <Briefcase className="w-10 h-10 text-blue-500 mb-4 drop-shadow-md transition-all duration-200 group-hover:scale-110" />
+                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                        <Briefcase className="w-10 h-10 text-blue-500 mb-4" />
                         <h3 className="text-xl font-semibold mb-2">Gợi ý ngành nghề</h3>
                         <p className="text-gray-600 text-sm">Khám phá các ngành nghề phù hợp với đặc điểm và năng lực cá nhân.</p>
                     </div>
                      {/* Feature Card */}
-                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
-                        <BarChart3 className="w-10 h-10 text-blue-500 mb-4 drop-shadow-md transition-all duration-200 group-hover:scale-110" />
+                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                        <BarChart3 className="w-10 h-10 text-blue-500 mb-4" />
                         <h3 className="text-xl font-semibold mb-2">Phân tích thị trường</h3>
                         <p className="text-gray-600 text-sm">Tìm hiểu xu hướng thị trường lao động để có lựa chọn tối ưu.</p>
                     </div>
                     {/* Feature Card */}
-                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
-                        <FileText className="w-10 h-10 text-blue-500 mb-4 drop-shadow-md transition-all duration-200 group-hover:scale-110" />
+                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                        <FileText className="w-10 h-10 text-blue-500 mb-4" />
                         <h3 className="text-xl font-semibold mb-2">Báo cáo chi tiết</h3>
                         <p className="text-gray-600 text-sm">Nhận báo cáo phân tích toàn diện về bản thân và định hướng.</p>
                     </div>
@@ -129,33 +129,33 @@ const Index = () => {
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             {/* Step Card */}
-                            <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                            <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                                 <div className="flex items-center justify-center w-16 h-16 mb-4 bg-blue-100 rounded-full">
-                                    <Search className="w-8 h-8 text-blue-600 drop-shadow-md transition-all duration-200 group-hover:scale-110" />
+                                    <Search className="w-8 h-8 text-blue-600" />
                                 </div>
                                 <h3 className="text-xl font-semibold mb-2">1. Khám phá bản thân</h3>
                                 <p className="text-gray-600 text-sm">Thực hiện các bài trắc nghiệm khoa học.</p>
                             </div>
                             {/* Step Card */}
-                            <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                            <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                                 <div className="flex items-center justify-center w-16 h-16 mb-4 bg-blue-100 rounded-full">
-                                     <FileCheck2 className="w-8 h-8 text-blue-600 drop-shadow-md transition-all duration-200 group-hover:scale-110" />
+                                     <FileCheck2 className="w-8 h-8 text-blue-600" />
                                 </div>
                                 <h3 className="text-xl font-semibold mb-2">2. Nhận báo cáo</h3>
                                 <p className="text-gray-600 text-sm">Hệ thống phân tích và trả kết quả chi tiết.</p>
                             </div>
                             {/* Step Card */}
-                            <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                            <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                                  <div className="flex items-center justify-center w-16 h-16 mb-4 bg-blue-100 rounded-full">
-                                    <Map className="w-8 h-8 text-blue-600 drop-shadow-md transition-all duration-200 group-hover:scale-110" />
+                                    <Map className="w-8 h-8 text-blue-600" />
                                 </div>
                                 <h3 className="text-xl font-semibold mb-2">3. Định hướng lộ trình</h3>
                                 <p className="text-gray-600 text-sm">Xây dựng kế hoạch học tập và phát triển sự nghiệp.</p>
                             </div>
                             {/* Step Card */}
-                            <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                            <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                                 <div className="flex items-center justify-center w-16 h-16 mb-4 bg-blue-100 rounded-full">
-                                    <MessageCircle className="w-8 h-8 text-blue-600 drop-shadow-md transition-all duration-200 group-hover:scale-110" />
+                                    <MessageCircle className="w-8 h-8 text-blue-600" />
                                 </div>
                                 <h3 className="text-xl font-semibold mb-2">4. Kết nối chuyên gia</h3>
                                 <p className="text-gray-600 text-sm">Trò chuyện 1-1 với các cố vấn hàng đầu.</p>
@@ -189,10 +189,10 @@ const Index = () => {
                         </div>
                         <div className="space-y-6">
                             {/* Without NaviU Card */}
-                            <div className="bg-white p-6 rounded-xl border-l-4 border-red-500 shadow-sm transition-all duration-300 hover:shadow-md hover:scale-[1.01] group">
+                            <div className="bg-white p-6 rounded-xl border-l-4 border-red-500 shadow-sm transition-all duration-300 hover:shadow-md hover:scale-[1.01]">
                                 <div className="flex items-start space-x-4">
                                      <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-red-100 text-red-600 rounded-full">
-                                        <XCircle className="w-6 h-6 drop-shadow-md transition-all duration-200 group-hover:scale-110" />
+                                        <XCircle className="w-6 h-6" />
                                     </div>
                                     <div>
                                         <h4 className="font-semibold text-lg">Khi không có định hướng</h4>
@@ -201,10 +201,10 @@ const Index = () => {
                                 </div>
                             </div>
                             {/* With NaviU Card */}
-                             <div className="bg-white p-6 rounded-xl border-l-4 border-blue-500 shadow-sm transition-all duration-300 hover:shadow-md hover:scale-[1.01] group">
+                             <div className="bg-white p-6 rounded-xl border-l-4 border-blue-500 shadow-sm transition-all duration-300 hover:shadow-md hover:scale-[1.01]">
                                 <div className="flex items-start space-x-4">
                                     <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-blue-100 text-blue-600 rounded-full">
-                                        <CheckCircle2 className="w-6 h-6 drop-shadow-md transition-all duration-200 group-hover:scale-110" />
+                                        <CheckCircle2 className="w-6 h-6" />
                                     </div>
                                     <div>
                                         <h4 className="font-semibold text-lg">Với lộ trình từ NaviU</h4>
@@ -339,11 +339,11 @@ const Index = () => {
                             <div>
                                 <h4 className="font-semibold">Ethan Miller</h4>
                                 <div className="flex text-amber-400">
-                                    <Star className="w-4 h-4 fill-current drop-shadow-md transition-all duration-200 group-hover:scale-110" />
-                                    <Star className="w-4 h-4 fill-current drop-shadow-md transition-all duration-200 group-hover:scale-110" />
-                                    <Star className="w-4 h-4 fill-current drop-shadow-md transition-all duration-200 group-hover:scale-110" />
-                                    <Star className="w-4 h-4 fill-current drop-shadow-md transition-all duration-200 group-hover:scale-110" />
-                                    <Star className="w-4 h-4 fill-current drop-shadow-md transition-all duration-200 group-hover:scale-110" />
+                                    <Star className="w-4 h-4 fill-current" />
+                                    <Star className="w-4 h-4 fill-current" />
+                                    <Star className="w-4 h-4 fill-current" />
+                                    <Star className="w-4 h-4 fill-current" />
+                                    <Star className="w-4 h-4 fill-current" />
                                 </div>
                             </div>
                         </div>
@@ -356,11 +356,11 @@ const Index = () => {
                             <div>
                                 <h4 className="font-semibold">Olivia Carter</h4>
                                 <div className="flex text-amber-400">
-                                    <Star className="w-4 h-4 fill-current drop-shadow-md transition-all duration-200 group-hover:scale-110" />
-                                    <Star className="w-4 h-4 fill-current drop-shadow-md transition-all duration-200 group-hover:scale-110" />
-                                    <Star className="w-4 h-4 fill-current drop-shadow-md transition-all duration-200 group-hover:scale-110" />
-                                    <Star className="w-4 h-4 fill-current drop-shadow-md transition-all duration-200 group-hover:scale-110" />
-                                    <Star className="w-4 h-4 fill-current drop-shadow-md transition-all duration-200 group-hover:scale-110" />
+                                    <Star className="w-4 h-4 fill-current" />
+                                    <Star className="w-4 h-4 fill-current" />
+                                    <Star className="w-4 h-4 fill-current" />
+                                    <Star className="w-4 h-4 fill-current" />
+                                    <Star className="w-4 h-4 fill-current" />
                                 </div>
                             </div>
                         </div>

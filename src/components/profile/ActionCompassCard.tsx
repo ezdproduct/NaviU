@@ -27,7 +27,7 @@ const ActionCompassCard = ({ onClick, valueData, isFaded = false, icon: Icon }: 
     >
       <CardHeader>
         <div className="flex items-center gap-3 mb-2">
-          {Icon && <Icon className="h-6 w-6 text-blue-600 drop-shadow-md transition-all duration-200 group-hover:scale-110" />}
+          {Icon && <Icon className="h-6 w-6 text-blue-600" />}
           <CardTitle className="text-lg font-bold text-gray-800">KIM CHỈ NAM HÀNH ĐỘNG</CardTitle>
         </div>
       </CardHeader>
