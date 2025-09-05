@@ -96,7 +96,7 @@ const NaviuMBTITestRunner = () => {
   const { isAuthenticated, setNaviuResult } = useAuth();
   const navigate = useNavigate();
 
-  const [mbtiQuestions, setMbtiQuestions] = useState<TransformedQuestion[]>([]);
+  const [allQuestions, setAllQuestions] = useState<TransformedQuestion[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingQuestions, setLoadingQuestions] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -111,18 +111,28 @@ const NaviuMBTITestRunner = () => {
       }
       const data: QuestionGroup = response.data;
       
-      const transformedMbtiQuestions: TransformedQuestion[] = data.mbti.map(q => ({
-        id: q.id,
-        text: q.text,
-        options: Object.entries(q.choices).map(([key, choice]) => ({
-          key: key,
-          text: choice.label,
-        })),
-        group: 'mbti',
-      }));
-      setMbtiQuestions(transformedMbtiQuestions);
+      const combinedQuestions: TransformedQuestion[] = [];
+
+      const transform = (questions: ApiQuestion[], group: 'mbti' | 'eq' | 'cog' | 'holland'): TransformedQuestion[] => {
+        return questions.map(q => ({
+          id: q.id,
+          text: q.text,
+          options: Object.entries(q.choices).map(([key, choice]) => ({
+            key: key,
+            text: choice.label,
+          })),
+          group: group,
+        }));
+      };
+
+      combinedQuestions.push(...transform(data.mbti, 'mbti'));
+      combinedQuestions.push(...transform(data.eq, 'eq'));
+      combinedQuestions.push(...transform(data.cog, 'cog'));
+      combinedQuestions.push(...transform(data.holland, 'holland'));
+
+      setAllQuestions(combinedQuestions);
     } catch (err: any) {
-      setError(err.message || "Không tải được câu hỏi MBTI từ NaviU.");
+      setError(err.message || "Không tải được câu hỏi từ NaviU.");
     } finally {
       setLoadingQuestions(false);
     }
@@ -137,7 +147,7 @@ const NaviuMBTITestRunner = () => {
     fetchQuestions();
   }, [isAuthenticated, fetchQuestions]);
 
-  const handleSubmit = async (mbtiAnswers: { [key: string]: string }) => {
+  const handleSubmit = async (answers: { [key: string]: string }) => {
     setLoading(true);
     setError(null);
 
@@ -186,7 +196,7 @@ const NaviuMBTITestRunner = () => {
   return (
     <GenericTestRunner
       title="Bài Test Toàn Diện NaviU"
-      questions={mbtiQuestions}
+      questions={allQuestions}
       onSubmit={handleSubmit}
       isSubmitting={loading}
     />
