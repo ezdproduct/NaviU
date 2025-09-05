@@ -63,7 +63,7 @@ const CareerPreviewSection = () => {
         </div>
 
         <Link to="/profile?initialView=report">
-          <Button size="lg" className="bg-blue-600 text-white hover:bg-blue-700 text-lg px-8 py-6 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
+          <Button size="lg" variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
             Xem báo cáo đầy đủ <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </Link>

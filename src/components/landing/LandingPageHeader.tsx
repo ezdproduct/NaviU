@@ -17,19 +17,19 @@ const LandingPageHeader = () => {
           {isAuthenticated ? (
             <>
               <Link to="/profile">
-                <Button variant="ghost" size="icon" className="bg-blue-600 text-white hover:bg-blue-700 rounded-full"> {/* Updated to solid blue button */}
+                <Button variant="ghost" size="icon" className="text-blue-600 hover:bg-blue-600 hover:text-white"> {/* Updated hover styles */}
                   <User className="h-5 w-5" />
                 </Button>
               </Link>
-              <Button onClick={logout} className="bg-blue-600 text-white hover:bg-blue-700 rounded-full">Đăng xuất</Button> {/* Updated to solid blue button */}
+              <Button onClick={logout} variant="ghost" className="text-blue-600 hover:bg-blue-600 hover:text-white">Đăng xuất</Button> {/* Updated hover styles */}
             </>
           ) : (
             <>
               <Link to="/login">
-                <Button className="bg-blue-600 text-white hover:bg-blue-700 rounded-full">Đăng nhập</Button> {/* Updated to solid blue button */}
+                <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white">Đăng nhập</Button> {/* Updated hover styles */}
               </Link>
               <Link to="/register">
-                <Button className="bg-blue-600 text-white hover:bg-blue-700 rounded-full">Đăng ký</Button> {/* Updated to solid blue button */}
+                <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white">Đăng ký</Button> {/* Updated hover styles */}
               </Link>
             </>
           )}
