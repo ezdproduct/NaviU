@@ -1,86 +1,40 @@
+import axios from 'axios';
 import { getToken, saveToken, clearToken, getUser } from "./storage";
 import { User, LoginCredentials, ApiResponse, UserProfileData, UpdateProfilePayload } from '@/types';
 
 export const WP_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://naviu-backend.ezd.vn";
 
-// Safe JSON parser
-export async function safeJsonParse(response: Response): Promise<any> {
-  try {
-    const contentType = response.headers.get('content-type');
-    
-    if (!contentType || !contentType.includes('application/json')) {
-      const text = await response.text();
-      console.error('Expected JSON but got:', contentType);
-      console.error('Response body:', text);
-      
-      throw new Error(`Expected JSON response but got ${contentType}. Check console for full response.`);
-    }
-    
-    return await response.json();
-  } catch (error) {
-    console.error('JSON Parse Error:', error);
-    throw new Error('Failed to parse JSON response');
-  }
-}
-
-// Enhanced authenticatedFetch
-export async function authenticatedFetch(url: string, options: RequestInit = {}): Promise<Response> {
-  const token = getToken();
-  
-  const defaultHeaders: Record<string, string> = {
+// Create an Axios instance with default headers and base URL
+const axiosInstance = axios.create({
+  baseURL: WP_BASE_URL,
+  headers: {
     'Content-Type': 'application/json',
-  };
-  
-  if (token) {
-    defaultHeaders['Authorization'] = `Bearer ${token}`;
+  },
+});
+
+// Add a request interceptor to include the authentication token
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = getToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-  
-  const finalOptions = {
-    ...options,
-    headers: {
-      ...defaultHeaders,
-      ...options.headers,
-    },
-  };
-  
-  try {
-    const response = await fetch(url, finalOptions);
-    return response;
-  } catch (error) {
-    console.error('❌ Network error:', error);
-    throw error;
-  }
-}
+);
 
 // --- Login Function ---
 export async function login(credentials: LoginCredentials): Promise<ApiResponse<{user: User, token: string}>> {
   try {
-    const response = await fetch(`${WP_BASE_URL}/wp-json/jwt-auth/v1/token`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: credentials.username,
-        password: credentials.password
-      })
+    const response = await axiosInstance.post('/wp-json/jwt-auth/v1/token', {
+      username: credentials.username,
+      password: credentials.password
     });
     
-    if (!response.ok) {
-      const errorText = await response.text();
-      let errorData;
-      try {
-        errorData = JSON.parse(errorText);
-      } catch {
-        errorData = { message: `HTTP ${response.status}: ${errorText}` };
-      }
-      return {
-        success: false,
-        message: errorData.message || `Login failed with status ${response.status}`
-      };
-    }
-    
-    const data = await safeJsonParse(response);
+    const data = response.data;
     const { token, user_id, user_email, user_nicename, user_display_name } = data;
     
     if (!token) {
@@ -109,109 +63,77 @@ export async function login(credentials: LoginCredentials): Promise<ApiResponse<
       }
     };
     
-  } catch (error) {
+  } catch (error: any) {
     console.error('❌ Login error:', error);
     return {
       success: false,
-      message: error instanceof Error ? error.message : 'Login failed. Please try again.'
+      message: error.response?.data?.message || error.message || 'Login failed. Please try again.'
     };
   }
 }
 
 export async function register(username: string, email: string, password: string) {
-  const res = await authenticatedFetch(`${WP_BASE_URL}/wp-json/custom/v1/register`, {
-    method: "POST",
-    body: JSON.stringify({ username, email, password }),
-  });
-  if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.message || "Đăng ký không thành công.");
+  try {
+    const res = await axiosInstance.post('/wp-json/custom/v1/register', { username, email, password });
+    return res.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || "Đăng ký không thành công.");
   }
-  return res.json();
 }
 
 export async function getCurrentUserInfo(): Promise<User> {
-  const token = getToken();
-  if (!token) {
-    throw new Error("No authentication token found.");
+  try {
+    const res = await axiosInstance.get('/wp-json/wp/v2/users/me?context=edit');
+    const wpUser = res.data;
+
+    const user: User = {
+      id: wpUser.id,
+      username: wpUser.slug,
+      email: wpUser.email,
+      first_name: wpUser.first_name,
+      last_name: wpUser.last_name,
+      description: wpUser.description,
+      nickname: wpUser.nickname || wpUser.slug,
+      user_login: wpUser.slug,
+      user_nicename: wpUser.slug,
+      user_display_name: wpUser.name,
+    };
+    return user;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || "Failed to fetch user info.");
   }
-
-  const res = await authenticatedFetch(`${WP_BASE_URL}/wp-json/wp/v2/users/me?context=edit`, {
-    method: "GET",
-  });
-
-  if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.message || "Failed to fetch user info.");
-  }
-  const wpUser = await res.json();
-
-  const user: User = {
-    id: wpUser.id,
-    username: wpUser.slug,
-    email: wpUser.email,
-    first_name: wpUser.first_name,
-    last_name: wpUser.last_name,
-    description: wpUser.description,
-    nickname: wpUser.nickname || wpUser.slug,
-    user_login: wpUser.slug,
-    user_nicename: wpUser.slug,
-    user_display_name: wpUser.name,
-  };
-  return user;
 }
 
 export async function getUserProfile(): Promise<ApiResponse<UserProfileData>> {
   try {
-    const response = await authenticatedFetch(`${WP_BASE_URL}/wp-json/users/v1/profile`);
-    
-    if (!response.ok) {
-      const errorData = await safeJsonParse(response);
-      return { success: false, message: errorData.message || 'Failed to fetch user profile.' };
-    }
-    
-    const data = await safeJsonParse(response);
-    return { success: true, data: data.data };
-    
-  } catch (error) {
+    const response = await axiosInstance.get('/wp-json/users/v1/profile');
+    // Assuming the backend returns { success: true, data: UserProfileData }
+    return { success: true, data: response.data.data }; 
+  } catch (error: any) {
     console.error('Error fetching user profile:', error);
     return {
       success: false,
-      message:
-        error instanceof Error
-          ? error.message
-          : 'An unknown error occurred while fetching user profile.',
+      message: error.response?.data?.message || error.message || 'An unknown error occurred while fetching user profile.',
     };
   }
 }
 
 export async function updateUserProfile(profileData: UpdateProfilePayload): Promise<ApiResponse<any>> {
   try {
-    const response = await authenticatedFetch(`${WP_BASE_URL}/wp-json/users/v1/profile`, {
-      method: 'PUT',
-      body: JSON.stringify(profileData),
-    });
-    const data = await safeJsonParse(response);
-    
-    if (!response.ok) {
-      return { success: false, message: data.message || 'Failed to update user profile.' };
-    }
-    
-    return { success: true, data, message: 'Cập nhật thành công!' };
-  } catch (error) {
+    const response = await axiosInstance.put('/wp-json/users/v1/profile', profileData);
+    // Assuming the backend returns { success: true, message: "..." }
+    return { success: true, data: response.data, message: response.data.message || 'Cập nhật thành công!' };
+  } catch (error: any) {
     console.error('Error updating user profile:', error);
-    return { success: false, message: error instanceof Error ? error.message : 'An unknown error occurred.' };
+    return { success: false, message: error.response?.data?.message || error.message || 'An unknown error occurred.' };
   }
 }
 
 export async function getTestHistory() {
-  const res = await authenticatedFetch(`${WP_BASE_URL}/wp-json/naviu/v1/history`, {
-    method: "GET",
-  });
-
-  if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.message || "Không thể tải lịch sử bài test.");
+  try {
+    const res = await axiosInstance.get('/wp-json/naviu/v1/history');
+    return res.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || "Không thể tải lịch sử bài test.");
   }
-  return res.json();
 }
