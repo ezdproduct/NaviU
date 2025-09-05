@@ -7,6 +7,9 @@ import GenericTestRunner from "../mbti/GenericTestRunner";
 import { NaviuResultData } from '@/types'; // Cập nhật import
 import { Card, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { personalityData } from "@/data/personalityData"; // Import personality data
+import { valuesData } from "@/data/valuesData"; // Import values data
+import { eqData } from "@/data/eqData"; // Import EQ data
 
 interface ApiChoice {
   label: string;
@@ -34,6 +37,60 @@ interface TransformedQuestion {
 }
 
 const API_BASE = `${WP_BASE_URL}/wp-json/naviu/v1`;
+
+// Helper function to generate random result data
+const generateRandomNaviuResult = (): NaviuResultData => {
+  const mbtiTypes = Object.keys(personalityData);
+  const randomMbtiType = mbtiTypes[Math.floor(Math.random() * mbtiTypes.length)];
+
+  const randomScore = (max = 10) => Math.floor(Math.random() * (max + 1));
+  const randomPercent = () => Math.floor(Math.random() * 101);
+
+  const eqLevels = ['Thấp', 'Trung bình', 'Cao'];
+  const clarityLevels = ['Không rõ ràng', 'Trung bình', 'Rõ ràng'];
+
+  const eiPercent = randomPercent();
+  const snPercent = randomPercent();
+  const tfPercent = randomPercent();
+  const jpPercent = randomPercent();
+
+  return {
+    result: {
+      major_group_name: 'Nhóm ngành Xã hội (Mẫu)',
+      major_group_code: 'S',
+    },
+    mbti: {
+      result: randomMbtiType,
+      scores: { E: randomScore(), S: randomScore(), T: randomScore(), J: randomScore(), I: randomScore(), N: randomScore(), F: randomScore(), P: randomScore() },
+      clarity: {
+        'EI': clarityLevels[Math.floor(Math.random() * clarityLevels.length)],
+        'SN': clarityLevels[Math.floor(Math.random() * clarityLevels.length)],
+        'TF': clarityLevels[Math.floor(Math.random() * clarityLevels.length)],
+        'JP': clarityLevels[Math.floor(Math.random() * clarityLevels.length)],
+      },
+      percent: {
+        'EI': `${eiPercent}% - ${100 - eiPercent}%`,
+        'SN': `${snPercent}% - ${100 - snPercent}%`,
+        'TF': `${tfPercent}% - ${100 - tfPercent}%`,
+        'JP': `${jpPercent}% - ${100 - jpPercent}%`,
+      },
+    },
+    eq: {
+      scores: Object.keys(eqData).reduce((acc, key) => ({ ...acc, [key]: randomScore(100) }), {}),
+      levels: Object.keys(eqData).reduce((acc, key) => ({ ...acc, [key]: eqLevels[Math.floor(Math.random() * eqLevels.length)] }), {}),
+    },
+    cognitive: {
+      Logic: randomScore(100),
+      'Ngôn_ngữ': randomScore(100),
+      'Không_gian': randomScore(100),
+    },
+    holland: {
+      R: randomScore(100), I: randomScore(100), A: randomScore(100), S: randomScore(100), E: randomScore(100), C: randomScore(100),
+    },
+    values: Object.keys(valuesData).reduce((acc, key) => ({ ...acc, [key]: randomScore(100) }), {}),
+  };
+};
+
 
 const NaviuMBTITestRunner = () => {
   const { isAuthenticated, setNaviuResult } = useAuth();
@@ -84,40 +141,23 @@ const NaviuMBTITestRunner = () => {
     setLoading(true);
     setError(null);
 
-    const payload = {
-      mbti: mbtiAnswers,
-      // Các phần khác của bài test toàn diện sẽ trống nếu chỉ làm MBTI
-      eq: {},
-      cog: {},
-      holland: {},
-    };
+    // Simulate API call and generate random data
+    setTimeout(() => {
+      try {
+        const randomResult = generateRandomNaviuResult();
+        console.log("🎉 [DEBUG] Dữ liệu kết quả ngẫu nhiên:", randomResult);
 
-    console.log("🚀 [DEBUG] Dữ liệu MBTI gửi đi:", JSON.stringify(payload, null, 2));
+        setNaviuResult(randomResult); // Update global state
+        showSuccess("Đã hoàn thành bài test! Đang tạo báo cáo của bạn...");
+        navigate('/profile/naviu-result', { state: { resultData: randomResult } });
 
-    try {
-      const response = await axiosInstance.post(`${API_BASE}/submit`, payload);
-
-      console.log("✅ [DEBUG] Phản hồi từ server:", response);
-
-      if (response.status !== 200) {
-        const errorData = response.data;
-        console.error("❌ [DEBUG] Lỗi từ API:", errorData);
-        throw new Error(errorData.message || `Lỗi ${response.status}: ${response.statusText}`);
+      } catch (err: any) {
+        console.error("🔥 [DEBUG] Lỗi khi tạo dữ liệu ngẫu nhiên:", err);
+        showError(err.message || "Lỗi khi tạo dữ liệu kết quả.");
+      } finally {
+        setLoading(false);
       }
-
-      const data: NaviuResultData = response.data;
-      console.log("🎉 [DEBUG] Dữ liệu kết quả NaviU (MBTI):", data);
-
-      setNaviuResult(data); // Update global state with the full NaviU result
-      showSuccess("Đã nộp bài test MBTI NaviU thành công!");
-      navigate('/profile/naviu-result', { state: { resultData: data } });
-
-    } catch (err: any) {
-      console.error("🔥 [DEBUG] Lỗi trong khối catch:", err);
-      showError(err.message || "Lỗi kết nối server khi nộp bài MBTI NaviU.");
-    } finally {
-      setLoading(false);
-    }
+    }, 1500); // Simulate a 1.5 second network delay
   };
 
   if (loadingQuestions) {
