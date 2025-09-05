@@ -13,27 +13,38 @@ import { eqData } from "@/data/eqData"; // Import EQ data
 
 interface ApiChoice {
   label: string;
-  score: string;
+  score?: string | number; // score can be string (MBTI) or number (EQ, Cog)
+  value?: string; // for filtering
 }
 
 interface ApiQuestion {
   id: string;
+  group?: string; // for MBTI, EQ, Cog, Holland
   text: string;
-  choices: { [key: string]: ApiChoice };
+  choices?: { [key: string]: ApiChoice } | number[]; // for MBTI, EQ, Cog, Filtering, Holland
+  type?: string; // for filtering (e.g., "complex")
+  subjects?: any; // for complex filtering questions
+}
+
+interface ApiValuesQuestion {
+  id: string;
+  text: string;
 }
 
 interface QuestionGroup {
   mbti: ApiQuestion[];
   eq: ApiQuestion[];
-  cog: ApiQuestion[];
+  cognitive: ApiQuestion[]; // Changed from 'cog' to 'cognitive' to match API
   holland: ApiQuestion[];
+  values: ApiValuesQuestion[]; // Specific type for values
+  filtering: ApiQuestion[];
 }
 
 interface TransformedQuestion {
   id: string;
   text: string;
   options: { key: string; text: string }[];
-  group: 'mbti' | 'eq' | 'cog' | 'holland';
+  group?: string; // Optional group for display/categorization
 }
 
 const API_BASE = `${WP_BASE_URL}/wp-json/naviu/v1`;
@@ -113,22 +124,64 @@ const NaviuMBTITestRunner = () => {
       
       const combinedQuestions: TransformedQuestion[] = [];
 
-      const transform = (questions: ApiQuestion[], group: 'mbti' | 'eq' | 'cog' | 'holland'): TransformedQuestion[] => {
-        return questions.map(q => ({
-          id: q.id,
-          text: q.text,
-          options: Object.entries(q.choices).map(([key, choice]) => ({
-            key: key,
-            text: choice.label,
-          })),
-          group: group,
-        }));
+      const transform = (questions: ApiQuestion[], groupName: string): TransformedQuestion[] => {
+        return questions.flatMap(q => {
+          // Handle complex filtering questions (e.g., question 128)
+          if (q.type === 'complex') {
+            // For now, we'll skip complex questions as GenericTestRunner doesn't support them.
+            // Or, if we want to include a placeholder, we can do so.
+            // For this request, we'll just skip it.
+            return []; 
+          }
+
+          // Handle Holland questions with choices as number array
+          if (groupName === 'holland' && Array.isArray(q.choices)) {
+            return {
+              id: q.id.toString(),
+              text: q.text,
+              options: q.choices.map(score => ({
+                key: score.toString(),
+                text: `Mức độ ${score}`, // Example: "Mức độ 1", "Mức độ 2", etc.
+              })),
+              group: q.group,
+            };
+          }
+
+          // Handle Values questions (no choices object, just text)
+          if (groupName === 'values' && !q.choices) {
+            return {
+              id: q.id.toString(),
+              text: q.text,
+              options: [ // For values, we'll assume a simple "Yes/No" or "Important/Not Important" for now
+                { key: 'important', text: 'Quan trọng' },
+                { key: 'not_important', text: 'Không quan trọng' },
+              ],
+              group: q.group,
+            };
+          }
+
+          // Default handling for MBTI, EQ, Cognitive, and simple Filtering questions
+          if (q.choices && typeof q.choices === 'object' && !Array.isArray(q.choices)) {
+            return {
+              id: q.id.toString(),
+              text: q.text,
+              options: Object.entries(q.choices).map(([key, choice]) => ({
+                key: key,
+                text: choice.label,
+              })),
+              group: q.group,
+            };
+          }
+          return []; // Skip questions with unsupported choice formats
+        });
       };
 
       combinedQuestions.push(...transform(data.mbti, 'mbti'));
       combinedQuestions.push(...transform(data.eq, 'eq'));
-      combinedQuestions.push(...transform(data.cog, 'cog'));
+      combinedQuestions.push(...transform(data.cognitive, 'cognitive')); // Use 'cognitive'
       combinedQuestions.push(...transform(data.holland, 'holland'));
+      combinedQuestions.push(...transform(data.values as ApiQuestion[], 'values')); // Cast to ApiQuestion[]
+      combinedQuestions.push(...transform(data.filtering, 'filtering'));
 
       setAllQuestions(combinedQuestions);
     } catch (err: any) {
@@ -136,7 +189,7 @@ const NaviuMBTITestRunner = () => {
     } finally {
       setLoadingQuestions(false);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (!isAuthenticated) {
