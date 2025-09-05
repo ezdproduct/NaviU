@@ -15,27 +15,26 @@ const ActionCompassCard = ({ onClick, valueData, isFaded = false }: ActionCompas
   return (
     <Card
       className={cn(
-        "group relative flex flex-col h-full rounded-2xl cursor-pointer bg-green-600 text-white", // Changed to bg-green-600 and text-white
-        // isFaded && "opacity-50 grayscale" // Removed opacity-50 grayscale
+        "group relative flex flex-col h-full rounded-2xl cursor-pointer bg-white text-gray-800 shadow-sm border border-gray-200", // Changed to bg-white, text-gray-800, added border
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
     >
       <CardHeader>
-        <CardTitle className="text-lg font-bold text-white">KIM CHỈ NAM HÀNH ĐỘNG</CardTitle>
+        <CardTitle className="text-lg font-bold text-gray-800">KIM CHỈ NAM HÀNH ĐỘNG</CardTitle>
       </CardHeader>
       <CardContent className="flex-grow">
         {valueData ? (
           <>
-            <h3 className="text-2xl font-bold text-white mb-2">{valueData.name}</h3>
-            <p className="text-white opacity-90 leading-relaxed">{valueData.description}</p>
+            <h3 className="text-2xl font-bold text-gray-800 mb-2">{valueData.name}</h3>
+            <p className="text-gray-700 leading-relaxed">{valueData.description}</p> {/* Adjusted text color */}
           </>
         ) : (
-          <p className="text-white opacity-80 text-center">Chưa có dữ liệu giá trị nghề nghiệp.</p> 
+          <p className="text-gray-500 text-center">Chưa có dữ liệu giá trị nghề nghiệp.</p> {/* Adjusted text color */}
         )}
       </CardContent>
-      <HoverViewMore isVisible={isHovered} className="text-white" />
+      <HoverViewMore isVisible={isHovered} className="text-gray-800" /> {/* Adjusted text color */}
     </Card>
   );
 };
