@@ -271,7 +271,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
   const actionCompassValueData = topValueKey ? valuesData[topValueKey] : undefined;
 
   return (
-    <div className="flex flex-col gap-6">
+    <> {/* Bọc khối JSX có điều kiện trong React.Fragment */}
       {!hasNaviuResult && (
         <Card className="col-span-1 md:col-span-2 lg:col-span-4 p-8 text-center">
           <CardTitle>Chào mừng bạn đến với NaviU!</CardTitle>
@@ -282,104 +282,106 @@ const DashboardView = ({ username }: DashboardViewProps) => {
         </Card>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div
-          className={cn(
-            "group relative bg-blue-600 text-white rounded-2xl shadow-sm p-6 lg:col-span-2 cursor-pointer",
-            !hasNaviuResult && "opacity-50 grayscale"
-          )}
-          onMouseEnter={() => setIsWelcomeHovered(true)}
-          onMouseLeave={() => setIsWelcomeHovered(false)}
-          onClick={() => handleCardClick('welcome')} {/* Luôn cho phép click */}
-        >
-          <h3 className="text-lg font-semibold opacity-80">Chào mừng trở lại, {username}!</h3>
-          <p className="text-4xl font-bold mt-2">Hồ sơ Hướng nghiệp</p>
-          <p className="opacity-80 mt-1">Đây là phân tích tổng quan về tiềm năng của bạn.</p>
-          <HoverViewMore isVisible={isWelcomeHovered} className="text-white" /> {/* Luôn hiển thị khi hover */}
-        </div>
-        <div
-          className={cn(
-            "group relative bg-white rounded-2xl shadow-sm p-6 cursor-pointer",
-            !hasMbtiResult && "opacity-50 grayscale"
-          )}
-          onMouseEnter={() => setIsPersonalityHovered(true)}
-          onMouseLeave={() => setIsPersonalityHovered(false)}
-          onClick={() => handleCardClick('personality')} {/* Luôn cho phép click */}
-        >
-          <h3 className="text-gray-500">Loại tính cách</h3>
-          <p className="text-2xl font-bold text-gray-800 mt-2">{naviuResult?.mbti?.result || 'N/A'}</p>
-          <p className="text-sm text-gray-500 mt-1">
-            {hasMbtiResult ? personalityData[naviuResult!.mbti!.result as keyof typeof personalityData]?.title : 'Chưa có dữ liệu'}
-          </p>
-          <HoverViewMore isVisible={isPersonalityHovered} /> {/* Luôn hiển thị khi hover */}
-        </div>
-        <div
-          className={cn(
-            "group relative bg-white rounded-2xl shadow-sm p-6 cursor-pointer",
-            !hasHollandResult && "opacity-50 grayscale"
-          )}
-          onMouseEnter={() => setIsHollandHovered(true)}
-          onMouseLeave={() => setIsHollandHovered(false)}
-          onClick={() => handleCardClick('holland')} {/* Luôn cho phép click */}
-        >
-          <h3 className="text-gray-500">Mã Holland</h3>
-          <p className="text-2xl font-bold text-gray-800 mt-2">
-            {topHollandCodes.map(([code]) => code).join('') || 'N/A'}
-          </p>
-          <p className="text-sm text-gray-500 mt-1">
-            {hasHollandResult ? topHollandCodes.map(([code]) => hollandCodeData[code as keyof typeof hollandCodeData].name).join(' - ') : 'Chưa có dữ liệu'}
-          </p>
-          <HoverViewMore isVisible={isHollandHovered} /> {/* Luôn hiển thị khi hover */}
-        </div>
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 flex flex-col gap-6">
-          <OutstandingCompetenciesCard 
-            onClick={() => handleCardClick('competencies')} {/* Luôn cho phép click */}
-            competencies={naviuResult?.cognitive} 
-            isFaded={!hasCognitiveResult}
-          />
-          <ActionCompassCard 
-            onClick={() => handleCardClick('action-compass')} {/* Luôn cho phép click */}
-            valueData={actionCompassValueData}
-            isFaded={!hasValuesResult}
-          />
-        </div>
-        <div
-          className={cn(
-            "group relative bg-white rounded-2xl shadow-sm p-6 flex flex-col min-h-[400px] cursor-pointer",
-            !hasEqResult && "opacity-50 grayscale"
-          )}
-          onMouseEnter={() => setIsEqHovered(true)}
-          onMouseLeave={() => setIsEqHovered(false)}
-          onClick={() => handleCardClick('eq-profile')} {/* Luôn cho phép click */}
-        >
-          <h3 className="font-semibold text-gray-800 flex-shrink-0">Hồ sơ Trí tuệ Cảm xúc</h3>
-          <div className="relative flex-1 mt-4">
-            {hasEqResult ? (
-              <DynamicEqChart scores={naviuResult!.eq!.scores} />
-            ) : (
-              <div className="flex items-center justify-center h-full text-gray-500">Chưa có dữ liệu EQ.</div>
+      <div className="flex flex-col gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div
+            className={cn(
+              "group relative bg-blue-600 text-white rounded-2xl shadow-sm p-6 lg:col-span-2 cursor-pointer",
+              !hasNaviuResult && "opacity-50 grayscale"
             )}
+            onMouseEnter={() => setIsWelcomeHovered(true)}
+            onMouseLeave={() => setIsWelcomeHovered(false)}
+            onClick={() => handleCardClick('welcome')} {/* Luôn cho phép click */}
+          >
+            <h3 className="text-lg font-semibold opacity-80">Chào mừng trở lại, {username}!</h3>
+            <p className="text-4xl font-bold mt-2">Hồ sơ Hướng nghiệp</p>
+            <p className="opacity-80 mt-1">Đây là phân tích tổng quan về tiềm năng của bạn.</p>
+            <HoverViewMore isVisible={isWelcomeHovered} className="text-white" /> {/* Luôn hiển thị khi hover */}
           </div>
-          <HoverViewMore isVisible={isEqHovered} /> {/* Luôn hiển thị khi hover */}
+          <div
+            className={cn(
+              "group relative bg-white rounded-2xl shadow-sm p-6 cursor-pointer",
+              !hasMbtiResult && "opacity-50 grayscale"
+            )}
+            onMouseEnter={() => setIsPersonalityHovered(true)}
+            onMouseLeave={() => setIsPersonalityHovered(false)}
+            onClick={() => handleCardClick('personality')} {/* Luôn cho phép click */}
+          >
+            <h3 className="text-gray-500">Loại tính cách</h3>
+            <p className="text-2xl font-bold text-gray-800 mt-2">{naviuResult?.mbti?.result || 'N/A'}</p>
+            <p className="text-sm text-gray-500 mt-1">
+              {hasMbtiResult ? personalityData[naviuResult!.mbti!.result as keyof typeof personalityData]?.title : 'Chưa có dữ liệu'}
+            </p>
+            <HoverViewMore isVisible={isPersonalityHovered} /> {/* Luôn hiển thị khi hover */}
+          </div>
+          <div
+            className={cn(
+              "group relative bg-white rounded-2xl shadow-sm p-6 cursor-pointer",
+              !hasHollandResult && "opacity-50 grayscale"
+            )}
+            onMouseEnter={() => setIsHollandHovered(true)}
+            onMouseLeave={() => setIsHollandHovered(false)}
+            onClick={() => handleCardClick('holland')} {/* Luôn cho phép click */}
+          >
+            <h3 className="text-gray-500">Mã Holland</h3>
+            <p className="text-2xl font-bold text-gray-800 mt-2">
+              {topHollandCodes.map(([code]) => code).join('') || 'N/A'}
+            </p>
+            <p className="text-sm text-gray-500 mt-1">
+              {hasHollandResult ? topHollandCodes.map(([code]) => hollandCodeData[code as keyof typeof hollandCodeData].name).join(' - ') : 'Chưa có dữ liệu'}
+            </p>
+            <HoverViewMore isVisible={isHollandHovered} /> {/* Luôn hiển thị khi hover */}
+          </div>
         </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 flex flex-col gap-6">
+            <OutstandingCompetenciesCard 
+              onClick={() => handleCardClick('competencies')} {/* Luôn cho phép click */}
+              competencies={naviuResult?.cognitive} 
+              isFaded={!hasCognitiveResult}
+            />
+            <ActionCompassCard 
+              onClick={() => handleCardClick('action-compass')} {/* Luôn cho phép click */}
+              valueData={actionCompassValueData}
+              isFaded={!hasValuesResult}
+            />
+          </div>
+          <div
+            className={cn(
+              "group relative bg-white rounded-2xl shadow-sm p-6 flex flex-col min-h-[400px] cursor-pointer",
+              !hasEqResult && "opacity-50 grayscale"
+            )}
+            onMouseEnter={() => setIsEqHovered(true)}
+            onMouseLeave={() => setIsEqHovered(false)}
+            onClick={() => handleCardClick('eq-profile')} {/* Luôn cho phép click */}
+          >
+            <h3 className="font-semibold text-gray-800 flex-shrink-0">Hồ sơ Trí tuệ Cảm xúc</h3>
+            <div className="relative flex-1 mt-4">
+              {hasEqResult ? (
+                <DynamicEqChart scores={naviuResult!.eq!.scores} />
+              ) : (
+                <div className="flex items-center justify-center h-full text-gray-500">Chưa có dữ liệu EQ.</div>
+              )}
+            </div>
+            <HoverViewMore isVisible={isEqHovered} /> {/* Luôn hiển thị khi hover */}
+          </div>
+        </div>
+        
+        <InterestsSection onCardClick={handleCardClick} hollandScores={naviuResult?.holland} />
+
+        <CareerSection />
+
+        {modalContent && (
+          <DashboardDetailModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            title={modalContent.title}
+            description={modalContent.description}
+            content={modalContent.content}
+          />
+        )}
       </div>
-      
-      <InterestsSection onCardClick={handleCardClick} hollandScores={naviuResult?.holland} />
-
-      <CareerSection />
-
-      {modalContent && (
-        <DashboardDetailModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          title={modalContent.title}
-          description={modalContent.description}
-          content={modalContent.content}
-        />
-      )}
-    </div>
+    </>
   );
 };
 
