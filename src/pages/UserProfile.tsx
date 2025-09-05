@@ -258,15 +258,6 @@ const UserProfile = () => {
             maxLength={500}
           />
         </div>
-
-        <div className="mt-6 pt-4 border-t border-gray-200">
-          <h3 className="text-lg font-semibold mb-3">Thông tin khác</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
-            <p><strong>Tổng số bài test đã làm:</strong> {profile.meta?.total_tests_taken || 0}</p>
-            <p><strong>Điểm trung bình:</strong> {profile.meta?.average_score?.toFixed(2) || 'N/A'}</p>
-            <p><strong>Ngày đăng ký:</strong> {profile.meta?.registration_date ? new Date(profile.meta.registration_date).toLocaleDateString('vi-VN') : 'N/A'}</p>
-          </div>
-        </div>
       </CardContent>
 
       <CardFooter className="p-0 mt-6 flex space-x-2">
