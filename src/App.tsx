@@ -72,7 +72,7 @@ export const routes: RouteObject[] = [
       { path: "do-test/:testId", element: <TestRunnerPage /> },
       { path: "test/dgtc/do-test", element: <DGTCQuizRunner /> },
       { path: "test/naviu/do-test", element: <NaviuTestRunner /> },
-      {/* New route for NaviU MBTI */}
+      // New route for NaviU MBTI
       { path: "test/naviu-mbti/do-test", element: <NaviuMBTITestRunner /> }, 
       { path: "naviu-result", element: <NaviuResultPage /> },
       { path: "dgtc-result", element: <DGTCResultPage /> }, // Cập nhật route

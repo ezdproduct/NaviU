@@ -31,6 +31,7 @@ export interface NaviuResultData {
     E: number;
     C: number;
   };
+  values?: { [key: string]: number }; // Thêm thuộc tính 'values'
 }
 
 export interface NaviuHistoryItem {

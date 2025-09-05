@@ -174,13 +174,17 @@ const getEqProfileModalDetails = (eqScores: { [key: string]: number } | undefine
         ))}
       </div>
     ),
+    content: null,
   };
 };
 
-const DashboardView = () => {
+interface DashboardViewProps {
+  username: string;
+}
+
+const DashboardView = ({ username }: DashboardViewProps) => {
   const navigate = useNavigate();
-  const { user, naviuResult, isLoadingResult } = useAuth();
-  const username = user?.username || 'Bạn';
+  const { naviuResult, isLoadingResult } = useAuth();
 
   const [isWelcomeHovered, setIsWelcomeHovered] = useState(false);
   const [isPersonalityHovered, setIsPersonalityHovered] = useState(false);
