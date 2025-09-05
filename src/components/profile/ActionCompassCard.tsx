@@ -17,6 +17,7 @@ const ActionCompassCard = ({ onClick, valueData, isFaded = false }: ActionCompas
     <Card
       className={cn(
         "group relative flex flex-col h-full rounded-2xl cursor-pointer bg-white text-gray-800 shadow-sm border border-gray-200",
+        isFaded && "opacity-50 grayscale" // Re-added opacity-50 grayscale
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -38,7 +39,7 @@ const ActionCompassCard = ({ onClick, valueData, isFaded = false }: ActionCompas
           <p className="text-gray-500 text-center">Chưa có dữ liệu giá trị nghề nghiệp.</p> 
         )}
       </CardContent>
-      <HoverViewMore isVisible={isHovered} className="text-gray-800" />
+      <HoverViewMore isVisible={isHovered && !isFaded} className="text-gray-800" /> {/* isVisible depends on !isFaded */}
     </Card>
   );
 };

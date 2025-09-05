@@ -24,6 +24,7 @@ const OutstandingCompetenciesCard = ({ onClick, competencies, isFaded = false }:
     <Card
       className={cn(
         "group relative flex flex-col h-full rounded-2xl cursor-pointer bg-white text-gray-800 shadow-sm border border-gray-200",
+        isFaded && "opacity-50 grayscale" // Re-added opacity-50 grayscale
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -47,7 +48,7 @@ const OutstandingCompetenciesCard = ({ onClick, competencies, isFaded = false }:
           <p className="text-gray-500 text-center">Chưa có dữ liệu năng lực nhận thức.</p> 
         )}
       </CardContent>
-      <HoverViewMore isVisible={isHovered} className="text-gray-800" />
+      <HoverViewMore isVisible={isHovered && !isFaded} className="text-gray-800" /> {/* isVisible depends on !isFaded */}
     </Card>
   );
 };

@@ -284,6 +284,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
           <div
             className={cn(
               "group relative bg-blue-600 text-white rounded-2xl shadow-sm p-6 lg:col-span-2 cursor-pointer",
+              !hasNaviuResult && "opacity-50 grayscale" // Re-added opacity-50 grayscale
             )}
             onMouseEnter={() => setIsWelcomeHovered(true)}
             onMouseLeave={() => setIsWelcomeHovered(false)}
@@ -295,11 +296,12 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             </div>
             <p className="text-4xl font-bold mt-2">Hồ sơ Hướng nghiệp</p>
             <p className="opacity-80 mt-1">Đây là phân tích tổng quan về tiềm năng của bạn.</p>
-            <HoverViewMore isVisible={isWelcomeHovered} className="text-white" />
+            <HoverViewMore isVisible={isWelcomeHovered && hasNaviuResult} className="text-white" /> {/* isVisible depends on hasNaviuResult */}
           </div>
           <div
             className={cn(
               "group relative bg-white text-gray-800 rounded-2xl shadow-sm p-6 cursor-pointer border border-gray-200",
+              !hasMbtiResult && "opacity-50 grayscale" // Re-added opacity-50 grayscale
             )}
             onMouseEnter={() => setIsPersonalityHovered(true)}
             onMouseLeave={() => setIsPersonalityHovered(false)}
@@ -313,11 +315,12 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             <p className="text-sm text-gray-700 mt-1">
             {hasMbtiResult ? personalityData[naviuResult!.mbti!.result as keyof typeof personalityData]?.title : 'Chưa có dữ liệu'}
             </p>
-            <HoverViewMore isVisible={isPersonalityHovered} className="text-gray-800" />
+            <HoverViewMore isVisible={isPersonalityHovered && hasMbtiResult} className="text-gray-800" /> {/* isVisible depends on hasMbtiResult */}
           </div>
           <div
             className={cn(
               "group relative bg-white text-gray-800 rounded-2xl shadow-sm p-6 cursor-pointer border border-gray-200",
+              !hasHollandResult && "opacity-50 grayscale" // Re-added opacity-50 grayscale
             )}
             onMouseEnter={() => setIsHollandHovered(true)}
             onMouseLeave={() => setIsHollandHovered(false)}
@@ -333,7 +336,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             <p className="text-sm text-gray-700 mt-1">
               {hasHollandResult ? topHollandCodes.map(([code]) => hollandCodeData[code as keyof typeof hollandCodeData].name).join(' - ') : 'Chưa có dữ liệu'}
             </p>
-            <HoverViewMore isVisible={isHollandHovered} className="text-gray-800" />
+            <HoverViewMore isVisible={isHollandHovered && hasHollandResult} className="text-gray-800" /> {/* isVisible depends on hasHollandResult */}
           </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -341,17 +344,18 @@ const DashboardView = ({ username }: DashboardViewProps) => {
             <OutstandingCompetenciesCard 
               onClick={() => handleCardClick('competencies')}
               competencies={naviuResult?.cognitive} 
-              isFaded={!hasCognitiveResult}
+              isFaded={!hasCognitiveResult} // Pass isFaded prop
             />
             <ActionCompassCard 
               onClick={() => handleCardClick('action-compass')}
               valueData={actionCompassValueData}
-              isFaded={!hasValuesResult}
+              isFaded={!hasValuesResult} // Pass isFaded prop
             />
           </div>
           <div
             className={cn(
               "group relative bg-white text-gray-800 rounded-2xl shadow-sm p-6 flex flex-col min-h-[400px] cursor-pointer border border-gray-200",
+              !hasEqResult && "opacity-50 grayscale" // Re-added opacity-50 grayscale
             )}
             onMouseEnter={() => setIsEqHovered(true)}
             onMouseLeave={() => setIsEqHovered(false)}
@@ -368,7 +372,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
                 <div className="flex items-center justify-center h-full text-gray-500">Chưa có dữ liệu EQ.</div> 
               )}
             </div>
-            <HoverViewMore isVisible={isEqHovered} className="text-gray-800" />
+            <HoverViewMore isVisible={isEqHovered && hasEqResult} className="text-gray-800" /> {/* isVisible depends on hasEqResult */}
           </div>
         </div>
         
