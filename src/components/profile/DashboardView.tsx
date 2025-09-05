@@ -290,12 +290,12 @@ const DashboardView = ({ username }: DashboardViewProps) => {
           )}
           onMouseEnter={() => setIsWelcomeHovered(true)}
           onMouseLeave={() => setIsWelcomeHovered(false)}
-          onClick={() => hasNaviuResult && handleCardClick('welcome')}
+          onClick={() => handleCardClick('welcome')} {/* Luôn cho phép click */}
         >
           <h3 className="text-lg font-semibold opacity-80">Chào mừng trở lại, {username}!</h3>
           <p className="text-4xl font-bold mt-2">Hồ sơ Hướng nghiệp</p>
           <p className="opacity-80 mt-1">Đây là phân tích tổng quan về tiềm năng của bạn.</p>
-          <HoverViewMore isVisible={isWelcomeHovered && hasNaviuResult} className="text-white" />
+          <HoverViewMore isVisible={isWelcomeHovered} className="text-white" /> {/* Luôn hiển thị khi hover */}
         </div>
         <div
           className={cn(
@@ -304,14 +304,14 @@ const DashboardView = ({ username }: DashboardViewProps) => {
           )}
           onMouseEnter={() => setIsPersonalityHovered(true)}
           onMouseLeave={() => setIsPersonalityHovered(false)}
-          onClick={() => hasMbtiResult && handleCardClick('personality')}
+          onClick={() => handleCardClick('personality')} {/* Luôn cho phép click */}
         >
           <h3 className="text-gray-500">Loại tính cách</h3>
           <p className="text-2xl font-bold text-gray-800 mt-2">{naviuResult?.mbti?.result || 'N/A'}</p>
           <p className="text-sm text-gray-500 mt-1">
             {hasMbtiResult ? personalityData[naviuResult!.mbti!.result as keyof typeof personalityData]?.title : 'Chưa có dữ liệu'}
           </p>
-          <HoverViewMore isVisible={isPersonalityHovered && hasMbtiResult} />
+          <HoverViewMore isVisible={isPersonalityHovered} /> {/* Luôn hiển thị khi hover */}
         </div>
         <div
           className={cn(
@@ -320,7 +320,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
           )}
           onMouseEnter={() => setIsHollandHovered(true)}
           onMouseLeave={() => setIsHollandHovered(false)}
-          onClick={() => hasHollandResult && handleCardClick('holland')}
+          onClick={() => handleCardClick('holland')} {/* Luôn cho phép click */}
         >
           <h3 className="text-gray-500">Mã Holland</h3>
           <p className="text-2xl font-bold text-gray-800 mt-2">
@@ -329,18 +329,18 @@ const DashboardView = ({ username }: DashboardViewProps) => {
           <p className="text-sm text-gray-500 mt-1">
             {hasHollandResult ? topHollandCodes.map(([code]) => hollandCodeData[code as keyof typeof hollandCodeData].name).join(' - ') : 'Chưa có dữ liệu'}
           </p>
-          <HoverViewMore isVisible={isHollandHovered && hasHollandResult} />
+          <HoverViewMore isVisible={isHollandHovered} /> {/* Luôn hiển thị khi hover */}
         </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 flex flex-col gap-6">
           <OutstandingCompetenciesCard 
-            onClick={() => hasCognitiveResult && handleCardClick('competencies')} 
+            onClick={() => handleCardClick('competencies')} {/* Luôn cho phép click */}
             competencies={naviuResult?.cognitive} 
             isFaded={!hasCognitiveResult}
           />
           <ActionCompassCard 
-            onClick={() => hasValuesResult && handleCardClick('action-compass')} 
+            onClick={() => handleCardClick('action-compass')} {/* Luôn cho phép click */}
             valueData={actionCompassValueData}
             isFaded={!hasValuesResult}
           />
@@ -352,7 +352,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
           )}
           onMouseEnter={() => setIsEqHovered(true)}
           onMouseLeave={() => setIsEqHovered(false)}
-          onClick={() => hasEqResult && handleCardClick('eq-profile')}
+          onClick={() => handleCardClick('eq-profile')} {/* Luôn cho phép click */}
         >
           <h3 className="font-semibold text-gray-800 flex-shrink-0">Hồ sơ Trí tuệ Cảm xúc</h3>
           <div className="relative flex-1 mt-4">
@@ -362,7 +362,7 @@ const DashboardView = ({ username }: DashboardViewProps) => {
               <div className="flex items-center justify-center h-full text-gray-500">Chưa có dữ liệu EQ.</div>
             )}
           </div>
-          <HoverViewMore isVisible={isEqHovered && hasEqResult} />
+          <HoverViewMore isVisible={isEqHovered} /> {/* Luôn hiển thị khi hover */}
         </div>
       </div>
       

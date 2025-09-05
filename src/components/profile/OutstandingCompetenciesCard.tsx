@@ -44,7 +44,7 @@ const OutstandingCompetenciesCard = ({ onClick, competencies, isFaded = false }:
           <p className="text-gray-500 text-center">Chưa có dữ liệu năng lực nhận thức.</p>
         )}
       </CardContent>
-      <HoverViewMore isVisible={isHovered && !isFaded} /> {/* Chỉ hiển thị khi không bị làm mờ */}
+      <HoverViewMore isVisible={isHovered} /> {/* Chỉ hiển thị khi hover, không phụ thuộc vào isFaded */}
     </Card>
   );
 };

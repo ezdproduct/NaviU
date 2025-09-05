@@ -35,7 +35,7 @@ const ActionCompassCard = ({ onClick, valueData, isFaded = false }: ActionCompas
           <p className="text-gray-500 text-center">Chưa có dữ liệu giá trị nghề nghiệp.</p>
         )}
       </CardContent>
-      <HoverViewMore isVisible={isHovered && !isFaded} /> {/* Only show hover if not faded */}
+      <HoverViewMore isVisible={isHovered} /> {/* Chỉ hiển thị khi hover, không phụ thuộc vào isFaded */}
     </Card>
   );
 };
