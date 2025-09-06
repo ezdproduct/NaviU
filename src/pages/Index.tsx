@@ -121,7 +121,47 @@ const Index = () => {
             </div>
         </section>
 
-     
+        {/* Features Section 1: Thấu Hiểu Bản Thân */}
+        <section className="py-16 md:py-24 bg-white">
+            <div className="container mx-auto px-6">
+                <div className="text-center max-w-3xl mx-auto mb-12">
+                    <h2 className="text-3xl md:text-4xl font-bold mb-4">Thấu Hiểu Bản Thân Sâu Sắc</h2>
+                    <p className="text-gray-600">Với các bài trắc nghiệm khoa học như Holland, MBTI, DISC và MI, hệ thống giúp bạn khám phá tính cách, sở thích, năng lực và giá trị cốt lõi của mình.</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {/* Feature Card */}
+                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                        <ScanLine className="w-10 h-10 text-blue-500 mb-4" />
+                        <h3 className="text-xl font-semibold mb-2">Trắc nghiệm Holland</h3>
+                        <p className="text-gray-600 text-sm">Khám phá nhóm ngành nghề phù hợp với sở thích và năng lực của bạn.</p>
+                    </div>
+                    {/* Feature Card */}
+                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                        <BrainCircuit className="w-10 h-10 text-blue-500 mb-4" />
+                        <h3 className="text-xl font-semibold mb-2">Trí thông minh (MRTI)</h3>
+                        <p className="text-gray-600 text-sm">Hiểu rõ 8 loại hình trí tuệ để phát huy tối đa tiềm năng.</p>
+                    </div>
+                    {/* Feature Card */}
+                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                        <Briefcase className="w-10 h-10 text-blue-500 mb-4" />
+                        <h3 className="text-xl font-semibold mb-2">Gợi ý ngành nghề</h3>
+                        <p className="text-gray-600 text-sm">Khám phá các ngành nghề phù hợp với đặc điểm và năng lực cá nhân.</p>
+                    </div>
+                     {/* Feature Card */}
+                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                        <BarChart3 className="w-10 h-10 text-blue-500 mb-4" />
+                        <h3 className="text-xl font-semibold mb-2">Phân tích thị trường</h3>
+                        <p className="text-gray-600 text-sm">Tìm hiểu xu hướng thị trường lao động để có lựa chọn tối ưu.</p>
+                    </div>
+                    {/* Feature Card */}
+                    <div className="feature-card bg-gray-50 p-8 rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                        <FileText className="w-10 h-10 text-blue-500 mb-4" />
+                        <h3 className="text-xl font-semibold mb-2">Báo cáo chi tiết</h3>
+                        <p className="text-gray-600 text-sm">Nhận báo cáo phân tích toàn diện về bản thân và định hướng.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         {/* Journey Section */}
         <section className="py-16 md:py-24">
@@ -229,88 +269,7 @@ const Index = () => {
             </div>
         </section>
 
-        {/* Career Compass Section */}
-        <section className="py-16 md:py-24 bg-white">
-            <div className="container mx-auto px-6">
-                <div className="text-center max-w-3xl mx-auto mb-12">
-                    <h2 className="text-3xl md:text-4xl font-bold mb-4">Cung cấp La Bàn Sự Nghiệp Cho Bạn</h2>
-                    <p className="text-gray-600">Khám phá những ngành nghề phù hợp nhất với kết quả phân tích tính cách, sở thích và năng lực.</p>
-                </div>
-
-                <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left">
-                            <thead className="bg-gray-50 border-b border-gray-200">
-                                <tr>
-                                    <th className="p-4 text-sm font-semibold text-gray-600">#</th>
-                                    <th className="p-4 text-sm font-semibold text-gray-600">TÊN NGÀNH/NGHỀ</th>
-                                    <th className="p-4 text-sm font-semibold text-gray-600">CHUYÊN VIÊN TƯ VẤN TỪ</th>
-                                    <th className="p-4 text-sm font-semibold text-gray-600">MỨC ĐỘ PHÙ HỢP</th>
-                                    <th className="p-4 text-sm font-semibold text-gray-600">NHU CẦU THỊ TRƯỜNG</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr className="border-b border-gray-200">
-                                    <td className="p-4 text-gray-500">1</td>
-                                    <td className="p-4 font-medium">Chuyên viên tư vấn tâm lý</td>
-                                    <td className="p-4 text-gray-600">MindCare Clinic</td>
-                                    <td className="p-4">
-                                        <div className="w-full bg-gray-200 rounded-full h-2.5">
-                                            <div className="bg-blue-500 h-2.5 rounded-full" style={{ width: '90%' }}></div>
-                                        </div>
-                                    </td>
-                                    <td className="p-4">
-                                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Cao</span>
-                                    </td>
-                                </tr>
-                                <tr className="border-b border-gray-200">
-                                    <td className="p-4 text-gray-500">2</td>
-                                    <td className="p-4 font-medium">Nhà thiết kế UI/UX</td>
-                                    <td className="p-4 text-gray-600">Creative Hub</td>
-                                    <td className="p-4">
-                                        <div className="w-full bg-gray-200 rounded-full h-2.5">
-                                            <div className="bg-blue-500 h-2.5 rounded-full" style={{ width: '88%' }}></div>
-                                        </div>
-                                    </td>
-                                    <td className="p-4">
-                                         <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Cao</span>
-                                    </td>
-                                </tr>
-                                 <tr className="border-b border-gray-200">
-                                    <td className="p-4 text-gray-500">3</td>
-                                    <td className="p-4 font-medium">Giáo viên</td>
-                                    <td className="p-4 text-gray-600">EduNext Academy</td>
-                                    <td className="p-4">
-                                        <div className="w-full bg-gray-200 rounded-full h-2.5">
-                                            <div className="bg-amber-400 h-2.5 rounded-full" style={{ width: '85%' }}></div>
-                                        </div>
-                                    </td>
-                                    <td className="p-4">
-                                         <span className="bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Trung bình</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="p-4 text-gray-500">4</td>
-                                    <td className="p-4 font-medium">Nhà biên tập nội dung</td>
-                                    <td className="p-4 text-gray-600">Content Creators</td>
-                                    <td className="p-4">
-                                        <div className="w-full bg-gray-200 rounded-full h-2.5">
-                                            <div className="bg-amber-400 h-2.5 rounded-full" style={{ width: '82%' }}></div>
-                                        </div>
-                                    </td>
-                                    <td className="p-4">
-                                         <span className="bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Trung bình</span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div className="text-center mt-10">
-                    <Link to="/profile?initialView=report" className="text-blue-600 font-semibold hover:underline">Xem bản cáo đầy đủ &rarr;</Link>
-                </div>
-            </div>
-        </section>
+        {/* Removed Career Compass Section */}
 
 
         {/* CTA Section */}

@@ -102,9 +102,14 @@ const SidebarContent = ({ activeView, setActiveView, onToggle, isSidebarOpen }: 
         <div className={cn("bg-blue-50 rounded-lg p-6 text-center mx-2", !isSidebarOpen && "hidden")}>
           <h4 className="font-semibold text-blue-800">Tư vấn 1-1</h4>
           <p className="text-sm mt-2 text-blue-700">Nâng cấp để nhận tư vấn chuyên sâu từ chuyên gia.</p>
-          <button className="mt-4 bg-blue-600 text-white font-semibold w-full py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
+          <a
+            href="https://zalo.me/0902486822"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 bg-blue-600 text-white font-semibold w-full py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 inline-block" // Added inline-block for anchor tag
+          >
             Liên Hệ
-          </button>
+          </a>
         </div>
 
         {isAuthenticated && isSidebarOpen && (
